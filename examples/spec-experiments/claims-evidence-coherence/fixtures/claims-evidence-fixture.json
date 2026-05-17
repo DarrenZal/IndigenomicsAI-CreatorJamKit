@@ -1,0 +1,312 @@
+{
+  "fixture_id": "claims-evidence-coherence-public-sample-v0.1",
+  "spec_id": "claims-evidence-coherence-report",
+  "created_at": "2026-05-17",
+  "visibility": "public_sample",
+  "report_date": "2026-05-17",
+  "intended_report_use": "Public workshop demo briefing that shows which fictional claims can be reused, repaired, or excluded.",
+  "participant_safety": {
+    "content_mode": "fictional_public_sample",
+    "contains_private_or_protected_content": false,
+    "contains_cultural_or_nation_specific_content": false,
+    "raw_private_evidence_included": false,
+    "do_not_compute_policy": "Marker-only records may appear to show that a boundary exists; the underlying content must not be summarized, inferred, routed, or displayed."
+  },
+  "diagnostic_rules": {
+    "freshness_windows_days": {
+      "descriptive": 365,
+      "commitment_status": 90,
+      "outcome": 180,
+      "impact": 365,
+      "risk": 120,
+      "eligibility": 180
+    },
+    "public_claim_requirements": [
+      "at_least_one_evidence_pointer",
+      "reviewer",
+      "review_date",
+      "intended_use"
+    ],
+    "status_values": [
+      "ready_for_use",
+      "missing_evidence",
+      "stale_evidence",
+      "needs_review",
+      "contested",
+      "overbroad",
+      "visibility_blocked",
+      "do_not_compute"
+    ]
+  },
+  "reviewers": [
+    {
+      "reviewer_id": "reviewer:public-sample-steward",
+      "display_name": "Public Sample Steward",
+      "role": "fictional reviewer for demo coherence checks",
+      "authority_boundary": "May check report shape and sample evidence context; does not certify legitimacy, consent, truth, or cultural authority."
+    },
+    {
+      "reviewer_id": "reviewer:accessibility-note-checker",
+      "display_name": "Accessibility Note Checker",
+      "role": "fictional reviewer for public accessibility wording",
+      "authority_boundary": "May flag wording risk; does not certify compliance."
+    }
+  ],
+  "evidence_pointers": [
+    {
+      "evidence_id": "evidence:CER-001",
+      "evidence_type": "public_sample_calendar_snapshot",
+      "evidence_date": "2026-05-10",
+      "title": "Cedar Commons May-July public schedule snapshot",
+      "source_summary": "Fictional public schedule table with dates and roles, no personal names.",
+      "visibility_tier": "public_sample",
+      "restrictions": [],
+      "raw_private_evidence_allowed_for_ai": false
+    },
+    {
+      "evidence_id": "evidence:CER-002",
+      "evidence_type": "reviewer_checklist",
+      "evidence_date": "2026-05-12",
+      "title": "Schedule wording review note",
+      "source_summary": "Fictional reviewer note confirming the schedule wording is safe for the demo briefing.",
+      "visibility_tier": "public_sample",
+      "restrictions": [],
+      "raw_private_evidence_allowed_for_ai": false
+    },
+    {
+      "evidence_id": "evidence:CER-003",
+      "evidence_type": "aggregate_event_log",
+      "evidence_date": "2026-04-29",
+      "title": "April compost workshop aggregate log",
+      "source_summary": "Fictional aggregate count of three completed workshops; no attendance names or contact details.",
+      "visibility_tier": "public_sample",
+      "restrictions": [
+        "aggregate_only"
+      ],
+      "raw_private_evidence_allowed_for_ai": false
+    },
+    {
+      "evidence_id": "evidence:CER-004",
+      "evidence_type": "anonymous_theme_summary",
+      "evidence_date": "2024-09-15",
+      "title": "Older anonymous food access theme summary",
+      "source_summary": "Fictional thematic summary that is too old and too broad to support a public impact claim.",
+      "visibility_tier": "public_sample",
+      "restrictions": [
+        "weak_for_impact",
+        "do_not_expand_into_personal_story"
+      ],
+      "raw_private_evidence_allowed_for_ai": false
+    },
+    {
+      "evidence_id": "evidence:CER-005",
+      "evidence_type": "public_sample_walkthrough_note",
+      "evidence_date": "2026-03-30",
+      "title": "Demo route accessibility walkthrough",
+      "source_summary": "Fictional walkthrough note flags uneven gravel and missing bench spacing on the sample route.",
+      "visibility_tier": "public_sample",
+      "restrictions": [
+        "not_a_compliance_certification"
+      ],
+      "raw_private_evidence_allowed_for_ai": false
+    },
+    {
+      "evidence_id": "evidence:CER-006",
+      "evidence_type": "redacted_refusal_marker",
+      "evidence_date": "2026-05-14",
+      "title": "Participant-level non-use marker",
+      "source_summary": "Marker only: a fictional participant-level refusal exists. No underlying content is present.",
+      "visibility_tier": "boundary_marker_only",
+      "restrictions": [
+        "do_not_compute",
+        "do_not_summarize",
+        "do_not_display_publicly"
+      ],
+      "raw_private_evidence_allowed_for_ai": false
+    }
+  ],
+  "claims": [
+    {
+      "claim_id": "claim:CER-001",
+      "claim_text": "The Cedar Commons demo garden has published a monthly volunteer schedule for May-July 2026.",
+      "claim_subject": "Cedar Commons demo garden schedule",
+      "claim_type": "descriptive",
+      "intended_use": "Include in the public workshop demo briefing.",
+      "visibility_tier": "public_sample",
+      "evidence_pointers": [
+        "evidence:CER-001",
+        "evidence:CER-002"
+      ],
+      "reviewer": "reviewer:public-sample-steward",
+      "review_date": "2026-05-12",
+      "restrictions": [],
+      "confidence": "moderate",
+      "related_claims": [],
+      "do_not_compute": false
+    },
+    {
+      "claim_id": "claim:CER-002",
+      "claim_text": "Three public compost workshops were completed in April 2026.",
+      "claim_subject": "April compost workshop completion",
+      "claim_type": "outcome",
+      "intended_use": "Use as a narrow completed-activity example in the public workshop demo briefing.",
+      "visibility_tier": "public_sample",
+      "evidence_pointers": [
+        "evidence:CER-003"
+      ],
+      "reviewer": "reviewer:public-sample-steward",
+      "review_date": "2026-05-01",
+      "restrictions": [
+        "aggregate_only"
+      ],
+      "confidence": "moderate",
+      "related_claims": [],
+      "do_not_compute": false
+    },
+    {
+      "claim_id": "claim:CER-003",
+      "claim_text": "The demo garden improved household food security for nearby residents.",
+      "claim_subject": "Food security impact",
+      "claim_type": "impact",
+      "intended_use": "Requested for public funder-facing language; blocked in this sample report.",
+      "visibility_tier": "public_sample",
+      "evidence_pointers": [
+        "evidence:CER-004"
+      ],
+      "reviewer": "reviewer:public-sample-steward",
+      "review_date": "2026-05-16",
+      "restrictions": [
+        "do_not_strengthen",
+        "needs_current_evidence"
+      ],
+      "confidence": "low",
+      "related_claims": [],
+      "do_not_compute": false
+    },
+    {
+      "claim_id": "claim:CER-004",
+      "claim_text": "The public demo route has no access barriers for elders or mobility aid users.",
+      "claim_subject": "Route accessibility",
+      "claim_type": "eligibility",
+      "intended_use": "Requested for participant invitation copy; blocked until wording is repaired.",
+      "visibility_tier": "public_sample",
+      "evidence_pointers": [
+        "evidence:CER-005"
+      ],
+      "reviewer": "reviewer:accessibility-note-checker",
+      "review_date": "2026-05-16",
+      "restrictions": [
+        "not_a_compliance_certification",
+        "needs_rewording"
+      ],
+      "confidence": "low",
+      "related_claims": [
+        "claim:CER-004a: route has uneven gravel and limited seating"
+      ],
+      "do_not_compute": false
+    },
+    {
+      "claim_id": "claim:CER-005",
+      "claim_text": "Redacted participant-level non-use marker. Do not summarize, infer, route, train on, or display the underlying content.",
+      "claim_subject": "Redacted participant-level boundary",
+      "claim_type": "commitment_status",
+      "intended_use": "Boundary marker only; excluded from public report summary.",
+      "visibility_tier": "boundary_marker_only",
+      "evidence_pointers": [
+        "evidence:CER-006"
+      ],
+      "reviewer": "reviewer:public-sample-steward",
+      "review_date": "2026-05-14",
+      "restrictions": [
+        "do_not_compute",
+        "do_not_summarize",
+        "do_not_display_publicly"
+      ],
+      "confidence": "not_applicable",
+      "related_claims": [],
+      "do_not_compute": true
+    }
+  ],
+  "expected_report_diagnostics": [
+    {
+      "claim_id": "claim:CER-001",
+      "status": "ready_for_use",
+      "diagnostic_codes": [
+        "evidence_present",
+        "reviewer_present",
+        "fresh_for_descriptive_use"
+      ],
+      "freshness": {
+        "freshest_evidence_date": "2026-05-12",
+        "window_days": 365,
+        "age_days_on_report_date": 5,
+        "is_stale": false
+      },
+      "repair_path": "No repair required for the named demo briefing use."
+    },
+    {
+      "claim_id": "claim:CER-002",
+      "status": "ready_for_use",
+      "diagnostic_codes": [
+        "aggregate_evidence_present",
+        "reviewer_present",
+        "fresh_for_outcome_use"
+      ],
+      "freshness": {
+        "freshest_evidence_date": "2026-04-29",
+        "window_days": 180,
+        "age_days_on_report_date": 18,
+        "is_stale": false
+      },
+      "repair_path": "Keep language narrow: completed public sample workshops only; do not imply individual outcomes."
+    },
+    {
+      "claim_id": "claim:CER-003",
+      "status": "stale_evidence",
+      "diagnostic_codes": [
+        "stale_evidence",
+        "overbroad",
+        "weak_for_impact"
+      ],
+      "freshness": {
+        "freshest_evidence_date": "2024-09-15",
+        "window_days": 365,
+        "age_days_on_report_date": 609,
+        "is_stale": true
+      },
+      "repair_path": "Replace with current, approved, aggregate impact evidence or downgrade to a question for review."
+    },
+    {
+      "claim_id": "claim:CER-004",
+      "status": "contested",
+      "diagnostic_codes": [
+        "conflicting_evidence_visible",
+        "overbroad",
+        "needs_rewording"
+      ],
+      "freshness": {
+        "freshest_evidence_date": "2026-03-30",
+        "window_days": 180,
+        "age_days_on_report_date": 48,
+        "is_stale": false
+      },
+      "repair_path": "Use bounded access language that names known route constraints and routes accommodation questions to a human contact."
+    },
+    {
+      "claim_id": "claim:CER-005",
+      "status": "do_not_compute",
+      "diagnostic_codes": [
+        "boundary_marker_only",
+        "excluded_from_summary",
+        "excluded_from_public_display"
+      ],
+      "freshness": {
+        "freshest_evidence_date": "2026-05-14",
+        "window_days": 90,
+        "age_days_on_report_date": 3,
+        "is_stale": false
+      },
+      "repair_path": "No repair inside this report. Preserve the non-use marker and do not inspect or reconstruct the underlying content."
+    }
+  ]
+}

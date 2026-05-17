@@ -1,0 +1,275 @@
+{
+  "fixture_id": "commitment-pool-route-public-sample-v0.1",
+  "spec_id": "commitment-pool-route-diagnostic",
+  "created_at": "2026-05-17",
+  "visibility": "public_sample",
+  "diagnostic_date": "2026-05-17",
+  "diagnostic_use": "Public workshop replay that explains route readiness, review needs, and hard stops for fictional declarations.",
+  "participant_safety": {
+    "content_mode": "fictional_public_sample",
+    "contains_private_or_protected_content": false,
+    "contains_cultural_or_nation_specific_content": false,
+    "raw_private_evidence_included": false,
+    "share_policy_marker_rule": "Protected or private share policies may be represented as a marker only; the diagnostic must not inspect, infer, or complete protected records."
+  },
+  "route_status_values": [
+    "route_ready",
+    "needs_review",
+    "hard_stop",
+    "not_computable"
+  ],
+  "required_fields_for_route_check": [
+    "bioregion_uri",
+    "timeframe",
+    "routing_tags",
+    "evidence_pointers"
+  ],
+  "evidence_pointers": [
+    {
+      "evidence_id": "evidence:CPR-001",
+      "evidence_type": "public_sample_offer_note",
+      "evidence_date": "2026-05-15",
+      "title": "Six-hour garden path repair offer",
+      "source_summary": "Fictional public-sample note describing a time-limited volunteer offer.",
+      "visibility_tier": "public_sample",
+      "restrictions": []
+    },
+    {
+      "evidence_id": "evidence:CPR-002",
+      "evidence_type": "pool_charter",
+      "evidence_date": "2026-05-10",
+      "title": "Cedar Care Sprint public-sample charter",
+      "source_summary": "Fictional charter naming accepted routing tags, capacity unit, and review rules.",
+      "visibility_tier": "public_sample",
+      "restrictions": []
+    },
+    {
+      "evidence_id": "evidence:CPR-003",
+      "evidence_type": "zero_capacity_notice",
+      "evidence_date": "2026-05-16",
+      "title": "Harbor Microgrant pool closed notice",
+      "source_summary": "Fictional public-sample notice that the pool has no remaining capacity.",
+      "visibility_tier": "public_sample",
+      "restrictions": []
+    },
+    {
+      "evidence_id": "evidence:CPR-004",
+      "evidence_type": "redacted_share_policy_marker",
+      "evidence_date": "2026-05-14",
+      "title": "Protected private share-policy marker",
+      "source_summary": "Marker only: a protected private declaration exists and cannot be routed, summarized, or completed.",
+      "visibility_tier": "boundary_marker_only",
+      "restrictions": [
+        "do_not_compute",
+        "do_not_summarize",
+        "do_not_search_to_complete"
+      ]
+    }
+  ],
+  "pools": [
+    {
+      "pool_id": "pool:cedar-care-sprint",
+      "display_name": "Cedar Care Sprint",
+      "pool_capacity": {
+        "unit": "volunteer_hours",
+        "total": 20,
+        "committed": 12,
+        "remaining": 8
+      },
+      "pool_rules": {
+        "accepted_routing_tags": [
+          "garden_access",
+          "compost_workshop",
+          "water_monitoring"
+        ],
+        "accepted_units": [
+          "volunteer_hours"
+        ],
+        "accepted_share_policies": [
+          "public_sample",
+          "participant_approved_summary"
+        ],
+        "requires_evidence": true,
+        "governance_review_required_for": [
+          "beneficiary_unclear",
+          "authority_claim",
+          "protected_location",
+          "share_policy_exception"
+        ],
+        "pool_boundary": "Public-sample replay only; no real commitments are created."
+      }
+    },
+    {
+      "pool_id": "pool:harbor-microgrant-zero",
+      "display_name": "Harbor Microgrant Zero-Capacity Pool",
+      "pool_capacity": {
+        "unit": "usd",
+        "total": 0,
+        "committed": 0,
+        "remaining": 0
+      },
+      "pool_rules": {
+        "accepted_routing_tags": [
+          "microgrant"
+        ],
+        "accepted_units": [
+          "usd"
+        ],
+        "accepted_share_policies": [
+          "public_sample"
+        ],
+        "requires_evidence": true,
+        "governance_review_required_for": [
+          "capacity_change",
+          "missing_bioregion",
+          "missing_evidence"
+        ],
+        "pool_boundary": "Zero-capacity sample pool; cannot accept new route candidates."
+      }
+    }
+  ],
+  "candidate_declarations": [
+    {
+      "candidate_id": "candidate:CPR-001",
+      "declaration_type": "offer",
+      "issuer": "Fictional Builder A",
+      "beneficiary": "Cedar Commons Demo Garden",
+      "quantity": 6,
+      "unit": "volunteer_hours",
+      "estimated_value": {
+        "amount": 0,
+        "currency": "not_applicable",
+        "valuation_note": "Unpriced public-sample volunteer offer."
+      },
+      "timeframe": "2026-06-01/2026-06-30",
+      "routing_tags": [
+        "garden_access"
+      ],
+      "bioregion_uri": "public-sample:bioregion:cedar-commons",
+      "evidence_pointers": [
+        "evidence:CPR-001",
+        "evidence:CPR-002"
+      ],
+      "share_policy": "public_sample",
+      "target_pool": "pool:cedar-care-sprint",
+      "do_not_compute": false
+    },
+    {
+      "candidate_id": "candidate:CPR-002",
+      "declaration_type": "commitment",
+      "issuer": "Public Sample Funder",
+      "beneficiary": "Harbor Learning Commons",
+      "quantity": 500,
+      "unit": "usd",
+      "estimated_value": {
+        "amount": 500,
+        "currency": "USD",
+        "valuation_note": "Fictional microgrant amount for route diagnostic only."
+      },
+      "timeframe": "2026-07-01/2026-07-31",
+      "routing_tags": [
+        "microgrant"
+      ],
+      "bioregion_uri": null,
+      "evidence_pointers": [],
+      "share_policy": "public_sample",
+      "target_pool": "pool:harbor-microgrant-zero",
+      "do_not_compute": false
+    },
+    {
+      "candidate_id": "candidate:CPR-003",
+      "declaration_type": "need",
+      "issuer": "Redacted Fictional Kitchen Circle",
+      "beneficiary": "Redacted boundary marker only",
+      "quantity": null,
+      "unit": "redacted",
+      "estimated_value": {
+        "amount": null,
+        "currency": "not_computable",
+        "valuation_note": "Value is intentionally not computed because the declaration is private and marker-only."
+      },
+      "timeframe": "redacted",
+      "routing_tags": [
+        "food_enterprise"
+      ],
+      "bioregion_uri": "redacted-boundary-marker",
+      "evidence_pointers": [
+        "evidence:CPR-004"
+      ],
+      "share_policy": "protected_private_no_ai_no_public_route",
+      "target_pool": "pool:cedar-care-sprint",
+      "do_not_compute": true
+    }
+  ],
+  "standing_refusals": [
+    {
+      "refusal_id": "standing_refusal:CPR-RF-001",
+      "applies_to": [
+        "candidate:CPR-003",
+        "share_policy:protected_private_no_ai_no_public_route"
+      ],
+      "refusal_state": "active",
+      "display_mode": "marker_only",
+      "refusal_boundary": "Do not route, summarize, infer, or search for missing private details."
+    }
+  ],
+  "constraints": [
+    {
+      "constraint_id": "constraint:CPR-001",
+      "applies_to": [
+        "pool:harbor-microgrant-zero"
+      ],
+      "constraint_type": "capacity",
+      "constraint_text": "The pool has zero remaining capacity and cannot accept route candidates in this replay."
+    }
+  ],
+  "expected_route_diagnostics": [
+    {
+      "candidate_id": "candidate:CPR-001",
+      "route_status": "route_ready",
+      "diagnostic_codes": [
+        "required_fields_present",
+        "capacity_available",
+        "share_policy_allowed",
+        "evidence_present"
+      ],
+      "pool_capacity_after_hypothetical_route": {
+        "pool_id": "pool:cedar-care-sprint",
+        "remaining_before": 8,
+        "candidate_quantity": 6,
+        "remaining_after": 2,
+        "unit": "volunteer_hours"
+      },
+      "repair_path": "No repair required for diagnostic readiness; human review is still required before any real-world commitment."
+    },
+    {
+      "candidate_id": "candidate:CPR-002",
+      "route_status": "hard_stop",
+      "diagnostic_codes": [
+        "capacity_block",
+        "missing_bioregion_uri",
+        "missing_evidence"
+      ],
+      "pool_capacity_after_hypothetical_route": {
+        "pool_id": "pool:harbor-microgrant-zero",
+        "remaining_before": 0,
+        "candidate_quantity": 500,
+        "remaining_after": 0,
+        "unit": "usd"
+      },
+      "repair_path": "Do not route. A steward would need a new pool with capacity, a bioregion URI, evidence pointers, and governance review."
+    },
+    {
+      "candidate_id": "candidate:CPR-003",
+      "route_status": "not_computable",
+      "diagnostic_codes": [
+        "share_policy_block",
+        "do_not_compute",
+        "standing_refusal_active",
+        "protected_marker_only"
+      ],
+      "pool_capacity_after_hypothetical_route": null,
+      "repair_path": "No repair inside this diagnostic. Preserve the refusal and do not inspect or complete the protected declaration."
+    }
+  ]
+}

@@ -1,0 +1,244 @@
+{
+  "experiment_id": "sensor-to-receipt-pipeline",
+  "receipt_batch_id": "receipt-batch:sensor-to-receipt-public-sample-2026-05-17",
+  "created_at": "2026-05-17T05:45:00-07:00",
+  "generated_from_fixture": "sensor-observation-packets.json",
+  "safety_profile": {
+    "visibility": "public_sample",
+    "content_origin": "fictional_only",
+    "participant_private_content": false,
+    "protected_cultural_content": false,
+    "sensitive_coordinates_included": false,
+    "nation_specific_authority_claimed": false
+  },
+  "witness_receipts": [
+    {
+      "receipt_id": "receipt:sensor-temp-blue-heron-001",
+      "schema_version": "sensor-receipt-public-sample-v0",
+      "observation_id": "obs:temp-blue-heron-001",
+      "contributor": {
+        "id": "device:sample-temp-logger-07",
+        "role": "fictional_sensor_device",
+        "authority_note": "Fictional device identity; no publication authority claimed."
+      },
+      "contribution": {
+        "type": "sensor_reading",
+        "summary": "A fictional demo logger recorded 12.4 degC during a five-minute sample window.",
+        "content_hash": "sha256:sample-temp-001-placeholder"
+      },
+      "temporal": {
+        "assertion_time": "2026-05-17T05:45:00-07:00",
+        "event_time": "2026-05-16T08:00:00-07:00/2026-05-16T08:05:00-07:00"
+      },
+      "place": {
+        "public_location": "Demo watershed, approximate 10 km grid",
+        "location_precision": "public_region_only",
+        "coordinates_public": false,
+        "sensitive_location_flag": false
+      },
+      "review_summary": {
+        "state": "reviewed_with_limits",
+        "reviewed_by": "did:example:reviewer-sam",
+        "calibration_visible": true,
+        "uncertainty_visible": true,
+        "claim_limit": "single reading; not trend evidence"
+      },
+      "public_safe_summary": "Fictional temperature reading recorded and reviewed with limits. It can be displayed as a sample receipt but cannot verify watershed condition.",
+      "witnesses": {
+        "schema_witness": {
+          "validates_fixture_shape": true,
+          "errors": []
+        },
+        "reviewer_witness": {
+          "id": "did:example:reviewer-sam",
+          "statement": "Calibration and uncertainty are visible; public precision is generalized."
+        }
+      },
+      "refusal": {
+        "state": "active",
+        "withdrawal_authority": "fixture maintainer or named reviewer",
+        "state_history": [
+          {
+            "state": "active",
+            "transitioned_at": "2026-05-17T05:45:00-07:00",
+            "reason": "Initial public-sample receipt"
+          }
+        ]
+      },
+      "limitations": [
+        "Not a verified ecological claim.",
+        "Not suitable for enforcement, eligibility, underwriting, or risk pricing.",
+        "Not evidence of real sensor deployment."
+      ]
+    },
+    {
+      "receipt_id": "receipt:field-note-blue-heron-002",
+      "schema_version": "sensor-receipt-public-sample-v0",
+      "observation_id": "obs:field-note-blue-heron-002",
+      "contributor": {
+        "id": "did:example:jam-observer-river",
+        "role": "fictional_field_observer",
+        "authority_note": "Fictional observer identity; no authority to publish place-based knowledge claimed."
+      },
+      "contribution": {
+        "type": "field_note",
+        "summary": "A fictional observer wrote a qualitative public-sample note about visible conditions at a generalized training reach.",
+        "content_hash": "sha256:sample-field-note-002-placeholder"
+      },
+      "temporal": {
+        "assertion_time": "2026-05-17T05:45:00-07:00",
+        "event_time": "2026-05-16T09:10:00-07:00/2026-05-16T09:40:00-07:00"
+      },
+      "place": {
+        "public_location": "Demo watershed, approximate 25 km grid",
+        "location_precision": "coarse_region_only",
+        "coordinates_public": false,
+        "sensitive_location_flag": true
+      },
+      "review_summary": {
+        "state": "needs_review_before_computation",
+        "reviewed_by": "did:example:reviewer-river",
+        "calibration_visible": true,
+        "uncertainty_visible": true,
+        "claim_limit": "qualitative note only; not species verification or trend evidence",
+        "not_for_computation": true
+      },
+      "public_safe_summary": "Fictional qualitative field note recorded with reduced location precision. It is review material only and is marked not-for-computation.",
+      "witnesses": {
+        "schema_witness": {
+          "validates_fixture_shape": true,
+          "errors": []
+        },
+        "reviewer_witness": {
+          "id": "did:example:reviewer-river",
+          "statement": "Sensitive-location handling is active and public summary must remain coarse."
+        }
+      },
+      "refusal": {
+        "state": "active",
+        "withdrawal_authority": "fictional observer or reviewer",
+        "state_history": [
+          {
+            "state": "active",
+            "transitioned_at": "2026-05-17T05:45:00-07:00",
+            "reason": "Initial public-sample receipt with not-for-computation flag"
+          }
+        ]
+      },
+      "limitations": [
+        "Not for automated computation.",
+        "Not species verification.",
+        "Not compliance, enforcement, eligibility, underwriting, or risk-pricing evidence.",
+        "Exact location and raw note remain undisplayed."
+      ]
+    },
+    {
+      "receipt_id": "receipt:repair-blue-heron-003",
+      "schema_version": "sensor-receipt-public-sample-v0",
+      "observation_id": "obs:repair-blue-heron-003",
+      "contributor": {
+        "id": "did:example:sample-maintenance-team",
+        "role": "fictional_repair_team",
+        "authority_note": "Fictional team identity; no real organizational authority claimed."
+      },
+      "contribution": {
+        "type": "repair_event",
+        "summary": "A fictional maintenance team reported tightening one rain-gauge bracket and reseating two training plot markers.",
+        "content_hash": "sha256:sample-repair-003-placeholder"
+      },
+      "temporal": {
+        "assertion_time": "2026-05-17T05:45:00-07:00",
+        "event_time": "2026-05-16T13:00:00-07:00/2026-05-16T14:20:00-07:00"
+      },
+      "place": {
+        "public_location": "Demo watershed, approximate 10 km grid",
+        "location_precision": "public_region_only",
+        "coordinates_public": false,
+        "sensitive_location_flag": false
+      },
+      "review_summary": {
+        "state": "reviewed_with_limits",
+        "reviewed_by": "did:example:reviewer-sam",
+        "calibration_visible": true,
+        "uncertainty_visible": true,
+        "claim_limit": "reported maintenance event; not proof of ecological outcome"
+      },
+      "public_safe_summary": "Fictional repair event recorded and reviewed with limits. It reports maintenance activity only, not restoration success.",
+      "witnesses": {
+        "schema_witness": {
+          "validates_fixture_shape": true,
+          "errors": []
+        },
+        "reviewer_witness": {
+          "id": "did:example:reviewer-sam",
+          "statement": "Receipt can show reported maintenance, with explicit no-outcome limit."
+        }
+      },
+      "refusal": {
+        "state": "active",
+        "withdrawal_authority": "fixture maintainer or named reviewer",
+        "state_history": [
+          {
+            "state": "active",
+            "transitioned_at": "2026-05-17T05:45:00-07:00",
+            "reason": "Initial public-sample receipt"
+          }
+        ]
+      },
+      "limitations": [
+        "Not proof that restoration succeeded.",
+        "Not evidence of real maintenance work.",
+        "Not suitable for compliance, enforcement, eligibility, underwriting, or risk pricing."
+      ]
+    }
+  ],
+  "acceptance_checks": [
+    {
+      "criterion": "Sensor readings and human observations can share one packet model.",
+      "status": "pass",
+      "receipt_evidence": [
+        "receipt:sensor-temp-blue-heron-001",
+        "receipt:field-note-blue-heron-002",
+        "receipt:repair-blue-heron-003"
+      ]
+    },
+    {
+      "criterion": "Location precision can be reduced for sensitive places.",
+      "status": "pass",
+      "receipt_evidence": [
+        "receipt:field-note-blue-heron-002"
+      ]
+    },
+    {
+      "criterion": "Calibration and uncertainty are visible.",
+      "status": "pass",
+      "receipt_evidence": [
+        "receipt:sensor-temp-blue-heron-001",
+        "receipt:field-note-blue-heron-002",
+        "receipt:repair-blue-heron-003"
+      ]
+    },
+    {
+      "criterion": "Public receipts do not expose protected locations or identities.",
+      "status": "pass",
+      "receipt_evidence": [
+        "all receipts use fictional identities, generalized public locations, and no coordinates"
+      ]
+    },
+    {
+      "criterion": "Records can be withdrawn, corrected, or marked not-for-computation.",
+      "status": "pass",
+      "receipt_evidence": [
+        "each receipt has refusal.withdrawal_authority",
+        "receipt:field-note-blue-heron-002 carries not_for_computation"
+      ]
+    }
+  ],
+  "refusal_boundaries": [
+    "Do not treat a raw sensor reading as a verified claim.",
+    "Do not publish sensitive ecological or cultural locations.",
+    "Do not infer compliance, enforcement, risk pricing, underwriting, or eligibility from these packets.",
+    "Do not assume a device owner or observer has authority to publish place-based knowledge.",
+    "Do not reuse a withdrawn, corrected, or not-for-computation packet without review."
+  ]
+}

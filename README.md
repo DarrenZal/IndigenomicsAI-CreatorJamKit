@@ -37,6 +37,11 @@ This repo is for public, sample, or explicitly display-approved material only. D
 - `specs/README.md` is the Creator Jam spec menu.
 - The backlog includes witnessing and claims, commitment pooling, flow funding, bioregional mapping, bioregional insights, insurance and risk, Indigenomics AI app flows, sensors, private learning, receipt walls, and spec composition.
 - Participants can build a spec, improve a spec, or compose several specs into a candidate collective build.
+- `workshop/spec-composition-lab.md` gives a practical experiment protocol for discovering composability, overlap, non-composability, and coherence.
+- `workshop/spec-composition-matrix.md` starts the experiment of discovering which specs compose, overlap, or should remain separate.
+- `workshop/common-spec-fields.md` sketches shared fields to test across composed specs.
+- `workshop/tomorrow-spec-build-plan.md` gives a short next-day plan for turning the backlog into fixture-backed builds.
+- `examples/spec-experiments/` contains the first fixture-backed spec experiments.
 
 ## Boundaries
 

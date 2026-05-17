@@ -1,0 +1,267 @@
+{
+  "experiment_id": "indigenomics-ai-graph-chat-witness-sidecar",
+  "fixture_id": "fixture:graph-chat-sidecar-public-sample-2026-05-17",
+  "created_at": "2026-05-17T05:10:00-07:00",
+  "schema_intent": "Static sidecar fixture for one graph node, one chat answer, three citations, two claims, and one reviewer diagnostic.",
+  "safety_profile": {
+    "visibility": "public_sample",
+    "content_origin": "fictional_and_public_sample_only",
+    "participant_private_content": false,
+    "protected_cultural_content": false,
+    "nation_specific_authority_claimed": false,
+    "display_consent_required_for_real_use": true,
+    "notes": "All identifiers, local notes, and people are fictional. Existing repo paths are referenced only as public-sample source labels."
+  },
+  "graph_node": {
+    "node_id": "node:public-sample-marketplace-offering",
+    "node_type": "offering",
+    "title": "Public Sample Marketplace Offering",
+    "summary": "A fictional contributor proposes a public directory card for a training marketplace. The node is only used to test how answer support appears in a sidecar.",
+    "visibility_tier": "public_sample",
+    "source_scope": "sample fixture",
+    "authority_note": "This node does not speak for any Nation, community, organization, or real participant."
+  },
+  "chat_turn": {
+    "chat_turn_id": "chat:turn-public-sample-marketplace-001",
+    "question": "What can be built first from this marketplace offering node?",
+    "answer_text": "A safe first build is a static public-sample directory card with contributor-approved wording, a review-required display state, and a receipt that records what was shown. The answer should remain a build suggestion, not a claim of authority or consent.",
+    "answer_visibility": "public_sample",
+    "answer_status": "ai_assisted_draft_needs_reviewer_check"
+  },
+  "source_documents": [
+    {
+      "source_document_id": "src:graph-sidecar-spec",
+      "title": "Indigenomics AI Graph Chat Witness Sidecar",
+      "uri": "specs/indigenomics-ai-graph-chat-witness-sidecar.md",
+      "source_status": "public_repo_sample",
+      "visibility_tier": "public_sample",
+      "snippet_policy": "short_label_or_paraphrase_only",
+      "protected_content": false,
+      "freshness_status": "current_as_of_2026-05-17"
+    },
+    {
+      "source_document_id": "src:sample-open-kit-receipt",
+      "title": "Open Kit Collective Demo Sample Receipt",
+      "uri": "examples/open-kit-collective-demo/sample-receipt-v0.2.json",
+      "source_status": "public_repo_sample",
+      "visibility_tier": "public_sample",
+      "snippet_policy": "short_label_or_paraphrase_only",
+      "protected_content": false,
+      "freshness_status": "sample_fixture_not_live_evidence"
+    },
+    {
+      "source_document_id": "src:fictional-local-review-note",
+      "title": "Fictional Facilitator Review Note",
+      "uri": "sample://local-only/facilitator-review-note-001",
+      "source_status": "local_only_public_summary",
+      "visibility_tier": "private_source_public_summary",
+      "snippet_policy": "do_not_display_raw_note",
+      "protected_content": false,
+      "freshness_status": "review_required_before_real_use",
+      "public_summary": "Fictional note says public display requires contributor wording approval and visible review state."
+    }
+  ],
+  "citation_links": [
+    {
+      "citation_id": "cite:sidecar-input-output-fields",
+      "source_document_id": "src:graph-sidecar-spec",
+      "supports_answer_span": "static public-sample directory card with citation and review state",
+      "display_label": "Graph/chat sidecar spec fields",
+      "source_status": "public_repo_sample",
+      "visible_to_public": true,
+      "claim_use": "supports fixture shape, not real-world authority"
+    },
+    {
+      "citation_id": "cite:sample-receipt-pattern",
+      "source_document_id": "src:sample-open-kit-receipt",
+      "supports_answer_span": "a receipt that records what was shown",
+      "display_label": "Sample witnessing receipt pattern",
+      "source_status": "public_repo_sample",
+      "visible_to_public": true,
+      "claim_use": "supports receipt-shaped output only"
+    },
+    {
+      "citation_id": "cite:local-review-display-boundary",
+      "source_document_id": "src:fictional-local-review-note",
+      "supports_answer_span": "contributor-approved wording and review-required display state",
+      "display_label": "Local review note public summary",
+      "source_status": "local_only_public_summary",
+      "visible_to_public": true,
+      "claim_use": "flags review boundary; raw source remains hidden"
+    }
+  ],
+  "claims": [
+    {
+      "claim_id": "claim:static-card-is-safe-first-build",
+      "claim_text": "For this fictional node, a static public-sample directory card is the safest first build artifact.",
+      "claim_type": "build_recommendation",
+      "review_status": "supported_with_limits",
+      "supported_by_citations": [
+        "cite:sidecar-input-output-fields",
+        "cite:sample-receipt-pattern"
+      ],
+      "evidence_pointers": [
+        "evidence:sidecar-required-fields",
+        "evidence:receipt-pattern"
+      ],
+      "limitations": [
+        "Only applies to this fictional public-sample node.",
+        "Does not establish contributor approval for any real directory card.",
+        "Does not certify that the marketplace offering is legitimate or ready."
+      ]
+    },
+    {
+      "claim_id": "claim:citations-do-not-equal-authority",
+      "claim_text": "The cited answer remains a build suggestion and must not be presented as authority, consent, or verified truth.",
+      "claim_type": "refusal_boundary",
+      "review_status": "policy_boundary_pass",
+      "supported_by_citations": [
+        "cite:sidecar-input-output-fields",
+        "cite:local-review-display-boundary"
+      ],
+      "evidence_pointers": [
+        "evidence:review-required-state"
+      ],
+      "limitations": [
+        "A real implementation still needs reviewer signoff and display consent.",
+        "Citation presence only shows source relationship, not verification."
+      ]
+    }
+  ],
+  "evidence_pointers": [
+    {
+      "evidence_id": "evidence:sidecar-required-fields",
+      "points_to": "src:graph-sidecar-spec",
+      "description": "Spec names node, chat turn, answer text, citations, claims, evidence, witness records, review state, and AI-use receipt as sidecar inputs.",
+      "content_handling": "public path and paraphrase only",
+      "verification_limit": "Shape evidence only; does not verify real participant content."
+    },
+    {
+      "evidence_id": "evidence:receipt-pattern",
+      "points_to": "src:sample-open-kit-receipt",
+      "description": "Public-sample receipt demonstrates a witness record structure that records what happened and what review state applies.",
+      "content_handling": "public path and paraphrase only",
+      "verification_limit": "Pattern evidence only; sample receipt is not live proof."
+    },
+    {
+      "evidence_id": "evidence:review-required-state",
+      "points_to": "src:fictional-local-review-note",
+      "description": "Fictional local note marks public display as review-required before real use.",
+      "content_handling": "public summary only; raw local note not displayed",
+      "verification_limit": "Local-only source must be visible as local-only and cannot independently support authority claims."
+    }
+  ],
+  "witness_records": [
+    {
+      "witness_record_id": "witness:graph-sidecar-ai-use-001",
+      "witness_type": "ai_use_receipt",
+      "recorded_by": "did:example:creator-jam-builder",
+      "recorded_at": "2026-05-17T05:10:00-07:00",
+      "statement": "AI assistance drafted a public-sample sidecar fixture from public specs and fictional local-note metadata. No private or protected source text was included.",
+      "inputs_authorized": [
+        "specs/indigenomics-ai-graph-chat-witness-sidecar.md",
+        "examples/open-kit-collective-demo/sample-receipt-v0.2.json",
+        "fictional local-only note metadata"
+      ],
+      "outputs": [
+        "graph-chat-sidecar-fixture.json",
+        "output-report.md"
+      ],
+      "reviewer_status": "review_required_before_real_app_use"
+    },
+    {
+      "witness_record_id": "witness:graph-sidecar-reviewer-diagnostic-001",
+      "witness_type": "reviewer_diagnostic",
+      "recorded_by": "did:example:reviewer-river",
+      "recorded_at": "2026-05-17T05:18:00-07:00",
+      "result": {
+        "overall_status": "pass_for_public_sample_static_fixture",
+        "blocking_flags": [],
+        "non_blocking_flags": [
+          {
+            "flag_id": "flag:local-only-source",
+            "severity": "needs_review_before_real_use",
+            "message": "One source is local-only and must remain labeled as a public summary, not a displayed raw note."
+          }
+        ],
+        "claim_count": 2,
+        "citation_count": 3,
+        "unsupported_claim_count": 0
+      }
+    }
+  ],
+  "review_state": {
+    "state": "review_required_before_real_use",
+    "public_sample_result": "pass",
+    "visible_flags": [
+      "local_only_source",
+      "ai_assisted_draft",
+      "authority_not_claimed"
+    ],
+    "reviewer_diagnostic_id": "witness:graph-sidecar-reviewer-diagnostic-001"
+  },
+  "ai_use_receipt": {
+    "receipt_id": "receipt:ai-use-graph-sidecar-public-sample-001",
+    "schema_version": "public-sample-v0",
+    "ai_role": "draft_fixture_and_report",
+    "human_review_required": true,
+    "source_material": [
+      "public repo specs",
+      "public sample receipt",
+      "fictional local-note metadata"
+    ],
+    "source_material_excluded": [
+      "real participant notes",
+      "private graph content",
+      "protected cultural material",
+      "Nation-specific knowledge"
+    ],
+    "reviewer_status": "pass_for_static_fixture_only"
+  },
+  "acceptance_checks": [
+    {
+      "criterion": "Users can inspect which sources support an answer.",
+      "status": "pass",
+      "evidence": "Three citation links map answer spans to source documents and source statuses."
+    },
+    {
+      "criterion": "Claims are separate from citations and can have their own review status.",
+      "status": "pass",
+      "evidence": "Two claims carry independent review_status values and cite supporting evidence pointers."
+    },
+    {
+      "criterion": "Stale, missing, contested, or local-only sources are visible.",
+      "status": "pass_with_fixture_limit",
+      "evidence": "The fictional facilitator note is explicitly labeled local_only_public_summary and review_required_before_real_use."
+    },
+    {
+      "criterion": "AI-assisted answers include a receipt of source material and reviewer status.",
+      "status": "pass",
+      "evidence": "ai_use_receipt and witness:graph-sidecar-ai-use-001 record inputs, excluded inputs, outputs, and reviewer status."
+    },
+    {
+      "criterion": "Protected source content does not leak through citations or summaries.",
+      "status": "pass",
+      "evidence": "All source documents use public-sample paths, paraphrase-only labels, or local public summaries. No raw local note is exposed."
+    }
+  ],
+  "refusal_boundaries": [
+    "Do not present chat answers as authoritative because they have citations.",
+    "Do not expose private source content in snippets.",
+    "Do not auto-upgrade a citation into a verified claim.",
+    "Do not hide contested, missing, stale, or local-only evidence.",
+    "Do not infer consent, legitimacy, cultural authority, or production readiness from this public-sample fixture."
+  ],
+  "follow_up_repair_tasks": [
+    {
+      "task_id": "repair:real-sidecar-needs-redaction-policy",
+      "title": "Define redaction policy for real local graph notes before app integration.",
+      "owner_role": "reviewer"
+    },
+    {
+      "task_id": "repair:real-sidecar-needs-claim-status-vocabulary",
+      "title": "Normalize claim review statuses across claims, receipts, and chat surfaces.",
+      "owner_role": "builder"
+    }
+  ]
+}

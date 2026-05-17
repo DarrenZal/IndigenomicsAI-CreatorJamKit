@@ -9,6 +9,8 @@ last_updated: 2026-05-17
 
 Use this queue when participants ask what to jam on. Each row can become a GitHub issue, a build attempt, or a spec-improvement session.
 
+For composition experiments, start with `workshop/spec-composition-matrix.md`, use `examples/spec-experiments/` for fixture-backed tests, and then move candidate bundles into `workshop/candidate-bundle-board.md`.
+
 | Track | Starting Spec | First Useful Jam Task | Notes |
 | --- | --- | --- | --- |
 | Witnessing and claims | `specs/witness-record-interop-profile.md` | Create witness record fixtures and a validator. | Good first build for schema, CLI, or UI contributors. |
