@@ -43,6 +43,7 @@ This repo is for public, sample, or explicitly display-approved material only. D
 - `workshop/common-spec-fields.md` sketches shared fields to test across composed specs.
 - `workshop/waka-claims-engine-primitive-comparison.md` compares Austin Wade Smith / RiverComputer's Waka project, the RegenAI Claims Engine, and the Creator Jam Coordination Canoe pattern before any interop spec is written.
 - `workshop/coordination-canoe-weave-map.md` maps the central coordination field before the next spec or build artifact is selected.
+- `workshop/composition-engine-technical-pattern.md` describes the operator-facing composition engine pattern from raw garden input to candidate bundles, authority checks, coherence vectors, constraints, and receipts.
 - `workshop/tomorrow-spec-build-plan.md` gives a short next-day plan for turning the backlog into fixture-backed builds.
 - `examples/spec-experiments/` contains the first fixture-backed spec experiments.
 - `templates/speech-act-transition.md` is the category-drift checkpoint for transitions such as citation to claim, observation to attestation, dream to commitment, witness record to attribution, and receipt to public story.

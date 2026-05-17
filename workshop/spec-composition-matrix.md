@@ -80,6 +80,7 @@ These fields are the first places to test coherence:
 | --- | --- | --- | --- |
 | Claim -> witness -> receipt | Claims Evidence + Witness Profile + Receipt Wall | Adapter needed | Review required | Whether a public receipt can preserve evidence boundaries. |
 | Claims witness receipt worked reference | Claims Evidence + Witness Profile + Receipt Wall | Direct for fictional public-sample claim and bounded witness records | Approved for fixture; story candidate still requires display review | Whether required transitions, excluded source records, and display gates can travel together. See `examples/spec-experiments/claims-witness-receipt-composition/`. |
+| Commitment pool dream witness worked reference | Dream Board + Commitment Pool + Witness Profile | Adapter needed for contributor authority, capacity review, witness receipts, and withdrawal propagation | Approved for fixture with returned capacity-blocked candidate | Whether dreams, offers, promises, refusals, capacity pressure, and post-acceptance withdrawal can compose without commitment overreach. See `examples/spec-experiments/commitment-pool-dream-witness-composition/`. |
 | Offering -> pool -> flow edge | Dream Board + Commitment Pool + Flow Funding | Adapter needed | Review required | Whether commitments can become fundable without flattening refusal. |
 | Sensor -> claim -> risk packet | Sensor Pipeline + Claims Evidence + Risk Map | Adapter needed | Review required or blocked until repair | Whether sensor evidence can inform resilience without becoming actuarial. |
 | Atlas -> insights -> sidecar | Living Atlas + Insights Briefing + Graph Chat Sidecar | Direct for public sample records; adapter needed for local-only records | Approved for fixture or review required | Whether app answers can show source coherence without leaking context. |
@@ -106,6 +107,7 @@ These should be tested openly. A blocked composition is a successful discovery i
 - The main conflict pattern is category drift: claims become truth, citations become verification, maps become authority, risks become underwriting, dreams become obligations, and receipts become legitimacy.
 - Any category shift should emit a `templates/speech-act-transition.md` record.
 - The sheaf-theory intuition may be useful as a light metaphor: local sections can agree on overlaps without forcing one global object. In jam language, each spec can keep its local boundaries while overlaps are tested explicitly.
+- `workshop/composition-engine-technical-pattern.md` names the operator-facing engine loop behind this matrix: LLMs propose compositions; authority, provenance, constraints, reviewers, and receipts govern them.
 
 ## Tomorrow Output Targets
 

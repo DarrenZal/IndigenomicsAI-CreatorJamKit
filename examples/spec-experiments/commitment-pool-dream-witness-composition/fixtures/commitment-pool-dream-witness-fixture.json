@@ -1,0 +1,628 @@
+{
+  "fixture_id": "commitment-pool-dream-witness-composition-public-sample-v0.1",
+  "created_at": "2026-05-17",
+  "visibility": "public_sample",
+  "participant_safety": {
+    "content_mode": "fictional_public_sample",
+    "contains_private_or_protected_content": false,
+    "contains_cultural_or_nation_specific_content": false,
+    "raw_private_evidence_included": false,
+    "witness_boundary": "Witness records in this fixture are reviewer/software receipts only. They are not ceremonial witnessing, Knowledge Keeper witnessing, cultural authority, or protocol authority."
+  },
+  "source_specs": [
+    "specs/dream-to-fulfillment-board.md",
+    "specs/commitment-pool-route-diagnostic.md",
+    "specs/witness-record-interop-profile.md",
+    "templates/speech-act-transition.md"
+  ],
+  "composition_attempt": {
+    "attempt_id": "composition:CPDWC-001",
+    "purpose": "Test whether dream, offer, promise, refusal, and withdrawal records can compose into a commitment-pool reviewer receipt without category drift.",
+    "composition_shape": "adapter_needed",
+    "composition_disposition": "approved_for_fixture",
+    "review_date": "2026-05-17",
+    "derived_from_transitions": [
+      "transition:CPDWC-001",
+      "transition:CPDWC-002",
+      "transition:CPDWC-003",
+      "transition:CPDWC-004"
+    ]
+  },
+  "authority_policy": {
+    "dream_to_commitment_authority": "Only the original contributor can authorize a dream to become a commitment. A facilitator can record explicit contributor authorization, but cannot create the transition alone.",
+    "pool_acceptance_authority": "A fictional pool steward can approve a diagnostic pool update for fixture use only.",
+    "withdrawal_authority": "The original contributor can withdraw or narrow an accepted commitment. Pool steward review records capacity and expectation effects.",
+    "not_authorized_by": [
+      "embedding similarity",
+      "LLM extraction confidence",
+      "facilitator enthusiasm",
+      "technical reviewer alone",
+      "graph edge alone"
+    ]
+  },
+  "reviewer_objects": [
+    {
+      "reviewer_id": "contributor:CPDWC-A",
+      "reviewer_type": "other",
+      "role_description": "fictional original contributor authorizing their own dream-to-commitment transition",
+      "authority_scope": [
+        "authorize_or_refuse_transition_for_own_records",
+        "withdraw_or_narrow_own_commitment"
+      ],
+      "boundary": "Does not authorize other contributors' records or pool governance."
+    },
+    {
+      "reviewer_id": "reviewer:CPDWC-facilitator",
+      "reviewer_type": "facilitator",
+      "role_description": "fictional facilitator recording contributor authorization and boundary notes",
+      "authority_scope": [
+        "record_authorization",
+        "record_refusal",
+        "route_to_pool_steward"
+      ],
+      "boundary": "Cannot convert dreams to commitments without contributor authorization."
+    },
+    {
+      "reviewer_id": "reviewer:CPDWC-pool-steward",
+      "reviewer_type": "human_reviewer",
+      "role_description": "fictional pool steward checking capacity, time windows, and routing rules",
+      "authority_scope": [
+        "approve_fixture_pool_acceptance",
+        "return_capacity_blocked_candidate",
+        "record_withdrawal_capacity_effect"
+      ],
+      "boundary": "Does not approve real-world funding, legitimacy, or authority."
+    },
+    {
+      "reviewer_id": "reviewer:CPDWC-technical",
+      "reviewer_type": "technical_reviewer",
+      "role_description": "fictional reviewer checking field composition and boundary propagation",
+      "authority_scope": [
+        "check_schema_shape",
+        "check_boundary_fields",
+        "check_derived_from_transitions"
+      ],
+      "boundary": "Does not authorize speech-act transitions."
+    }
+  ],
+  "pool": {
+    "pool_id": "pool:cedar-care-sprint-near-full",
+    "display_name": "Cedar Care Sprint Near-Full Pool",
+    "pool_boundary": "Public-sample replay only; no real commitments are created.",
+    "capacity": {
+      "unit": "volunteer_hours",
+      "total": 12,
+      "accepted_before_fixture": 10,
+      "remaining_before_fixture": 2,
+      "reserve_not_routeable": 1,
+      "routeable_remaining_before_fixture": 1
+    },
+    "pool_rules": {
+      "accepted_declaration_types": [
+        "offer",
+        "promise",
+        "commitment"
+      ],
+      "accepted_units": [
+        "volunteer_hours"
+      ],
+      "accepted_routing_tags": [
+        "garden_access",
+        "workshop_setup",
+        "documentation_support"
+      ],
+      "accepted_share_policies": [
+        "public_sample",
+        "participant_approved_summary"
+      ],
+      "requires_explicit_time_window": true,
+      "requires_contributor_authority_for_dream_to_commitment": true,
+      "requires_witness_receipt_for_pool_acceptance": true
+    }
+  },
+  "source_records": [
+    {
+      "record_id": "dream:CPDWC-001",
+      "speech_act": "dream",
+      "summary": "A fictional contributor imagines a one-hour welcome table where participants can turn ideas into offering cards.",
+      "issuer": "contributor:CPDWC-A",
+      "visibility_tier": "public_sample",
+      "permission_state": "approved_for_review",
+      "time_window": "2026-05-25/2026-05-26",
+      "share_policy": "public_sample",
+      "do_not_compute": false,
+      "boundary": "This starts as a dream and does not become an obligation without contributor authorization."
+    },
+    {
+      "record_id": "authorization:CPDWC-001",
+      "speech_act": "participant_authorization",
+      "summary": "The fictional contributor explicitly authorizes one hour of welcome-table support for fixture use.",
+      "issuer": "contributor:CPDWC-A",
+      "visibility_tier": "public_sample",
+      "permission_state": "approved_for_review",
+      "time_window": "2026-05-25/2026-05-26",
+      "share_policy": "public_sample",
+      "do_not_compute": false,
+      "boundary": "Authorization applies only to the one-hour fixture commitment and does not authorize other records."
+    },
+    {
+      "record_id": "offer:CPDWC-002",
+      "speech_act": "offer",
+      "summary": "A fictional contributor offers three hours of documentation support.",
+      "issuer": "contributor:CPDWC-B",
+      "visibility_tier": "public_sample",
+      "permission_state": "approved_for_review",
+      "quantity": 3,
+      "unit": "volunteer_hours",
+      "time_window": "2026-05-25/2026-05-26",
+      "routing_tags": [
+        "documentation_support"
+      ],
+      "share_policy": "public_sample",
+      "do_not_compute": false,
+      "boundary": "Offer is valid as a record, but pool capacity may return it without routing."
+    },
+    {
+      "record_id": "promise:CPDWC-003",
+      "speech_act": "promise",
+      "summary": "A fictional contributor promises two hours of workshop setup already accepted before this fixture.",
+      "issuer": "contributor:CPDWC-C",
+      "visibility_tier": "public_sample",
+      "permission_state": "approved_for_review",
+      "quantity": 2,
+      "unit": "volunteer_hours",
+      "time_window": "2026-05-25/2026-05-26",
+      "routing_tags": [
+        "workshop_setup"
+      ],
+      "share_policy": "public_sample",
+      "do_not_compute": false,
+      "boundary": "This is an already-accepted fixture commitment used to test post-acceptance withdrawal."
+    },
+    {
+      "record_id": "withdrawal:CPDWC-003",
+      "speech_act": "withdrawal",
+      "summary": "The fictional contributor narrows the accepted setup commitment from two hours to one hour.",
+      "issuer": "contributor:CPDWC-C",
+      "visibility_tier": "public_sample",
+      "permission_state": "approved_for_review",
+      "time_window": "2026-05-20/2026-05-24",
+      "share_policy": "public_sample",
+      "do_not_compute": false,
+      "boundary": "Post-acceptance withdrawal affects pool capacity and any downstream expectation, but does not imply fault."
+    },
+    {
+      "record_id": "refusal:CPDWC-004",
+      "speech_act": "refusal",
+      "summary": "A fictional contributor refuses to have a care note converted into a commitment or task.",
+      "issuer": "contributor:CPDWC-D",
+      "visibility_tier": "boundary_marker_only",
+      "permission_state": "refused",
+      "share_policy": "marker_only",
+      "do_not_compute": true,
+      "boundary": "Do not infer the underlying note, route it, summarize it, or use it as pool capacity."
+    },
+    {
+      "record_id": "protected-source:CPDWC-005",
+      "speech_act": "care_note",
+      "summary": "Marker only: a protected care note exists outside this fixture's permission boundary.",
+      "issuer": "redacted",
+      "visibility_tier": "private",
+      "permission_state": "refused",
+      "share_policy": "protected_private_no_ai_no_public_route",
+      "do_not_compute": true,
+      "boundary": "Excluded from all composed outputs. No underlying content is included."
+    }
+  ],
+  "speech_act_transitions": [
+    {
+      "transition_id": "transition:CPDWC-001",
+      "from_speech_act": "dream",
+      "to_speech_act": "commitment",
+      "source_record": "dream:CPDWC-001",
+      "authority_record": "authorization:CPDWC-001",
+      "target_record": "commitment-candidate:CPDWC-001",
+      "transition_review": {
+        "composition_shape": "adapter_needed",
+        "composition_disposition": "approved_for_fixture",
+        "transition_reviewer": {
+          "reviewer_id": "contributor:CPDWC-A",
+          "reviewer_type": "other",
+          "role_description": "original contributor authorizing own dream-to-commitment transition"
+        },
+        "recorded_by": "reviewer:CPDWC-facilitator",
+        "review_date": "2026-05-17",
+        "transition_reason": "Contributor explicitly authorized a one-hour time-bounded commitment candidate from their own dream."
+      },
+      "allowed_projection": {
+        "summary": "One-hour welcome-table support commitment candidate.",
+        "allowed_fields": [
+          "issuer",
+          "quantity",
+          "unit",
+          "time_window",
+          "routing_tags",
+          "target_pool",
+          "share_policy"
+        ],
+        "excluded_fields": [
+          "any broader dream language",
+          "any obligation beyond one hour",
+          "any commitment by other contributors"
+        ]
+      },
+      "boundary_obstructions": [
+        "facilitator alone cannot authorize the transition",
+        "graph relation alone cannot authorize the transition",
+        "dream language outside the explicit one-hour scope remains a dream"
+      ],
+      "not_established": [
+        "real-world commitment",
+        "permission for other uses",
+        "authority over other records",
+        "legitimacy or certification"
+      ],
+      "ai_use_receipt": {
+        "ai_used": false,
+        "approved_for_this_use": "not_applicable",
+        "touched_material": [],
+        "excluded_material": [
+          "private or protected content",
+          "protected-source:CPDWC-005"
+        ],
+        "output_review_state": "reviewed_for_fixture"
+      },
+      "withdrawal_path": {
+        "who_can_withdraw_or_correct": "contributor:CPDWC-A",
+        "affected_surfaces": [
+          "fixtures/commitment-pool-dream-witness-fixture.json",
+          "reports/composition-report.md",
+          "reports/speech-act-transitions.md",
+          "workshop/spec-composition-matrix.md if summarized there"
+        ],
+        "action_if_withdrawn": "Mark commitment-candidate:CPDWC-001 withdrawn and restore the one hour to routeable pool capacity in any fixture summary."
+      },
+      "result": {
+        "status": "transitioned_with_limits",
+        "next_action": "Route the one-hour candidate through pool capacity review."
+      }
+    },
+    {
+      "transition_id": "transition:CPDWC-002",
+      "from_speech_act": "offer",
+      "to_speech_act": "commitment",
+      "source_record": "offer:CPDWC-002",
+      "target_record": "commitment-candidate:CPDWC-002",
+      "transition_review": {
+        "composition_shape": "adapter_needed",
+        "composition_disposition": "blocked",
+        "block_reason": "capacity_until_changes",
+        "transition_reviewer": {
+          "reviewer_id": "reviewer:CPDWC-pool-steward",
+          "reviewer_type": "human_reviewer"
+        },
+        "review_date": "2026-05-17",
+        "transition_reason": "Offer has valid fields, but the near-full pool has only one routeable hour available."
+      },
+      "allowed_projection": {
+        "summary": "Returned documentation-support offer with capacity reason.",
+        "allowed_fields": [
+          "issuer",
+          "quantity",
+          "unit",
+          "time_window",
+          "routing_tags",
+          "return_reason"
+        ],
+        "excluded_fields": [
+          "pool acceptance",
+          "capacity update",
+          "funding or priority ranking"
+        ]
+      },
+      "boundary_obstructions": [
+        "candidate quantity exceeds routeable remaining capacity",
+        "pool acceptance would silently over-allocate the fixture pool"
+      ],
+      "not_established": [
+        "bad offer",
+        "rejection of contributor",
+        "funding priority",
+        "future ineligibility"
+      ],
+      "ai_use_receipt": {
+        "ai_used": false,
+        "approved_for_this_use": "not_applicable",
+        "touched_material": [],
+        "excluded_material": [
+          "private or protected content",
+          "protected-source:CPDWC-005"
+        ],
+        "output_review_state": "reviewed_for_fixture"
+      },
+      "withdrawal_path": {
+        "who_can_withdraw_or_correct": "contributor:CPDWC-B or reviewer:CPDWC-pool-steward",
+        "affected_surfaces": [
+          "capacity-return summary",
+          "composition report",
+          "future route queue"
+        ],
+        "action_if_withdrawn": "Remove the offer from the returned queue; do not infer replacement capacity."
+      },
+      "result": {
+        "status": "blocked",
+        "next_action": "Return with repair path: wait for capacity, narrow quantity, or route to another pool."
+      }
+    },
+    {
+      "transition_id": "transition:CPDWC-003",
+      "from_speech_act": "promise",
+      "to_speech_act": "commitment",
+      "source_record": "promise:CPDWC-003",
+      "target_record": "accepted-commitment:CPDWC-003",
+      "transition_review": {
+        "composition_shape": "direct",
+        "composition_disposition": "approved_for_fixture",
+        "transition_reviewer": {
+          "reviewer_id": "reviewer:CPDWC-pool-steward",
+          "reviewer_type": "human_reviewer"
+        },
+        "review_date": "2026-05-17",
+        "transition_reason": "Already-accepted fictional setup promise is included to test post-acceptance withdrawal propagation."
+      },
+      "allowed_projection": {
+        "summary": "Accepted two-hour workshop setup commitment before withdrawal.",
+        "allowed_fields": [
+          "issuer",
+          "quantity",
+          "unit",
+          "time_window",
+          "routing_tags",
+          "accepted_state"
+        ],
+        "excluded_fields": [
+          "public praise",
+          "legitimacy claim",
+          "ceremonial witness language"
+        ]
+      },
+      "boundary_obstructions": [
+        "accepted commitment remains withdrawable or narrowable by contributor"
+      ],
+      "not_established": [
+        "irreversible obligation",
+        "certification",
+        "public endorsement"
+      ],
+      "ai_use_receipt": {
+        "ai_used": false,
+        "approved_for_this_use": "not_applicable",
+        "touched_material": [],
+        "excluded_material": [
+          "private or protected content",
+          "protected-source:CPDWC-005"
+        ],
+        "output_review_state": "reviewed_for_fixture"
+      },
+      "withdrawal_path": {
+        "who_can_withdraw_or_correct": "contributor:CPDWC-C",
+        "affected_surfaces": [
+          "pool capacity summary",
+          "accepted commitment list",
+          "witness receipt rollup",
+          "any downstream flow-funding edge if later created"
+        ],
+        "action_if_withdrawn": "Apply transition:CPDWC-004 and record capacity effect without treating withdrawal as fault."
+      },
+      "result": {
+        "status": "transitioned",
+        "next_action": "Apply post-acceptance withdrawal record."
+      }
+    },
+    {
+      "transition_id": "transition:CPDWC-004",
+      "from_speech_act": "commitment",
+      "to_speech_act": "other",
+      "to_speech_act_label": "withdrawn_or_narrowed_commitment",
+      "source_record": "accepted-commitment:CPDWC-003",
+      "authority_record": "withdrawal:CPDWC-003",
+      "target_record": "accepted-commitment:CPDWC-003-narrowed",
+      "transition_review": {
+        "composition_shape": "adapter_needed",
+        "composition_disposition": "approved_for_fixture",
+        "transition_reviewer": {
+          "reviewer_id": "contributor:CPDWC-C",
+          "reviewer_type": "other",
+          "role_description": "original contributor narrowing an already-accepted fixture commitment"
+        },
+        "recorded_by": "reviewer:CPDWC-pool-steward",
+        "review_date": "2026-05-17",
+        "transition_reason": "Contributor narrows an accepted commitment from two hours to one hour before the time window begins."
+      },
+      "allowed_projection": {
+        "summary": "Accepted setup commitment narrowed from two hours to one hour.",
+        "allowed_fields": [
+          "issuer",
+          "previous_quantity",
+          "new_quantity",
+          "unit",
+          "time_window",
+          "capacity_delta",
+          "affected_surfaces"
+        ],
+        "excluded_fields": [
+          "fault language",
+          "public blame",
+          "ranking or reliability score"
+        ]
+      },
+      "boundary_obstructions": [
+        "withdrawal changes pool capacity and downstream expectations",
+        "withdrawal must not be interpreted as a character or legitimacy judgment"
+      ],
+      "not_established": [
+        "fault",
+        "future ineligibility",
+        "public display approval",
+        "permission for scoring contributor reliability"
+      ],
+      "ai_use_receipt": {
+        "ai_used": false,
+        "approved_for_this_use": "not_applicable",
+        "touched_material": [],
+        "excluded_material": [
+          "private or protected content",
+          "protected-source:CPDWC-005"
+        ],
+        "output_review_state": "reviewed_for_fixture"
+      },
+      "withdrawal_path": {
+        "who_can_withdraw_or_correct": "contributor:CPDWC-C or reviewer:CPDWC-pool-steward for capacity arithmetic",
+        "affected_surfaces": [
+          "pool capacity summary",
+          "witness receipt rollup",
+          "composition report"
+        ],
+        "action_if_withdrawn": "If this withdrawal record is withdrawn, restore the previous accepted quantity only after contributor confirmation."
+      },
+      "result": {
+        "status": "transitioned_with_limits",
+        "next_action": "Update fixture capacity summary and receipt rollup."
+      }
+    }
+  ],
+  "excluded_records": [
+    {
+      "record_id": "protected-source:CPDWC-005",
+      "excluded_reason": [
+        "permission_state refused",
+        "visibility_tier private",
+        "do_not_compute true",
+        "share_policy protected_private_no_ai_no_public_route",
+        "standing refusal applies"
+      ],
+      "allowed_reference": "Marker only: a protected care note exists outside this fixture's permission boundary.",
+      "prohibited_actions": [
+        "summarize underlying content",
+        "infer commitment",
+        "route into pool",
+        "embed or index",
+        "train on",
+        "display"
+      ]
+    },
+    {
+      "record_id": "refusal:CPDWC-004",
+      "excluded_reason": [
+        "active refusal",
+        "do_not_compute true"
+      ],
+      "allowed_reference": "Refusal boundary exists and is honored.",
+      "prohibited_actions": [
+        "convert refusal to backlog item",
+        "search for missing details",
+        "treat refusal as capacity"
+      ]
+    }
+  ],
+  "composed_outputs": [
+    {
+      "output_id": "commitment-pool-composition:CPDWC-001",
+      "output_type": "commitment_pool_reviewer_receipt",
+      "composition_shape": "adapter_needed",
+      "composition_disposition": "approved_for_fixture",
+      "derived_from_transitions": [
+        "transition:CPDWC-001",
+        "transition:CPDWC-002",
+        "transition:CPDWC-003",
+        "transition:CPDWC-004"
+      ],
+      "included_records": [
+        "dream:CPDWC-001",
+        "authorization:CPDWC-001",
+        "offer:CPDWC-002",
+        "promise:CPDWC-003",
+        "withdrawal:CPDWC-003"
+      ],
+      "excluded_records": [
+        "refusal:CPDWC-004",
+        "protected-source:CPDWC-005"
+      ],
+      "capacity_effects": {
+        "pool_id": "pool:cedar-care-sprint-near-full",
+        "unit": "volunteer_hours",
+        "routeable_remaining_before_fixture": 1,
+        "accepted_from_transition_CPDWC_001": 1,
+        "returned_from_transition_CPDWC_002": 3,
+        "capacity_restored_from_transition_CPDWC_004": 1,
+        "routeable_remaining_after_fixture": 1
+      },
+      "witness_receipts": [
+        {
+          "witness_id": "witness:CPDWC-001",
+          "witness_type": "human_review",
+          "reviewer_id": "reviewer:CPDWC-pool-steward",
+          "statement": "A fictional pool steward reviewed the one-hour contributor-authorized commitment candidate and capacity effect for fixture use only.",
+          "not_established": [
+            "real-world commitment",
+            "funding eligibility",
+            "cultural authority",
+            "ceremonial witnessing",
+            "legitimacy"
+          ]
+        },
+        {
+          "witness_id": "witness:CPDWC-002",
+          "witness_type": "facilitator_note",
+          "reviewer_id": "reviewer:CPDWC-facilitator",
+          "statement": "A fictional facilitator recorded that contributor authorization was required and present for transition:CPDWC-001.",
+          "not_established": [
+            "facilitator authority to create commitments",
+            "ceremonial witnessing",
+            "permission for other uses"
+          ]
+        }
+      ]
+    }
+  ],
+  "coherence_vector": {
+    "logical_coherence": {
+      "state": "holds_for_fixture",
+      "note": "Capacity arithmetic is explicit and no accepted record exceeds routeable capacity."
+    },
+    "epistemic_coherence": {
+      "state": "holds_for_fixture",
+      "note": "Every composed output cites source records and transition IDs."
+    },
+    "normative_coherence": {
+      "state": "holds_with_limits",
+      "note": "Commitments enter only through contributor authority; returned offers are not treated as lower value."
+    },
+    "relational_cultural_coherence": {
+      "state": "holds_for_fixture",
+      "note": "Witness language is bounded to reviewer/software receipts and refusal markers are preserved."
+    },
+    "temporal_coherence": {
+      "state": "holds_with_limits",
+      "note": "Time windows are explicit; post-acceptance withdrawal changes capacity before the commitment window begins."
+    }
+  },
+  "not_established": [
+    "real-world commitment",
+    "funding eligibility",
+    "authority",
+    "legitimacy",
+    "certification",
+    "cultural fit",
+    "ceremonial witnessing",
+    "permission for other uses"
+  ],
+  "not_run": [
+    "live pool update",
+    "real commitment routing",
+    "payment, grant, or allocation execution",
+    "participant or community review workflow",
+    "public receipt wall export",
+    "AI processing of private or protected material"
+  ]
+}

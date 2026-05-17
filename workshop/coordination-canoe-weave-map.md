@@ -60,7 +60,7 @@ The strongest current insight is that composition is not only a technical fit pr
 | Maturity | Primitives | Current Evidence | Next Discipline |
 | --- | --- | --- | --- |
 | Well-defined in this kit | Offering quick card, spec fragment, candidate bundle, selected bundle, build attempt, review state, receipt, witness rollup, refusal boundary, visibility, intended use. | Templates, Open Kit flow, composition v0 example, common fields. | Keep participant-facing path simple. |
-| Fixture-backed | Claims evidence -> witness record -> receipt/story candidate, blocked commitment pool -> untracked allocation, display review walkthrough. | `examples/spec-experiments/` and `templates/display-review-checklist.md`. | Use fixtures as teaching examples, not proof of real-world readiness. |
+| Fixture-backed | Claims evidence -> witness record -> receipt/story candidate, commitment pool dream/witness composition, blocked commitment pool -> untracked allocation, display review walkthrough. | `examples/spec-experiments/` and `templates/display-review-checklist.md`. | Use fixtures as teaching examples, not proof of real-world readiness. |
 | Spec-backed but not fully composed | Commitment pool, flow funding frontier, dream-to-fulfillment board, sensors, graph/chat sidecar, bioregional insights, risk/insurance, app gateway. | Draft specs in `specs/` and matrix rows. | Pick narrow fixtures that preserve boundaries. |
 | Adjacent implementation surfaces | RegenAI Claims Engine, KOI/session and meeting-note processing, Indigenomics AI app, sensor pipelines. | Local implementation notes and working pipelines outside the kit. | Compose with reviewed projections instead of rebuilding infrastructure here. |
 | External or posture-pending | Austin Wade Smith / RiverComputer Waka project. | Primitive comparison note and Austin posture question. | Wait for Austin's posture before writing an interop spec. |
@@ -144,7 +144,7 @@ Do not treat this list as today's build order. Pick the next artifact after revi
 
 | Candidate | Why It Matters | Smallest Useful Artifact |
 | --- | --- | --- |
-| Commitment Pool + Dream/Fulfillment + Witness mini-fixture | Tests whether offers, promises, refusals, and witnessed commitments compose before adding transcript inference. | One fictional board item set, one route diagnostic, one speech-act transition, one blocked or approved-for-fixture receipt. |
+| Commitment Pool + Dream/Fulfillment + Witness mini-fixture | Tests whether offers, promises, refusals, and witnessed commitments compose before adding transcript inference. | Added as `examples/spec-experiments/commitment-pool-dream-witness-composition/`; use review feedback before extending it. |
 | Conversation-to-records hazard map | Names the exact risk modes before a transcript-to-claims or transcript-to-commitments spec. | Review-only hazard map with examples of what must not be inferred. |
 | Sensors + Claims + Risk boundary stress test | Exercises observation, evidence, claim, risk, and non-underwriting boundaries. | Three fictional observation packets, one claim candidate, one risk note with obstruction markers. |
 | App Gateway + Graph/Chat Sidecar fixture | Connects directly to the Indigenomics AI web app and AI-use receipt discipline. | One participant gateway sample, one sidecar card, one AI-use receipt, one display review state. |
