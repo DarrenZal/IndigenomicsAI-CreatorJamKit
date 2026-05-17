@@ -9,15 +9,34 @@ last_updated: 2026-05-17
 
 This matrix treats each spec as a small interface. The jam experiment is to discover which interfaces actually line up, which need a reviewer or adapter, which overlap too much, and which should not be composed.
 
-## Composition States
+## Composition Shape And Disposition
 
-| State | Meaning | Jam Decision |
+Use two fields instead of one when judging a bundle:
+
+- `composition_shape` describes technical fit: do the records, fields, or outputs line up?
+- `composition_disposition` describes review verdict: should the bundle proceed, pause, stay separate, or be blocked?
+
+This prevents a common mistake: something can have partial technical overlap and still be non-composable because of consent, visibility, authority, or purpose.
+
+## Composition Shapes
+
+| Shape | Meaning | Jam Decision |
 | --- | --- | --- |
-| Direct | Output fields from one spec can become input fields for another with no sensitive change. | Safe to prototype with sample/public data. |
-| Mediated | Specs can compose only through a reviewer, witness record, consent decision, or adapter. | Prototype the adapter or review step. |
-| Overlap | Specs cover the same behavior or language. | Decide whether to merge, keep separate, or name the difference. |
-| Blocked | Composition would violate consent, visibility, cultural authority, governance, or intended-use boundaries. | Record non-composability as a valid result. |
+| Direct | Output fields from one spec can become input fields for another with no sensitive change. | Safe to prototype with sample/public data if disposition also allows. |
+| Adapter needed | Specs can compose only through a reviewer, witness record, consent decision, field adapter, or projection. | Prototype the adapter or review step. |
+| Partial overlap | Specs share some fields or concepts but serve different purposes. | Build only the connecting piece; leave the rest separate. |
+| No shared interface | Specs do not share enough structure for a useful handoff. | Record the gap and do not force a bundle. |
 | Unknown | More context is needed. | Write the missing question as the next spec improvement. |
+
+## Composition Dispositions
+
+| Disposition | Meaning | Jam Decision |
+| --- | --- | --- |
+| Approved for fixture | Safe to test with fictional or public-sample data. | Create fixture and build attempt instructions. |
+| Review required | Technical shape fits, but consent, authority, visibility, evidence, or intended use needs review. | Add reviewer step before display or real use. |
+| Blocked until repair | Missing fields, stale evidence, unclear permission, or unresolved dependencies block the bundle for now. | Name the repair path and do not route around the gap. |
+| Non-composable | The bundle conflicts in purpose, consent, authority, or refusal boundary. | Keep separate and record why. |
+| Preserve separate | The material can only be represented as present, protected, or review-required. | Do not simulate protected content. |
 
 ## Shared Interface Fields
 
@@ -57,14 +76,15 @@ These fields are the first places to test coherence:
 
 ## High-Value Composition Tests
 
-| Test | Specs | Expected Result | What We Learn |
+| Test | Specs | Expected Shape | Expected Disposition | What We Learn |
 | --- | --- | --- | --- |
-| Claim -> witness -> receipt | Claims Evidence + Witness Profile + Receipt Wall | Mediated composition through reviewer and display approval. | Whether a public receipt can preserve evidence boundaries. |
-| Offering -> pool -> flow edge | Dream Board + Commitment Pool + Flow Funding | Mediated composition through route diagnostics and pool rules. | Whether commitments can become fundable without flattening refusal. |
-| Sensor -> claim -> risk packet | Sensor Pipeline + Claims Evidence + Risk Map | Mediated composition through evidence review and non-underwriting boundary. | Whether sensor evidence can inform resilience without becoming actuarial. |
-| Atlas -> insights -> sidecar | Living Atlas + Insights Briefing + Graph Chat Sidecar | Direct for public sample records; mediated for local-only records. | Whether app answers can show source coherence without leaking context. |
-| Gateway -> composer -> selected build | Participant Gateway + Spec Composer + Build Attempt Templates | Direct if consent and AI-use preferences are explicit. | Whether participant entry can flow into spec-driven builds. |
-| Allocation -> receipt wall | Untracked Allocation + Receipt Wall | Often blocked or summary-only. | Whether deliberate non-legibility can remain a valid outcome. |
+| Claim -> witness -> receipt | Claims Evidence + Witness Profile + Receipt Wall | Adapter needed | Review required | Whether a public receipt can preserve evidence boundaries. |
+| Offering -> pool -> flow edge | Dream Board + Commitment Pool + Flow Funding | Adapter needed | Review required | Whether commitments can become fundable without flattening refusal. |
+| Sensor -> claim -> risk packet | Sensor Pipeline + Claims Evidence + Risk Map | Adapter needed | Review required or blocked until repair | Whether sensor evidence can inform resilience without becoming actuarial. |
+| Atlas -> insights -> sidecar | Living Atlas + Insights Briefing + Graph Chat Sidecar | Direct for public sample records; adapter needed for local-only records | Approved for fixture or review required | Whether app answers can show source coherence without leaking context. |
+| Gateway -> composer -> selected build | Participant Gateway + Spec Composer + Build Attempt Templates | Direct if consent and AI-use preferences are explicit | Approved for fixture or review required | Whether participant entry can flow into spec-driven builds. |
+| Commitment pool -> untracked allocation | Commitment Pool Route + Untracked Allocation | Partial overlap | Non-composable except summary-only receipt | Whether deliberate non-legibility can remain a valid outcome. |
+| Allocation -> receipt wall | Untracked Allocation + Receipt Wall | Adapter needed | Often preserve separate or summary-only | Whether deliberate non-legibility can remain a valid outcome. |
 
 ## Known Non-Composability Candidates
 
@@ -75,7 +95,7 @@ These should be tested openly. A blocked composition is a successful discovery i
 | Risk Map + Flow Funding | Risk signals could create investment or insurance implications beyond the reviewed use. | Reviewer-approved resilience action shortlist with non-underwriting language. |
 | Receipt Wall + Private Learning Ledger | Public story cards can expose private learning context. | Public projection record and withdrawal propagation check. |
 | Bioregional Mapping + Graph Chat Sidecar | App citations can leak sensitive layer names or locations. | Citation redaction plus local-only sidecar state. |
-| Commitment Pool + Untracked Allocation | Route diagnostics want structured fields; untracked allocation preserves non-legibility. | Summary-only allocation receipt with no routing. |
+| Commitment Pool + Untracked Allocation | Route diagnostics want structured fields; untracked allocation preserves non-legibility. | Summary-only allocation receipt with no routing. See `examples/spec-experiments/commitment-pool-untracked-allocation-blocked/`. |
 | Dream Board + Commitment Pool | Dreams and care can be pressured into commitments. | Explicit transition state: not-a-commitment. |
 
 ## Coherence Hypotheses
@@ -83,6 +103,7 @@ These should be tested openly. A blocked composition is a successful discovery i
 - Coherence is strongest where specs share boundary fields: `visibility_tier`, `review_state`, `evidence_pointers`, `witness_records`, and `receipt_policy`.
 - The main adapter pattern is not technical. It is review: consent review, steward review, display approval, AI-use approval, or intended-use review.
 - The main conflict pattern is category drift: claims become truth, citations become verification, maps become authority, risks become underwriting, dreams become obligations, and receipts become legitimacy.
+- Any category shift should emit a `templates/speech-act-transition.md` record.
 - The sheaf-theory intuition may be useful as a light metaphor: local sections can agree on overlaps without forcing one global object. In jam language, each spec can keep its local boundaries while overlaps are tested explicitly.
 
 ## Tomorrow Output Targets

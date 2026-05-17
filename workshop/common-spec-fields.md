@@ -65,7 +65,7 @@ These fields are candidates for shared schema fragments across the Creator Jam s
 - If any source has `do_not_compute: true`, the composed output must exclude that source from AI, routing, indexing, and summarization.
 - If a record lacks `intended_use`, do not reuse it for public display, risk, funding, or learning summaries.
 - If evidence is private, the composed output may cite a redacted pointer but must not reveal the protected content.
-- If a composition changes the speech act, such as dream to commitment or citation to verified claim, it needs an explicit transition record.
+- If a composition changes the speech act, such as dream to commitment or citation to verified claim, it needs an explicit transition record using `templates/speech-act-transition.md`.
 
 ## Tomorrow Question
 

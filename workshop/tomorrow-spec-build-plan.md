@@ -40,17 +40,26 @@ Starter fixture packets live in `examples/spec-experiments/`.
 
 ## Suggested First Bundle
 
-Start with a three-spec composition:
+Start with a fast warmup three-spec composition:
 
 1. `specs/claims-evidence-coherence-report.md`
 2. `specs/witness-record-interop-profile.md`
 3. `specs/receipt-wall-story-gallery.md`
 
-Reason: this bundle is small, close to the current prototype, and tests a core pattern used by the rest of the system: evidence -> review -> witness -> public-safe receipt.
+Reason: this bundle is small, close to the current prototype, and gives participants a passing reference example: evidence -> review -> witness -> public-safe receipt.
+
+## Primary Sunday Deliverable
+
+Then build the stronger lab artifact:
+
+1. `templates/speech-act-transition.md`
+2. `examples/spec-experiments/commitment-pool-untracked-allocation-blocked/`
+
+Reason: the transition template protects against category drift across all bundles, and the blocked experiment shows that non-composability is a rigorous output rather than a failure.
 
 ## Suggested Second Bundle
 
-Then test a bioregional/resilience bundle:
+After the transition template exists, test a bioregional/resilience bundle:
 
 1. `specs/sensor-to-receipt-pipeline.md`
 2. `specs/claims-evidence-coherence-report.md`

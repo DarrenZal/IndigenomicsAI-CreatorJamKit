@@ -1,0 +1,122 @@
+{
+  "fixture_id": "commitment-pool-untracked-allocation-blocked-public-sample-v0.1",
+  "created_at": "2026-05-17",
+  "visibility": "public_sample",
+  "participant_safety": "Fictional public-sample content only. No real allocation, funder, recipient, protected content, financial record, or authority-bound material is included.",
+  "source_specs": [
+    "specs/commitment-pool-route-diagnostic.md",
+    "specs/untracked-allocation-ledger.md",
+    "templates/speech-act-transition.md"
+  ],
+  "composition_attempt": {
+    "attempt_id": "composition:commitment-pool-untracked-allocation-blocked-001",
+    "purpose": "Test whether an untracked allocation can become a routeable commitment pool record.",
+    "composition_shape": "partial_overlap",
+    "composition_disposition": "non_composable",
+    "reviewer": "Public Sample Composition Reviewer",
+    "review_date": "2026-05-17"
+  },
+  "commitment_pool_context": {
+    "pool_id": "pool:cedar-care-sprint",
+    "pool_unit": "volunteer_hours",
+    "remaining_capacity": 8,
+    "required_route_fields": [
+      "candidate_id",
+      "declaration_type",
+      "issuer",
+      "beneficiary",
+      "quantity",
+      "unit",
+      "timeframe",
+      "routing_tags",
+      "bioregion_uri",
+      "share_policy",
+      "evidence_pointers"
+    ],
+    "route_boundary": "Diagnostic-only public sample pool. No real commitment, money, authority, or allocation is routed."
+  },
+  "untracked_allocation_record": {
+    "allocation_id": "allocation:care-introduction-001",
+    "allocation_type": "introduction",
+    "public_summary": "A fictional contributor made a private introduction that may support a future care sprint.",
+    "private_notes_pointer": "redacted://private-steward-note/not-in-fixture",
+    "recipient_visibility": "hidden",
+    "funder_visibility": "not_applicable",
+    "amount_visibility": "not_tracked",
+    "reviewer": "Public Sample Allocation Reviewer",
+    "receipt_policy": "private_receipt",
+    "not_tracked_reason": "The introduction was relational support. Recording identities, amount, or routing value would create surveillance pressure and change the nature of the gift.",
+    "permission_state": "approved_for_private_receipt",
+    "do_not_route": true,
+    "do_not_compute": true
+  },
+  "speech_act_transition": {
+    "transition_id": "transition:allocation-to-route-diagnostic-blocked-001",
+    "from_speech_act": "allocation_record",
+    "to_speech_act": "route_diagnostic",
+    "transition_reason": "A facilitator asked whether the private introduction could count as a commitment pool contribution.",
+    "composition_shape": "partial_overlap",
+    "composition_disposition": "non_composable",
+    "boundary_obstructions": [
+      "recipient hidden",
+      "amount not tracked",
+      "private notes pointer redacted",
+      "private receipt policy",
+      "do_not_route true",
+      "do_not_compute true",
+      "no consent to convert relational support into a pool commitment"
+    ],
+    "not_established": [
+      "routeable commitment",
+      "fundable edge",
+      "pool capacity update",
+      "financial value",
+      "participant consent for public display",
+      "legitimacy or authority"
+    ],
+    "allowed_projection": {
+      "summary": "Support was offered in a way that should remain private and not routable.",
+      "allowed_fields": [
+        "allocation_id",
+        "allocation_type",
+        "public_summary",
+        "receipt_policy",
+        "not_tracked_reason",
+        "composition_disposition"
+      ],
+      "excluded_fields": [
+        "recipient identity",
+        "private notes",
+        "amount",
+        "route quantity",
+        "beneficiary",
+        "routing value"
+      ]
+    },
+    "withdrawal_path": {
+      "who_can_withdraw_or_correct": "allocation reviewer or original contributor",
+      "affected_surfaces": [
+        "blocked-composition-receipt.md",
+        "workshop/spec-composition-matrix.md if this result is summarized there"
+      ],
+      "action_if_withdrawn": "Remove public summary and preserve only a private withdrawn-marker if approved."
+    },
+    "result": {
+      "status": "blocked",
+      "next_action": "Preserve as summary-only receipt. Do not route, value, infer, or search private notes."
+    }
+  },
+  "blocked_route_diagnostic": {
+    "route_status": "not_computable",
+    "diagnostic_codes": [
+      "not_tracked_by_design",
+      "share_policy_blocks_route",
+      "do_not_route",
+      "do_not_compute",
+      "missing_route_quantity_by_design",
+      "recipient_hidden",
+      "private_receipt_policy"
+    ],
+    "repair_path": "No repair for direct routing. If the contributor later wants to make a separate public offer or commitment, create a new record with explicit consent and do not backfill from this private allocation."
+  }
+}

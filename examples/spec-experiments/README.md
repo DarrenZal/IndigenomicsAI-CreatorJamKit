@@ -15,6 +15,7 @@ These examples turn draft specs into fixture-backed experiments. They are not pr
 | --- | --- | --- |
 | [Claims Evidence Coherence](claims-evidence-coherence/) | `specs/claims-evidence-coherence-report.md` | Five fictional claims, six evidence pointers, status diagnostics, and a static report. |
 | [Commitment Pool Route](commitment-pool-route/) | `specs/commitment-pool-route-diagnostic.md` | Three candidate declarations, two pools, route readiness, capacity block, and share-policy block. |
+| [Commitment Pool + Untracked Allocation Blocked](commitment-pool-untracked-allocation-blocked/) | `specs/commitment-pool-route-diagnostic.md` + `specs/untracked-allocation-ledger.md` | A worked non-composable result where non-legibility must be preserved. |
 | [Graph Chat Witness Sidecar](graph-chat-witness-sidecar/) | `specs/indigenomics-ai-graph-chat-witness-sidecar.md` | One graph node, one chat answer, citations, claims, review state, and AI-use receipt. |
 | [Sensor To Receipt](sensor-to-receipt/) | `specs/sensor-to-receipt-pipeline.md` | Three observation packets and public-safe witness receipts. |
 
@@ -23,7 +24,7 @@ These examples turn draft specs into fixture-backed experiments. They are not pr
 1. Pick one experiment packet.
 2. Read the source spec.
 3. Open the fixture JSON and output report.
-4. Mark the experiment in `workshop/spec-composition-matrix.md` as direct, mediated, overlap, blocked, or unknown.
+4. Mark the experiment in `workshop/spec-composition-matrix.md` with `composition_shape` and `composition_disposition`.
 5. If the experiment composes with another spec, move it to `workshop/candidate-bundle-board.md`.
 
 ## Guardrails
