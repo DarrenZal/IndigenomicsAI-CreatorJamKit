@@ -22,6 +22,7 @@ This repo is for public, sample, or explicitly display-approved material only. D
 4. If several offerings fit together, use `templates/bundle.md`.
 5. For a selected bundle, use `templates/build-attempt-instructions.md`.
 6. After a build attempt, use `templates/reviewer-check.md` and `templates/witness-rollup.md`.
+7. Before a story, receipt wall item, slide, or other display surface is shown, use `templates/display-review-checklist.md`.
 
 ## Seed Examples
 
@@ -44,6 +45,7 @@ This repo is for public, sample, or explicitly display-approved material only. D
 - `workshop/tomorrow-spec-build-plan.md` gives a short next-day plan for turning the backlog into fixture-backed builds.
 - `examples/spec-experiments/` contains the first fixture-backed spec experiments.
 - `templates/speech-act-transition.md` is the category-drift checkpoint for transitions such as citation to claim, observation to attestation, dream to commitment, witness record to attribution, and receipt to public story.
+- `templates/display-review-checklist.md` is the review gate before a receipt, witness rollup, story card, gallery item, or public readout moves into display.
 - `docs/glossary.md` names `Coordination Canoe` as the provisional local working metaphor and reserves `Waka` for Austin Wade Smith / RiverComputer's project.
 
 ## Boundaries

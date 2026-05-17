@@ -741,5 +741,126 @@
         }
       }
     ]
-  }
+  },
+  "display_reviews": [
+    {
+      "display_review_id": "display-review:CWRC-story-card-001",
+      "candidate_id": "story-candidate:CWRC-001",
+      "candidate_path": "examples/spec-experiments/claims-witness-receipt-composition/reports/story-card-candidate.md",
+      "review_date": "2026-05-17",
+      "display_reviewer": {
+        "reviewer_id": "reviewer:CWRC-display-reviewer",
+        "reviewer_type": "display_reviewer",
+        "reviewer_role": "fictional role for deciding whether a candidate may move toward display"
+      },
+      "requested_display_use": {
+        "surface": "repo_example",
+        "audience": "invited Creator Jam kit readers and reviewers",
+        "duration": "until withdrawn or superseded",
+        "public_display_requested": false
+      },
+      "source_state": {
+        "visibility_tier": "do_not_display",
+        "display_approval": "pending",
+        "display_reviewer_role": "display_reviewer",
+        "do_not_show_externally": true,
+        "derived_from_transitions": [
+          "transition:CWRC-002"
+        ],
+        "excluded_source_records": [
+          "evidence:CWRC-003"
+        ]
+      },
+      "decision": {
+        "status": "approved_for_fixture_only",
+        "external_display_approval": "not_granted",
+        "reason": "The candidate can be shown as an internal public-sample fixture example because it keeps display gates visible, uses fictional role-only reviewer objects, names its source transition, preserves excluded evidence, and states what it does not establish.",
+        "required_repairs": []
+      },
+      "check_results": [
+        {
+          "check_id": "DR1",
+          "result": "satisfied",
+          "evidence": "Requested use is internal fixture readout only."
+        },
+        {
+          "check_id": "DR2",
+          "result": "satisfied",
+          "evidence": "Candidate has display_reviewer_role and fixture has a display_reviewer object."
+        },
+        {
+          "check_id": "DR3",
+          "result": "satisfied",
+          "evidence": "Candidate keeps display_approval pending and do_not_show_externally true."
+        },
+        {
+          "check_id": "DR4",
+          "result": "satisfied",
+          "evidence": "Candidate derives from transition:CWRC-002."
+        },
+        {
+          "check_id": "DR5",
+          "result": "satisfied",
+          "evidence": "Not-established markers survive fixture projection."
+        },
+        {
+          "check_id": "DR6",
+          "result": "satisfied",
+          "evidence": "evidence:CWRC-003 remains marker-only and excluded."
+        },
+        {
+          "check_id": "DR7",
+          "result": "satisfied",
+          "evidence": "Claim wording and evidence visibility remain separate."
+        },
+        {
+          "check_id": "DR8",
+          "result": "satisfied",
+          "evidence": "Witness language is limited to software/reviewer receipt."
+        },
+        {
+          "check_id": "DR9",
+          "result": "satisfied",
+          "evidence": "AI-use receipt names touched and excluded material."
+        },
+        {
+          "check_id": "DR10",
+          "result": "satisfied",
+          "evidence": "Withdrawal path names reviewer roles and affected surfaces."
+        },
+        {
+          "check_id": "DR11",
+          "result": "satisfied",
+          "evidence": "Fixture story text stays narrow and avoids authority, impact, eligibility, underwriting, certification, and reuse claims."
+        },
+        {
+          "check_id": "DR12",
+          "result": "satisfied",
+          "evidence": "Review records approved_for_fixture_only and external display approval remains closed."
+        }
+      ],
+      "not_established": [
+        "authority",
+        "legitimacy",
+        "certification",
+        "cultural fit",
+        "readiness for reuse",
+        "permission for other uses",
+        "approval for public or external display"
+      ],
+      "withdrawal_path": {
+        "who_can_withdraw_or_correct": [
+          "reviewer:CWRC-display-reviewer",
+          "reviewer:CWRC-sample-steward"
+        ],
+        "affected_surfaces": [
+          "story-card-display-review.md",
+          "fixture readouts",
+          "composition report",
+          "derived summaries"
+        ],
+        "action_if_withdrawn": "Remove this review from fixture readouts, mark dependent summaries withdrawn, and keep story-card-candidate.md closed to external display."
+      }
+    }
+  ]
 }

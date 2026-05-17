@@ -8,9 +8,10 @@ All records are fictional public-sample data. They are meant to test whether fie
 
 ## Files
 
-- `fixtures/claims-witness-receipt-fixture.json` contains the source records, reviewer objects, boundary checks, speech-act transition records, composed output, display gate, withdrawal paths, and AI-use receipts.
+- `fixtures/claims-witness-receipt-fixture.json` contains the source records, reviewer objects, boundary checks, speech-act transition records, composed output, display gate, display review, withdrawal paths, and AI-use receipts.
 - `reports/composition-report.md` is the human-readable worked composition reference for the fixture.
 - `reports/story-card-candidate.md` is an internal display-review candidate only. It is gated with `display_approval: pending` and `do_not_show_externally: true`.
+- `reports/story-card-display-review.md` runs the candidate through `templates/display-review-checklist.md` and approves fixture-only use while keeping external display closed.
 
 ## Participant Safety
 
@@ -27,6 +28,7 @@ All records are fictional public-sample data. They are meant to test whether fie
   - `evidence -> claim`
   - `witness_record -> story_candidate`
 - The story candidate includes `derived_from_transitions` and cannot be shown externally while `display_approval` is `pending`.
+- The display review can approve fixture-only use without approving external display.
 - Public/display-facing candidates must state that they do not establish authority, legitimacy, certification, cultural fit, readiness for reuse, or permission for other uses.
 
 ## Not Established

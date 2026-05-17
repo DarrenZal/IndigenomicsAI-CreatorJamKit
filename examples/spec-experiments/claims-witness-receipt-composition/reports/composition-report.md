@@ -81,6 +81,14 @@ Candidate summary:
 
 This is not a public-ready story card. The candidate remains internal until a display reviewer explicitly changes `display_approval` and removes the external display block in a later reviewed record.
 
+## Display Review Result
+
+`reports/story-card-display-review.md` runs this candidate through `templates/display-review-checklist.md`.
+
+Result: `approved_for_fixture_only`
+
+This means the candidate can be used as an internal/public-sample fixture example in the private Creator Jam kit. It does not grant external display approval, public receipt-wall export, participant reuse, or permission for other uses.
+
 ## AI-Use Receipts
 
 | Receipt | ai_used | Scope | Excluded Material | Review State |

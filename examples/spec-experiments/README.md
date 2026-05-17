@@ -14,7 +14,7 @@ These examples turn draft specs into fixture-backed experiments. They are not pr
 | Experiment | Source Spec | What It Tests |
 | --- | --- | --- |
 | [Claims Evidence Coherence](claims-evidence-coherence/) | `specs/claims-evidence-coherence-report.md` | Five fictional claims, six evidence pointers, status diagnostics, and a static report. |
-| [Claims Witness Receipt Composition](claims-witness-receipt-composition/) | `specs/claims-evidence-coherence-report.md` + `specs/witness-record-interop-profile.md` + `specs/receipt-wall-story-gallery.md` | A worked composition reference with mandatory speech-act transitions, one excluded source, and a gated internal story candidate. |
+| [Claims Witness Receipt Composition](claims-witness-receipt-composition/) | `specs/claims-evidence-coherence-report.md` + `specs/witness-record-interop-profile.md` + `specs/receipt-wall-story-gallery.md` | A worked composition reference with mandatory speech-act transitions, one excluded source, a gated internal story candidate, and a display-review walkthrough. |
 | [Commitment Pool Route](commitment-pool-route/) | `specs/commitment-pool-route-diagnostic.md` | Three candidate declarations, two pools, route readiness, capacity block, and share-policy block. |
 | [Commitment Pool + Untracked Allocation Blocked](commitment-pool-untracked-allocation-blocked/) | `specs/commitment-pool-route-diagnostic.md` + `specs/untracked-allocation-ledger.md` | A worked non-composable result where non-legibility must be preserved. |
 | [Graph Chat Witness Sidecar](graph-chat-witness-sidecar/) | `specs/indigenomics-ai-graph-chat-witness-sidecar.md` | One graph node, one chat answer, citations, claims, review state, and AI-use receipt. |
@@ -31,6 +31,6 @@ These examples turn draft specs into fixture-backed experiments. They are not pr
 ## Guardrails
 
 - Fixtures are fictional or public-sample only.
-- A passing fixture does not prove real-world consent, authority, legitimacy, production readiness, or cultural fit.
+- A working fixture does not prove real-world consent, authority, legitimacy, production readiness, or cultural fit.
 - Do not replace reviewer decisions with deterministic checks.
 - Treat blocked or non-composable results as valid discoveries.
