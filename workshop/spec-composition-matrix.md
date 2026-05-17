@@ -79,6 +79,7 @@ These fields are the first places to test coherence:
 | Test | Specs | Expected Shape | Expected Disposition | What We Learn |
 | --- | --- | --- | --- |
 | Claim -> witness -> receipt | Claims Evidence + Witness Profile + Receipt Wall | Adapter needed | Review required | Whether a public receipt can preserve evidence boundaries. |
+| Claims witness receipt worked reference | Claims Evidence + Witness Profile + Receipt Wall | Direct for fictional public-sample claim and bounded witness records | Approved for fixture; story candidate still requires display review | Whether required transitions, excluded source records, and display gates can travel together. See `examples/spec-experiments/claims-witness-receipt-composition/`. |
 | Offering -> pool -> flow edge | Dream Board + Commitment Pool + Flow Funding | Adapter needed | Review required | Whether commitments can become fundable without flattening refusal. |
 | Sensor -> claim -> risk packet | Sensor Pipeline + Claims Evidence + Risk Map | Adapter needed | Review required or blocked until repair | Whether sensor evidence can inform resilience without becoming actuarial. |
 | Atlas -> insights -> sidecar | Living Atlas + Insights Briefing + Graph Chat Sidecar | Direct for public sample records; adapter needed for local-only records | Approved for fixture or review required | Whether app answers can show source coherence without leaking context. |

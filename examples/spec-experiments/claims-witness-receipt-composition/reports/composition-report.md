@@ -40,6 +40,15 @@ Evidence visibility is intentionally separate from claim visibility. The public 
 | `transition:CWRC-001` | `evidence -> claim` | `evidence:CWRC-001` | `claim:CWRC-001` | `transitioned_with_limits` | `technical_reviewer` | Only aggregate session-count wording may move into the claim. |
 | `transition:CWRC-002` | `witness_record -> story_candidate` | `witness:CWRC-001` | `story-candidate:CWRC-001` | `review_required` | `display_reviewer` | Display remains pending; the candidate cannot be shown externally. |
 
+### Transition Risk Callouts
+
+These transitions map directly to `templates/speech-act-transition.md`:
+
+| Transition | Template Risk | Required Marker In This Fixture |
+|---|---|---|
+| `transition:CWRC-001` | `citation -> claim` / evidence pointer becoming claim support | `not_established` excludes truth adjudication, legitimacy, authority, impact, eligibility, and reuse permission. |
+| `transition:CWRC-002` | `witness record -> attribution` and `receipt -> public story` | `display_approval: pending`, `do_not_show_externally: true`, non-ceremonial witness boundary, and `not_established` markers. |
+
 ### Transition Notes
 
 `transition:CWRC-001` changes an aggregate evidence pointer into a narrow claim. It does not adjudicate ultimate truth, create public display approval, or allow impact, eligibility, authority, legitimacy, certification, cultural fit, readiness-for-reuse, or permission-for-other-use language.
@@ -64,7 +73,7 @@ The worked composition reference produces one internal candidate:
 
 | Candidate | Visibility | display_approval | do_not_show_externally | derived_from_transitions | Included Records | Excluded Records |
 |---|---|---|---|---|---|---|
-| `story-candidate:CWRC-001` | `do_not_display` | `pending` | `true` | `transition:CWRC-002` | `claim:CWRC-001`, `witness:CWRC-001`, `receipt:CWRC-001` | `evidence:CWRC-003` |
+| `story-candidate:CWRC-001` | `do_not_display` | `pending` with `display_reviewer_role: display_reviewer` | `true` | `transition:CWRC-002` | `claim:CWRC-001`, `witness:CWRC-001`, `receipt:CWRC-001` | `evidence:CWRC-003` |
 
 Candidate summary:
 

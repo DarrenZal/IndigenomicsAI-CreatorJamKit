@@ -687,6 +687,7 @@
         "story_summary": "Internal display-review candidate: a fictional role-only reviewer receipt says a narrow public-sample claim was checked against aggregate sample evidence.",
         "visibility_tier": "do_not_display",
         "display_approval": "pending",
+        "display_reviewer_role": "display_reviewer",
         "do_not_show_externally": true,
         "participants_displayed": "none; fictional role-only labels only",
         "derived_from_transitions": [

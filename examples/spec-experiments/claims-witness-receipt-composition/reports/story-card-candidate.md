@@ -3,6 +3,7 @@ doc_kind: story-card-candidate
 status: draft
 visibility_tier: do_not_display
 display_approval: pending
+display_reviewer_role: display_reviewer
 do_not_show_externally: true
 created_at: 2026-05-17
 source_fixture: ../fixtures/claims-witness-receipt-fixture.json
@@ -13,7 +14,7 @@ withdrawal_path: "A fictional display reviewer or sample steward can withdraw or
 
 # Story Card Candidate: Riverbend Commons Sample Garden Sessions
 
-Display gate: `display_approval: pending` and `do_not_show_externally: true`.
+Display gate: `display_approval: pending`, `display_reviewer_role: display_reviewer`, and `do_not_show_externally: true`.
 
 This is an internal display-review candidate only. It is not a public-ready story card and must not be shown externally.
 
