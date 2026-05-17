@@ -40,6 +40,7 @@ This repo is for public, sample, or explicitly display-approved material only. D
 - `workshop/spec-composition-lab.md` gives a practical experiment protocol for discovering composability, overlap, non-composability, and coherence.
 - `workshop/spec-composition-matrix.md` starts the experiment of discovering which specs compose, overlap, or should remain separate.
 - `workshop/common-spec-fields.md` sketches shared fields to test across composed specs.
+- `workshop/waka-claims-engine-primitive-comparison.md` compares Austin Wade Smith / RiverComputer's Waka project, the RegenAI Claims Engine, and the Creator Jam Coordination Canoe pattern before any interop spec is written.
 - `workshop/tomorrow-spec-build-plan.md` gives a short next-day plan for turning the backlog into fixture-backed builds.
 - `examples/spec-experiments/` contains the first fixture-backed spec experiments.
 - `templates/speech-act-transition.md` is the category-drift checkpoint for transitions such as citation to claim, observation to attestation, dream to commitment, witness record to attribution, and receipt to public story.

@@ -29,6 +29,7 @@ For composition experiments, start with `workshop/spec-composition-matrix.md`, u
 | Commitments | `specs/dream-to-fulfillment-board.md` | Render an eight-item board with transition diagnostics. | Helps participants see non-build offerings as valid. |
 | Receipt wall | `specs/receipt-wall-story-gallery.md` | Build three story card fixtures. | Requires explicit display approval in real use. |
 | Spec composition | `specs/spec-composer-bundle-board.md` | Compose six fragments into candidate bundles and one frozen build packet. | Good meta-build for the jam itself. |
+| Waka / claims bridge | `workshop/waka-claims-engine-primitive-comparison.md` | Create one fictional primitive mapping receipt without implementing an adapter. | Keep Waka as Austin Wade Smith / RiverComputer's project; mapping is not adoption. |
 
 ## Facilitator Use
 
