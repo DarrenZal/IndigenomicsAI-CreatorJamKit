@@ -45,7 +45,7 @@ The pool is intentionally near full. This tests whether the composition records 
 | `dream:CPDWC-001` | `dream` | Can remain a dream; can become one-hour candidate only with contributor authorization. | Source for `transition:CPDWC-001`. |
 | `authorization:CPDWC-001` | `participant_authorization` | Authorizes only the exact one-hour fixture transition. | Authority record for `transition:CPDWC-001`. |
 | `offer:CPDWC-002` | `offer` | Valid offer, but pool capacity blocks route acceptance. | Returned by `transition:CPDWC-002`. |
-| `promise:CPDWC-003` | `promise` | Already-accepted fixture commitment. | Source for withdrawal propagation test. |
+| `promise:CPDWC-003` | `promise` | Already-accepted fixture commitment with explicit contributor consent marker. | Source for withdrawal propagation test. |
 | `withdrawal:CPDWC-003` | `withdrawal` | Narrows accepted commitment from two hours to one hour. | Authority record for `transition:CPDWC-004`. |
 | `refusal:CPDWC-004` | `refusal` | Active refusal, marker-only. | Excluded from composition. |
 | `protected-source:CPDWC-005` | `care_note` | Private, refused, `do_not_compute`. | Excluded from composition; marker only. |
@@ -57,15 +57,15 @@ See `reports/speech-act-transitions.md` for the full transition details.
 | Transition | Speech-Act Change | Source | Target | Disposition | Authority | Result |
 | --- | --- | --- | --- | --- | --- | --- |
 | `transition:CPDWC-001` | `dream -> commitment` | `dream:CPDWC-001` | `commitment-candidate:CPDWC-001` | `approved_for_fixture` | `contributor:CPDWC-A` | One-hour candidate created with limits. |
-| `transition:CPDWC-002` | `offer -> commitment` | `offer:CPDWC-002` | `commitment-candidate:CPDWC-002` | `blocked` with `capacity_until_changes` reason | pool steward plus contributor offer | Returned because capacity is insufficient. |
-| `transition:CPDWC-003` | `promise -> commitment` | `promise:CPDWC-003` | `accepted-commitment:CPDWC-003` | `approved_for_fixture` | pool steward for fixture record | Included to test withdrawal. |
+| `transition:CPDWC-002` | `offer -> commitment` | `offer:CPDWC-002` | `commitment-candidate:CPDWC-002` | `blocked` with `capacity_until_changes` reason | contributor consent check plus pool steward | Returned because capacity is insufficient. |
+| `transition:CPDWC-003` | `promise -> commitment` | `promise:CPDWC-003` | `accepted-commitment:CPDWC-003` | `approved_for_fixture` | contributor consent check plus pool steward | Included to test withdrawal. |
 | `transition:CPDWC-004` | `commitment -> narrowed commitment` | `accepted-commitment:CPDWC-003` | `accepted-commitment:CPDWC-003-narrowed` | `approved_for_fixture` | `contributor:CPDWC-C` | Narrows from two hours to one hour. |
 
 ## Transition Risk Callouts
 
 | Transition | Template Risk | Required Marker In This Fixture |
 | --- | --- | --- |
-| `transition:CPDWC-001` | `dream -> commitment` | Contributor authority, one-hour limit, time window, and no broader obligation. |
+| `transition:CPDWC-001` | `dream -> commitment` | Contributor authority, one-hour limit, scope interpretation, time window, and no broader obligation. |
 | `transition:CPDWC-002` | offer becoming routeable commitment | Capacity block and return reason; no contributor ranking or silent drop. |
 | `transition:CPDWC-003` | promise becoming accepted commitment | Fixture-only acceptance and no ceremonial witness language. |
 | `transition:CPDWC-004` | accepted commitment withdrawal | Capacity effect, downstream expectation effect, and no fault language. |
@@ -155,6 +155,8 @@ These are reviewer/software receipts only. They do not establish ceremonial witn
 | `AC5` | pass | Composed output includes `derived_from_transitions`. |
 | `AC6` | pass | `transition:CPDWC-004` records post-acceptance withdrawal and capacity effect. |
 | `AC7` | pass | Refusal and protected marker records are excluded without exposing underlying content. |
+| `AC8` | pass | Source records mark `explicit_or_inferred: explicit`; no inferred commitment enters the pool. |
+| `AC9` | pass | Offer and promise transitions include contributor consent checks alongside pool-steward review. |
 
 ## Not Established
 

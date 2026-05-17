@@ -124,6 +124,10 @@ authority_check:
     - embedding_similarity
     - graph_edge
     - facilitator_without_consent
+  contributor_consent_check:
+    contributor_record:
+    consent_state: explicit_in_source | reconfirmed_for_transition | missing | refused
+    reconfirmation_required_before_acceptance: true | false
 ```
 
 ## Coherence Vector

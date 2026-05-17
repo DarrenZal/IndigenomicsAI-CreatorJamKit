@@ -124,6 +124,7 @@
     {
       "record_id": "dream:CPDWC-001",
       "speech_act": "dream",
+      "explicit_or_inferred": "explicit",
       "summary": "A fictional contributor imagines a one-hour welcome table where participants can turn ideas into offering cards.",
       "issuer": "contributor:CPDWC-A",
       "visibility_tier": "public_sample",
@@ -136,6 +137,7 @@
     {
       "record_id": "authorization:CPDWC-001",
       "speech_act": "participant_authorization",
+      "explicit_or_inferred": "explicit",
       "summary": "The fictional contributor explicitly authorizes one hour of welcome-table support for fixture use.",
       "issuer": "contributor:CPDWC-A",
       "visibility_tier": "public_sample",
@@ -148,6 +150,7 @@
     {
       "record_id": "offer:CPDWC-002",
       "speech_act": "offer",
+      "explicit_or_inferred": "explicit",
       "summary": "A fictional contributor offers three hours of documentation support.",
       "issuer": "contributor:CPDWC-B",
       "visibility_tier": "public_sample",
@@ -165,6 +168,7 @@
     {
       "record_id": "promise:CPDWC-003",
       "speech_act": "promise",
+      "explicit_or_inferred": "explicit",
       "summary": "A fictional contributor promises two hours of workshop setup already accepted before this fixture.",
       "issuer": "contributor:CPDWC-C",
       "visibility_tier": "public_sample",
@@ -182,6 +186,7 @@
     {
       "record_id": "withdrawal:CPDWC-003",
       "speech_act": "withdrawal",
+      "explicit_or_inferred": "explicit",
       "summary": "The fictional contributor narrows the accepted setup commitment from two hours to one hour.",
       "issuer": "contributor:CPDWC-C",
       "visibility_tier": "public_sample",
@@ -194,6 +199,7 @@
     {
       "record_id": "refusal:CPDWC-004",
       "speech_act": "refusal",
+      "explicit_or_inferred": "explicit",
       "summary": "A fictional contributor refuses to have a care note converted into a commitment or task.",
       "issuer": "contributor:CPDWC-D",
       "visibility_tier": "boundary_marker_only",
@@ -205,6 +211,7 @@
     {
       "record_id": "protected-source:CPDWC-005",
       "speech_act": "care_note",
+      "explicit_or_inferred": "explicit",
       "summary": "Marker only: a protected care note exists outside this fixture's permission boundary.",
       "issuer": "redacted",
       "visibility_tier": "private",
@@ -222,6 +229,7 @@
       "source_record": "dream:CPDWC-001",
       "authority_record": "authorization:CPDWC-001",
       "target_record": "commitment-candidate:CPDWC-001",
+      "scope_interpretation": "The authorized commitment is one hour of welcome-table presence and support. It does not require the contributor to create all offering cards or take responsibility for the whole table.",
       "transition_review": {
         "composition_shape": "adapter_needed",
         "composition_disposition": "approved_for_fixture",
@@ -293,6 +301,13 @@
       "to_speech_act": "commitment",
       "source_record": "offer:CPDWC-002",
       "target_record": "commitment-candidate:CPDWC-002",
+      "contributor_consent_check": {
+        "contributor_record": "offer:CPDWC-002",
+        "contributor_id": "contributor:CPDWC-B",
+        "consent_state": "explicit_in_source_offer",
+        "reconfirmation_required_before_pool_acceptance": true,
+        "note": "This fixture returns the offer for capacity reasons. If a future pool accepted it, the transition would need a contributor-facing confirmation for that pool and time window."
+      },
       "transition_review": {
         "composition_shape": "adapter_needed",
         "composition_disposition": "blocked",
@@ -360,6 +375,13 @@
       "to_speech_act": "commitment",
       "source_record": "promise:CPDWC-003",
       "target_record": "accepted-commitment:CPDWC-003",
+      "contributor_consent_check": {
+        "contributor_record": "promise:CPDWC-003",
+        "contributor_id": "contributor:CPDWC-C",
+        "consent_state": "explicit_in_source_promise",
+        "reconfirmation_required_before_reactivation_or_route_change": true,
+        "note": "This is a historical fixture acceptance. A later route change or reactivation would require contributor confirmation."
+      },
       "transition_review": {
         "composition_shape": "direct",
         "composition_disposition": "approved_for_fixture",

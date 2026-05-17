@@ -12,8 +12,8 @@ This report isolates the speech-act transitions used by the commitment-pool drea
 | Transition Type | Who Can Authorize | Who Can Record | Who Cannot Authorize Alone |
 | --- | --- | --- | --- |
 | `dream -> commitment` | Original contributor for the dream. | Facilitator with explicit contributor authorization. | Facilitator, technical reviewer, embedding match, LLM, graph edge, pool steward. |
-| `offer -> commitment candidate` | Contributor plus pool steward for fixture routing. | Pool steward. | Capacity algorithm alone. |
-| `promise -> accepted commitment` | Contributor plus pool steward for fixture routing. | Pool steward. | Public display reviewer, graph edge, LLM. |
+| `offer -> commitment candidate` | Contributor plus pool steward for fixture routing. | Pool steward records route result after contributor consent check. | Capacity algorithm or pool steward alone. |
+| `promise -> accepted commitment` | Contributor plus pool steward for fixture routing. | Pool steward records fixture acceptance after contributor consent check. | Public display reviewer, graph edge, LLM, or pool steward alone. |
 | `accepted commitment -> narrowed commitment` | Original contributor. | Pool steward records capacity effect. | Pool steward without contributor request. |
 
 ## Transition Table
@@ -21,8 +21,8 @@ This report isolates the speech-act transitions used by the commitment-pool drea
 | Transition | From | To | Source | Target | Disposition | Authority | AI Used | Result |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | `transition:CPDWC-001` | `dream` | `commitment` | `dream:CPDWC-001` | `commitment-candidate:CPDWC-001` | `approved_for_fixture` | `contributor:CPDWC-A` | `false` | One-hour candidate created with limits. |
-| `transition:CPDWC-002` | `offer` | `commitment` | `offer:CPDWC-002` | `commitment-candidate:CPDWC-002` | `blocked` with `capacity_until_changes` reason | `reviewer:CPDWC-pool-steward` plus contributor offer | `false` | Returned because pool has insufficient routeable capacity. |
-| `transition:CPDWC-003` | `promise` | `commitment` | `promise:CPDWC-003` | `accepted-commitment:CPDWC-003` | `approved_for_fixture` | pool steward for already-accepted fixture record | `false` | Included to test post-acceptance withdrawal. |
+| `transition:CPDWC-002` | `offer` | `commitment` | `offer:CPDWC-002` | `commitment-candidate:CPDWC-002` | `blocked` with `capacity_until_changes` reason | contributor consent check plus pool steward | `false` | Returned because pool has insufficient routeable capacity. |
+| `transition:CPDWC-003` | `promise` | `commitment` | `promise:CPDWC-003` | `accepted-commitment:CPDWC-003` | `approved_for_fixture` | contributor consent check plus pool steward | `false` | Included to test post-acceptance withdrawal. |
 | `transition:CPDWC-004` | `commitment` | `withdrawn_or_narrowed_commitment` | `accepted-commitment:CPDWC-003` | `accepted-commitment:CPDWC-003-narrowed` | `approved_for_fixture` | `contributor:CPDWC-C` | `false` | Commitment narrowed from two hours to one hour. |
 
 ## Transition Details
@@ -30,6 +30,8 @@ This report isolates the speech-act transitions used by the commitment-pool drea
 ### `transition:CPDWC-001`
 
 `dream:CPDWC-001` becomes a one-hour commitment candidate only because `contributor:CPDWC-A` authorizes that exact transition. The facilitator records the authorization. The facilitator does not create the commitment.
+
+Scope interpretation: the authorized commitment is one hour of welcome-table presence and support. It does not require the contributor to create all offering cards or take responsibility for the whole table.
 
 Allowed projection:
 
@@ -60,9 +62,13 @@ Not established:
 
 The returned offer is not invalid, low value, or rejected as a contributor relationship. It simply does not fit the near-full pool at this time.
 
+Authority encoding: the transition carries a contributor consent check from `offer:CPDWC-002` and a pool-steward capacity review. If a future pool accepted this offer, contributor reconfirmation would be required for that pool and time window.
+
 ### `transition:CPDWC-003`
 
 `promise:CPDWC-003` is an already-accepted fictional commitment included to test a later withdrawal. Its acceptance is fixture-only and does not establish real-world obligation, certification, public endorsement, or cultural authority.
+
+Authority encoding: the transition carries a contributor consent check from `promise:CPDWC-003` and a pool-steward fixture acceptance. Any later reactivation or route change would require contributor confirmation.
 
 ### `transition:CPDWC-004`
 
