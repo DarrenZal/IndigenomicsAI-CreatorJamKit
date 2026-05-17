@@ -10,7 +10,20 @@ from typing import Any
 
 
 ENGINE_NAME = "Creator Jam Composition Engine Prototype"
-ENGINE_VERSION = "0.1.0"
+ENGINE_VERSION = "0.1.1"
+RECORD_ID_KEYS = (
+    "record_id",
+    "id",
+    "claim_id",
+    "evidence_id",
+    "witness_record_id",
+    "witness_id",
+    "receipt_id",
+    "story_candidate_id",
+    "output_id",
+    "allocation_id",
+    "transition_id",
+)
 
 
 def load_fixture(experiment_dir: Path, fixture_path: Path | None) -> tuple[Path, dict[str, Any]]:
@@ -32,7 +45,9 @@ def transition_id(transition: dict[str, Any]) -> str:
 
 def transition_disposition(transition: dict[str, Any]) -> str:
     review = transition.get("transition_review", {})
-    return str(review.get("composition_disposition", "unknown"))
+    if isinstance(review, dict) and review.get("composition_disposition"):
+        return str(review["composition_disposition"])
+    return str(transition.get("composition_disposition", "unknown"))
 
 
 def transition_result(transition: dict[str, Any]) -> str:
@@ -41,30 +56,140 @@ def transition_result(transition: dict[str, Any]) -> str:
 
 
 def source_records(fixture: dict[str, Any]) -> list[dict[str, Any]]:
-    records = fixture.get("source_records", [])
-    return records if isinstance(records, list) else []
+    records = normalize_collection(fixture.get("source_records", []))
+    allocation_record = fixture.get("untracked_allocation_record")
+    if isinstance(allocation_record, dict):
+        records.append(allocation_record)
+    return dedupe_records(records)
 
 
 def speech_act_transitions(fixture: dict[str, Any]) -> list[dict[str, Any]]:
-    transitions = fixture.get("speech_act_transitions", [])
-    return transitions if isinstance(transitions, list) else []
+    transitions = normalize_collection(fixture.get("speech_act_transitions", []))
+    singular_transition = fixture.get("speech_act_transition")
+    if isinstance(singular_transition, dict):
+        transitions.append(singular_transition)
+    return dedupe_records(transitions)
+
+
+def explicit_excluded_records(fixture: dict[str, Any]) -> list[dict[str, Any]]:
+    records = normalize_collection(fixture.get("excluded_records", []))
+    composed = fixture.get("composed_outputs", {})
+    if isinstance(composed, dict):
+        records.extend(normalize_collection(composed.get("excluded_source_records", [])))
+    return dedupe_records(records)
 
 
 def excluded_records(fixture: dict[str, Any]) -> list[dict[str, Any]]:
-    records = fixture.get("excluded_records", [])
-    return records if isinstance(records, list) else []
+    records = explicit_excluded_records(fixture)
+    known_ids = {record_id(item) for item in records}
+
+    for record in source_records(fixture):
+        rid = record_id(record)
+        if rid in known_ids:
+            continue
+        if record.get("do_not_compute") is True or record.get("permission_state") == "refused":
+            records.append(derived_exclusion_marker(record))
+            known_ids.add(rid)
+
+    return records
 
 
 def composed_outputs(fixture: dict[str, Any]) -> list[dict[str, Any]]:
     outputs = fixture.get("composed_outputs", [])
-    return outputs if isinstance(outputs, list) else []
+    if isinstance(outputs, list):
+        return [item for item in outputs if isinstance(item, dict)]
+    if isinstance(outputs, dict):
+        normalized = []
+        if "derived_from_transitions" in outputs or "output_id" in outputs or "story_candidate_id" in outputs:
+            normalized.append(outputs)
+        for item in outputs.values():
+            for candidate in normalize_collection(item):
+                if "derived_from_transitions" in candidate or "output_id" in candidate or "story_candidate_id" in candidate:
+                    normalized.append(candidate)
+        return dedupe_records(normalized)
+    return []
 
 
 def record_id(record: dict[str, Any]) -> str:
-    return str(record.get("record_id", "unknown-record"))
+    for key in RECORD_ID_KEYS:
+        if record.get(key):
+            return str(record[key])
+    return "unknown-record"
+
+
+def ref_id(value: Any) -> str:
+    if isinstance(value, dict):
+        return record_id(value)
+    if value is None:
+        return ""
+    return str(value)
+
+
+def normalize_collection(value: Any) -> list[dict[str, Any]]:
+    if isinstance(value, list):
+        return [item for item in value if isinstance(item, dict)]
+    if isinstance(value, dict):
+        if any(key in value for key in RECORD_ID_KEYS) or "transition_id" in value:
+            return [value]
+        records: list[dict[str, Any]] = []
+        for item in value.values():
+            records.extend(normalize_collection(item))
+        return records
+    return []
+
+
+def dedupe_records(records: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    seen = set()
+    deduped = []
+    for record in records:
+        key = record_id(record)
+        if key in seen:
+            continue
+        seen.add(key)
+        deduped.append(record)
+    return deduped
+
+
+def derived_exclusion_marker(record: dict[str, Any]) -> dict[str, Any]:
+    reasons = []
+    if record.get("permission_state") == "refused":
+        reasons.append("permission_state refused")
+    if record.get("do_not_compute") is True:
+        reasons.append("do_not_compute true")
+    if record.get("visibility_tier"):
+        reasons.append(f"visibility_tier {record.get('visibility_tier')}")
+    if record.get("share_policy"):
+        reasons.append(f"share_policy {record.get('share_policy')}")
+
+    prohibited = record.get("restrictions", [])
+    if not isinstance(prohibited, list):
+        prohibited = []
+
+    return {
+        "record_id": record_id(record),
+        "excluded_reason": reasons,
+        "allowed_reference": record.get("summary") or record.get("source_summary") or record.get("public_summary", ""),
+        "prohibited_actions": prohibited,
+        "engine_derived_marker": True,
+    }
+
+
+def speech_act_label(record: dict[str, Any]) -> str:
+    for key in ("speech_act", "record_type", "allocation_type", "claim_type", "event_type"):
+        if record.get(key):
+            return str(record[key])
+    return ""
 
 
 def check_source_records_have_explicit_marker(records: list[dict[str, Any]]) -> dict[str, Any]:
+    if not records:
+        return {
+            "code": "source_records_explicit_or_inferred",
+            "status": "warn",
+            "detail": "No source records were found to check.",
+            "records": [],
+        }
+
     missing = [record_id(record) for record in records if "explicit_or_inferred" not in record]
     return {
         "code": "source_records_explicit_or_inferred",
@@ -75,6 +200,14 @@ def check_source_records_have_explicit_marker(records: list[dict[str, Any]]) -> 
 
 
 def check_transition_ai_receipts(transitions: list[dict[str, Any]]) -> dict[str, Any]:
+    if not transitions:
+        return {
+            "code": "transition_ai_use_receipts",
+            "status": "warn",
+            "detail": "No speech-act transitions were found to check.",
+            "transitions": [],
+        }
+
     missing = [transition_id(item) for item in transitions if "ai_use_receipt" not in item]
     return {
         "code": "transition_ai_use_receipts",
@@ -88,9 +221,19 @@ def check_derived_from_transitions(fixture: dict[str, Any], transitions: list[di
     known = {transition_id(item) for item in transitions}
     missing_outputs = []
     unknown_refs = []
+    outputs = composed_outputs(fixture)
 
-    for output in composed_outputs(fixture):
-        output_id = str(output.get("output_id", "unknown-output"))
+    if not outputs:
+        return {
+            "code": "derived_from_transitions",
+            "status": "ok",
+            "detail": "No composed outputs were found to check.",
+            "missing_outputs": [],
+            "unknown_refs": [],
+        }
+
+    for output in outputs:
+        output_id = record_id(output)
         refs = output.get("derived_from_transitions", [])
         if not refs:
             missing_outputs.append(output_id)
@@ -110,21 +253,47 @@ def check_derived_from_transitions(fixture: dict[str, Any], transitions: list[di
 
 
 def check_do_not_compute_exclusions(
-    records: list[dict[str, Any]], excluded: list[dict[str, Any]]
+    records: list[dict[str, Any]], excluded: list[dict[str, Any]], transitions: list[dict[str, Any]]
 ) -> dict[str, Any]:
     excluded_ids = {record_id(item) for item in excluded}
-    missing = [record_id(record) for record in records if record.get("do_not_compute") is True and record_id(record) not in excluded_ids]
+    missing = []
+    represented_by_blocked_transition = []
+    for record in records:
+        if record.get("do_not_compute") is not True or record_id(record) in excluded_ids:
+            continue
+        if blocked_transition_names_do_not_compute(transitions):
+            represented_by_blocked_transition.append(record_id(record))
+        else:
+            missing.append(record_id(record))
+
+    if missing:
+        status = "block"
+        detail = "A do_not_compute record is not represented in excluded records or blocked transition obstructions."
+    elif represented_by_blocked_transition:
+        status = "warn"
+        detail = "Some do_not_compute source records are represented by blocked transition obstructions, but not by explicit excluded records."
+    else:
+        status = "ok"
+        detail = "do_not_compute source records are represented as excluded records."
+
     return {
         "code": "do_not_compute_exclusions",
-        "status": "ok" if not missing else "block",
-        "detail": "do_not_compute source records are represented as excluded records."
-        if not missing
-        else "A do_not_compute record is not represented in excluded_records.",
+        "status": status,
+        "detail": detail,
         "records": missing,
+        "represented_by_blocked_transition": represented_by_blocked_transition,
     }
 
 
 def check_authority_markers(transitions: list[dict[str, Any]]) -> dict[str, Any]:
+    if not transitions:
+        return {
+            "code": "speech_act_authority_markers",
+            "status": "warn",
+            "detail": "No speech-act transitions were found to check.",
+            "warnings": [],
+        }
+
     warnings = []
     for item in transitions:
         from_act = item.get("from_speech_act")
@@ -144,9 +313,20 @@ def check_authority_markers(transitions: list[dict[str, Any]]) -> dict[str, Any]
     }
 
 
+def blocked_transition_names_do_not_compute(transitions: list[dict[str, Any]]) -> bool:
+    for item in transitions:
+        if transition_disposition(item) not in {"blocked", "non_composable"} and transition_result(item) != "blocked":
+            continue
+        obstruction_text = " ".join(str(value) for value in item.get("boundary_obstructions", []))
+        if "do_not_compute" in obstruction_text:
+            return True
+    return False
+
+
 def build_trace(experiment_dir: Path, fixture_path: Path, fixture: dict[str, Any]) -> dict[str, Any]:
     records = source_records(fixture)
     transitions = speech_act_transitions(fixture)
+    explicit_excluded = explicit_excluded_records(fixture)
     excluded = excluded_records(fixture)
     outputs = composed_outputs(fixture)
 
@@ -154,7 +334,7 @@ def build_trace(experiment_dir: Path, fixture_path: Path, fixture: dict[str, Any
         check_source_records_have_explicit_marker(records),
         check_transition_ai_receipts(transitions),
         check_derived_from_transitions(fixture, transitions),
-        check_do_not_compute_exclusions(records, excluded),
+        check_do_not_compute_exclusions(records, explicit_excluded, transitions),
         check_authority_markers(transitions),
     ]
 
@@ -169,7 +349,8 @@ def build_trace(experiment_dir: Path, fixture_path: Path, fixture: dict[str, Any
             "boundary_obstructions": item.get("boundary_obstructions", []),
         }
         for item in transitions
-        if transition_disposition(item) == "blocked" or transition_result(item) == "blocked"
+        if transition_disposition(item) in {"blocked", "non_composable", "review_required"}
+        or transition_result(item) in {"blocked", "review_required", "returned"}
     ]
 
     return {
@@ -187,7 +368,7 @@ def build_trace(experiment_dir: Path, fixture_path: Path, fixture: dict[str, Any
         "records": [
             {
                 "record_id": record_id(item),
-                "speech_act": item.get("speech_act"),
+                "speech_act": speech_act_label(item),
                 "explicit_or_inferred": item.get("explicit_or_inferred"),
                 "visibility_tier": item.get("visibility_tier"),
                 "permission_state": item.get("permission_state"),
@@ -200,13 +381,15 @@ def build_trace(experiment_dir: Path, fixture_path: Path, fixture: dict[str, Any
                 "transition_id": transition_id(item),
                 "from_speech_act": item.get("from_speech_act"),
                 "to_speech_act": item.get("to_speech_act"),
-                "source_record": item.get("source_record"),
-                "target_record": item.get("target_record"),
+                "source_record": ref_id(item.get("source_record")),
+                "target_record": ref_id(item.get("target_record")),
                 "composition_disposition": transition_disposition(item),
                 "result_status": transition_result(item),
                 "has_ai_use_receipt": "ai_use_receipt" in item,
                 "has_authority_record": "authority_record" in item,
                 "has_contributor_consent_check": "contributor_consent_check" in item,
+                "explicit_contributor_authority": "authority_record" in item
+                or "contributor_consent_check" in item,
             }
             for item in transitions
         ],
@@ -228,6 +411,14 @@ def md_table_row(values: list[Any]) -> str:
 def md_value(value: Any) -> str:
     if isinstance(value, bool):
         return "true" if value else "false"
+    if value is None:
+        return ""
+    return str(value)
+
+
+def md_join(value: Any) -> str:
+    if isinstance(value, list):
+        return "; ".join(str(item) for item in value)
     if value is None:
         return ""
     return str(value)
@@ -265,16 +456,36 @@ def render_report(trace: dict[str, Any]) -> str:
             md_table_row(
                 [
                     f"`{record['record_id']}`",
-                    f"`{record.get('speech_act')}`",
-                    f"`{record.get('explicit_or_inferred')}`",
-                    f"`{record.get('visibility_tier')}`",
-                    f"`{record.get('permission_state')}`",
+                    f"`{md_value(record.get('speech_act'))}`",
+                    f"`{md_value(record.get('explicit_or_inferred'))}`",
+                    f"`{md_value(record.get('visibility_tier'))}`",
+                    f"`{md_value(record.get('permission_state'))}`",
                     f"`{md_value(record.get('do_not_compute'))}`",
                 ]
             )
         )
 
-    lines.extend(["", "## Speech-Act Transitions", "", md_table_row(["Transition", "From", "To", "Disposition", "Result", "AI Receipt", "Authority", "Contributor Consent"]), md_table_row(["---", "---", "---", "---", "---", "---", "---", "---"])])
+    lines.extend(
+        [
+            "",
+            "## Speech-Act Transitions",
+            "",
+            md_table_row(
+                [
+                    "Transition",
+                    "From",
+                    "To",
+                    "Disposition",
+                    "Result",
+                    "AI Receipt",
+                    "Authority Record",
+                    "Contributor Consent",
+                    "Explicit Contributor Authority",
+                ]
+            ),
+            md_table_row(["---", "---", "---", "---", "---", "---", "---", "---", "---"]),
+        ]
+    )
     for item in trace["transitions"]:
         lines.append(
             md_table_row(
@@ -287,6 +498,7 @@ def render_report(trace: dict[str, Any]) -> str:
                     f"`{md_value(item.get('has_ai_use_receipt'))}`",
                     f"`{md_value(item.get('has_authority_record'))}`",
                     f"`{md_value(item.get('has_contributor_consent_check'))}`",
+                    f"`{md_value(item.get('explicit_contributor_authority'))}`",
                 ]
             )
         )
@@ -312,17 +524,30 @@ def render_report(trace: dict[str, Any]) -> str:
             lines.append(
                 md_table_row(
                     [
-                        f"`{item.get('record_id')}`",
-                        "; ".join(item.get("excluded_reason", [])),
-                        "; ".join(item.get("prohibited_actions", [])),
+                        f"`{record_id(item)}`",
+                        md_join(item.get("excluded_reason") or item.get("exclusion_reason")),
+                        md_join(item.get("prohibited_actions") or item.get("restrictions")),
                     ]
                 )
             )
     else:
         lines.append("No excluded records were found in the fixture trace.")
 
-    lines.extend(["", "## Coherence Vector", "", md_table_row(["Dimension", "State", "Note"]), md_table_row(["---", "---", "---"])])
-    for dimension, payload in (trace.get("coherence_vector") or {}).items():
+    lines.extend(
+        [
+            "",
+            "## Coherence Vector",
+            "",
+            "These states are preserved from the fixture. The v0.1.x engine does not independently validate coherence-vector claims.",
+            "",
+            md_table_row(["Dimension", "State", "Note"]),
+            md_table_row(["---", "---", "---"]),
+        ]
+    )
+    coherence_vector = trace.get("coherence_vector") or {}
+    if not coherence_vector:
+        lines.append(md_table_row(["", "", "No fixture-authored coherence vector was found."]))
+    for dimension, payload in coherence_vector.items():
         if isinstance(payload, dict):
             lines.append(md_table_row([f"`{dimension}`", f"`{payload.get('state')}`", payload.get("note", "")]))
 

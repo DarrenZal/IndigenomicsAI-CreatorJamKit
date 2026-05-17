@@ -50,6 +50,7 @@ This repo is for public, sample, or explicitly display-approved material only. D
 - `games/` contains lightweight play formats that teach the same speech-act, refusal, review, and receipt primitives as the kit.
 - `templates/speech-act-transition.md` is the category-drift checkpoint for transitions such as citation to claim, observation to attestation, dream to commitment, witness record to attribution, and receipt to public story.
 - `templates/display-review-checklist.md` is the review gate before a receipt, witness rollup, story card, gallery item, or public readout moves into display.
+- `templates/trade-off-surface.md` helps reviewers separate technical composability, coherence, and desirability/health before calling a composition a good next move.
 - `docs/glossary.md` names `Coordination Canoe` as the provisional local working metaphor and reserves `Waka` for Austin Wade Smith / RiverComputer's project.
 
 ## Boundaries
@@ -68,6 +69,8 @@ Run:
 python3 scripts/validate-frontmatter.py
 python3 scripts/validate-bundle-links.py
 python3 scripts/composition_engine.py examples/spec-experiments/commitment-pool-dream-witness-composition --write
+python3 scripts/composition_engine.py examples/spec-experiments/claims-witness-receipt-composition --write
+python3 scripts/composition_engine.py examples/spec-experiments/commitment-pool-untracked-allocation-blocked --write
 ```
 
 These checks are lightweight. They check shape and references; they do not certify permission, authority, or correctness.

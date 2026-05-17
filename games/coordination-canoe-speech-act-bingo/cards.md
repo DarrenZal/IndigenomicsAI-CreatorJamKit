@@ -14,7 +14,7 @@ Mark a square when the room notices this transition being proposed, assumed, blo
 | citation -> claim | observation -> attestation | dream -> commitment | offer -> promise |
 | question -> requirement | receipt -> public story | witness record -> attribution | route diagnostic -> funding discussion |
 | risk signal -> insurance discussion | map layer -> authority claim | refusal -> backlog item | private note -> public summary |
-| AI suggestion -> reviewer decision | promise -> accepted commitment | accepted commitment -> withdrawal | evidence pointer -> display-ready evidence |
+| AI suggestion -> reviewer decision | promise -> accepted commitment | accepted commitment -> withdrawal | boundary marker -> policy |
 
 ## Callout Script
 
@@ -27,6 +27,7 @@ These squares are especially important because the correct move may be to stop:
 - refusal -> backlog item
 - private note -> public summary
 - map layer -> authority claim
+- boundary marker -> policy
 - AI suggestion -> reviewer decision
 - risk signal -> insurance discussion
 

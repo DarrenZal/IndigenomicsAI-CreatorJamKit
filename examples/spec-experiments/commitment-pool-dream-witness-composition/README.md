@@ -28,6 +28,9 @@ One contributor-authorized dream becomes a small time-bounded commitment candida
 - `fixtures/commitment-pool-dream-witness-fixture.json`
 - `reports/composition-report.md`
 - `reports/speech-act-transitions.md`
+- `reports/composition-engine-report.md`
+- `reports/trade-off-surface.md`
+- `traces/composition-trace.json`
 
 ## Participant Safety
 

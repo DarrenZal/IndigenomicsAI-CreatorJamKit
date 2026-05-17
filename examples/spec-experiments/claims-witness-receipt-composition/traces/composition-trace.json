@@ -1,0 +1,233 @@
+{
+  "engine": {
+    "name": "Creator Jam Composition Engine Prototype",
+    "version": "0.1.1",
+    "generated_at": "2026-05-17"
+  },
+  "input": {
+    "experiment_dir": "/Users/darrenzal/projects/IndigenomicsAI-CreatorJamKit/examples/spec-experiments/claims-witness-receipt-composition",
+    "fixture_path": "/Users/darrenzal/projects/IndigenomicsAI-CreatorJamKit/examples/spec-experiments/claims-witness-receipt-composition/fixtures/claims-witness-receipt-fixture.json"
+  },
+  "fixture_id": "claims-witness-receipt-composition-public-sample-v0.1",
+  "composition_attempt": {},
+  "records": [
+    {
+      "record_id": "evidence:CWRC-001",
+      "speech_act": "evidence_pointer",
+      "explicit_or_inferred": null,
+      "visibility_tier": "public_sample",
+      "permission_state": "approved_for_review",
+      "do_not_compute": false
+    },
+    {
+      "record_id": "evidence:CWRC-002",
+      "speech_act": "evidence_pointer",
+      "explicit_or_inferred": null,
+      "visibility_tier": "local_only",
+      "permission_state": "approved_for_review",
+      "do_not_compute": false
+    },
+    {
+      "record_id": "evidence:CWRC-003",
+      "speech_act": "evidence_pointer",
+      "explicit_or_inferred": null,
+      "visibility_tier": "do_not_display",
+      "permission_state": "refused",
+      "do_not_compute": true
+    },
+    {
+      "record_id": "claim:CWRC-001",
+      "speech_act": "claim",
+      "explicit_or_inferred": null,
+      "visibility_tier": "public_sample",
+      "permission_state": "approved_for_review",
+      "do_not_compute": false
+    },
+    {
+      "record_id": "witness:CWRC-001",
+      "speech_act": "witness",
+      "explicit_or_inferred": null,
+      "visibility_tier": "public_sample",
+      "permission_state": "approved_for_review",
+      "do_not_compute": null
+    },
+    {
+      "record_id": "witness:CWRC-002",
+      "speech_act": "witness",
+      "explicit_or_inferred": null,
+      "visibility_tier": "public_sample",
+      "permission_state": "approved_for_review",
+      "do_not_compute": null
+    },
+    {
+      "record_id": "receipt:CWRC-001",
+      "speech_act": "reviewer_evaluation",
+      "explicit_or_inferred": null,
+      "visibility_tier": "public_sample",
+      "permission_state": "approved_for_review",
+      "do_not_compute": null
+    }
+  ],
+  "transitions": [
+    {
+      "transition_id": "transition:CWRC-001",
+      "from_speech_act": "evidence_pointer",
+      "to_speech_act": "claim",
+      "source_record": "evidence:CWRC-001",
+      "target_record": "claim:CWRC-001",
+      "composition_disposition": "approved_for_fixture",
+      "result_status": "transitioned_with_limits",
+      "has_ai_use_receipt": true,
+      "has_authority_record": false,
+      "has_contributor_consent_check": false,
+      "explicit_contributor_authority": false
+    },
+    {
+      "transition_id": "transition:CWRC-002",
+      "from_speech_act": "witness_record",
+      "to_speech_act": "story_candidate",
+      "source_record": "witness:CWRC-001",
+      "target_record": "story-candidate:CWRC-001",
+      "composition_disposition": "review_required",
+      "result_status": "review_required",
+      "has_ai_use_receipt": true,
+      "has_authority_record": false,
+      "has_contributor_consent_check": false,
+      "explicit_contributor_authority": false
+    }
+  ],
+  "hard_checks": [
+    {
+      "code": "source_records_explicit_or_inferred",
+      "status": "warn",
+      "detail": "Missing explicit_or_inferred.",
+      "records": [
+        "evidence:CWRC-001",
+        "evidence:CWRC-002",
+        "evidence:CWRC-003",
+        "claim:CWRC-001",
+        "witness:CWRC-001",
+        "witness:CWRC-002",
+        "receipt:CWRC-001"
+      ]
+    },
+    {
+      "code": "transition_ai_use_receipts",
+      "status": "ok",
+      "detail": "All transitions include AI-use receipts.",
+      "transitions": []
+    },
+    {
+      "code": "derived_from_transitions",
+      "status": "ok",
+      "detail": "Composed outputs point to known transition IDs.",
+      "missing_outputs": [],
+      "unknown_refs": []
+    },
+    {
+      "code": "do_not_compute_exclusions",
+      "status": "ok",
+      "detail": "do_not_compute source records are represented as excluded records.",
+      "records": [],
+      "represented_by_blocked_transition": []
+    },
+    {
+      "code": "speech_act_authority_markers",
+      "status": "ok",
+      "detail": "Load-bearing speech-act transitions carry authority markers.",
+      "warnings": []
+    }
+  ],
+  "blocked_transitions": [
+    {
+      "transition_id": "transition:CWRC-002",
+      "from_speech_act": "witness_record",
+      "to_speech_act": "story_candidate",
+      "composition_disposition": "review_required",
+      "result_status": "review_required",
+      "next_action": "Display reviewer must explicitly approve or return the candidate before any external display.",
+      "boundary_obstructions": [
+        "display_approval is pending",
+        "do_not_show_externally is true",
+        "witness records are reviewer/software receipts only",
+        "evidence:CWRC-003 is excluded and cannot be used as story support"
+      ]
+    }
+  ],
+  "excluded_records": [
+    {
+      "record_id": "evidence:CWRC-003",
+      "excluded_by_boundary_check": true,
+      "exclusion_reason": "permission_state refused, do_not_compute true, evidence_visibility private, and no display approval",
+      "may_be_named_as_marker_only": true,
+      "may_be_summarized": false,
+      "may_be_used_as_claim_support": false,
+      "may_be_used_as_story_support": false
+    }
+  ],
+  "composed_outputs": [
+    {
+      "story_candidate_id": "story-candidate:CWRC-001",
+      "title": "Riverbend Commons sample garden sessions",
+      "story_summary": "Internal display-review candidate: a fictional role-only reviewer receipt says a narrow public-sample claim was checked against aggregate sample evidence.",
+      "visibility_tier": "do_not_display",
+      "display_approval": "pending",
+      "display_reviewer_role": "display_reviewer",
+      "do_not_show_externally": true,
+      "participants_displayed": "none; fictional role-only labels only",
+      "derived_from_transitions": [
+        "transition:CWRC-002"
+      ],
+      "derived_from_records": [
+        "claim:CWRC-001",
+        "witness:CWRC-001",
+        "receipt:CWRC-001"
+      ],
+      "excluded_source_records": [
+        "evidence:CWRC-003"
+      ],
+      "not_established": [
+        "authority",
+        "legitimacy",
+        "certification",
+        "cultural fit",
+        "readiness for reuse",
+        "permission for other uses"
+      ],
+      "withdrawal_path": {
+        "who_can_withdraw_or_correct": [
+          "reviewer:CWRC-display-reviewer",
+          "reviewer:CWRC-sample-steward"
+        ],
+        "affected_surfaces": [
+          "story-card-candidate.md",
+          "composition report",
+          "receipt wall drafts",
+          "search indexes or summaries derived from this candidate"
+        ],
+        "action_if_withdrawn": "Remove the candidate from review queues and mark all derived references as withdrawn."
+      },
+      "ai_use_receipt": {
+        "receipt_id": "ai-use:CWRC-story-candidate-001",
+        "ai_used": true,
+        "approved_for_this_use": true,
+        "touched_material": [
+          "fictional public-sample fixture fields",
+          "local public-sample specs and templates",
+          "role-only reviewer objects"
+        ],
+        "excluded_material": [
+          "private evidence",
+          "protected content",
+          "cultural or ceremonial material",
+          "evidence:CWRC-003 underlying content"
+        ],
+        "output_review_state": "pending_display_review"
+      }
+    }
+  ],
+  "coherence_vector": {},
+  "not_established": [],
+  "not_run": [],
+  "human_review_prompt": "Review the trace for authority gaps, boundary laundering, category drift, missing excluded records, and whether blocked outputs are explained as clearly as composed outputs."
+}

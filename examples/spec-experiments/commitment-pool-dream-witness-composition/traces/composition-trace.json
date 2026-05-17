@@ -1,7 +1,7 @@
 {
   "engine": {
     "name": "Creator Jam Composition Engine Prototype",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "generated_at": "2026-05-17"
   },
   "input": {
@@ -91,7 +91,8 @@
       "result_status": "transitioned_with_limits",
       "has_ai_use_receipt": true,
       "has_authority_record": true,
-      "has_contributor_consent_check": false
+      "has_contributor_consent_check": false,
+      "explicit_contributor_authority": true
     },
     {
       "transition_id": "transition:CPDWC-002",
@@ -103,7 +104,8 @@
       "result_status": "blocked",
       "has_ai_use_receipt": true,
       "has_authority_record": false,
-      "has_contributor_consent_check": true
+      "has_contributor_consent_check": true,
+      "explicit_contributor_authority": true
     },
     {
       "transition_id": "transition:CPDWC-003",
@@ -115,7 +117,8 @@
       "result_status": "transitioned",
       "has_ai_use_receipt": true,
       "has_authority_record": false,
-      "has_contributor_consent_check": true
+      "has_contributor_consent_check": true,
+      "explicit_contributor_authority": true
     },
     {
       "transition_id": "transition:CPDWC-004",
@@ -127,7 +130,8 @@
       "result_status": "transitioned_with_limits",
       "has_ai_use_receipt": true,
       "has_authority_record": true,
-      "has_contributor_consent_check": false
+      "has_contributor_consent_check": false,
+      "explicit_contributor_authority": true
     }
   ],
   "hard_checks": [
@@ -154,7 +158,8 @@
       "code": "do_not_compute_exclusions",
       "status": "ok",
       "detail": "do_not_compute source records are represented as excluded records.",
-      "records": []
+      "records": [],
+      "represented_by_blocked_transition": []
     },
     {
       "code": "speech_act_authority_markers",

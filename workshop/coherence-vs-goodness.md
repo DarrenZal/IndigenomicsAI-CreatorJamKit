@@ -101,7 +101,7 @@ Candidate artifacts:
 
 | Artifact | Purpose |
 | --- | --- |
-| `trade-off-surface` | Names what the composition gains, loses, and makes fragile. |
+| `templates/trade-off-surface.md` | Names what the composition gains, loses, and makes fragile. |
 | `value-lens-view` | Shows the same composition through Indigenomics, commons, gift-economy, bioregional, legal, technical, and participant lenses. |
 | `adjacent-possible-map` | Lists near options that become possible if this proceeds. |
 | `adjacent-impossible-map` | Lists options that may be foreclosed if this proceeds. |
@@ -122,4 +122,4 @@ For now, a Creator Jam composition should not be called a good next move unless:
 - refusal and withdrawal paths are explicit
 - a desirability / health deliberation has named what the composition serves, what it risks, and what it forecloses
 
-The last point is the current gap. The next iteration of the kit should add at least one deliberation-support template.
+The last point is the gap that `templates/trade-off-surface.md` starts to address. Future iterations should add more deliberation-support artifacts only when concrete fixtures show the need.

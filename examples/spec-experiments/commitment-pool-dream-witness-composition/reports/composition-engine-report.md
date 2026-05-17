@@ -8,7 +8,7 @@ last_updated: 2026-05-17
 # Composition Engine Diagnostic Report
 
 Fixture: `commitment-pool-dream-witness-composition-public-sample-v0.1`
-Engine: `Creator Jam Composition Engine Prototype` `0.1.0`
+Engine: `Creator Jam Composition Engine Prototype` `0.1.1`
 
 This report is diagnostic output for human review. It is not a verdict, score, approval, authority grant, or display approval.
 
@@ -34,12 +34,12 @@ This report is diagnostic output for human review. It is not a verdict, score, a
 
 ## Speech-Act Transitions
 
-| Transition | From | To | Disposition | Result | AI Receipt | Authority | Contributor Consent |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| `transition:CPDWC-001` | `dream` | `commitment` | `approved_for_fixture` | `transitioned_with_limits` | `true` | `true` | `false` |
-| `transition:CPDWC-002` | `offer` | `commitment` | `blocked` | `blocked` | `true` | `false` | `true` |
-| `transition:CPDWC-003` | `promise` | `commitment` | `approved_for_fixture` | `transitioned` | `true` | `false` | `true` |
-| `transition:CPDWC-004` | `commitment` | `other` | `approved_for_fixture` | `transitioned_with_limits` | `true` | `true` | `false` |
+| Transition | From | To | Disposition | Result | AI Receipt | Authority Record | Contributor Consent | Explicit Contributor Authority |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `transition:CPDWC-001` | `dream` | `commitment` | `approved_for_fixture` | `transitioned_with_limits` | `true` | `true` | `false` | `true` |
+| `transition:CPDWC-002` | `offer` | `commitment` | `blocked` | `blocked` | `true` | `false` | `true` | `true` |
+| `transition:CPDWC-003` | `promise` | `commitment` | `approved_for_fixture` | `transitioned` | `true` | `false` | `true` | `true` |
+| `transition:CPDWC-004` | `commitment` | `other` | `approved_for_fixture` | `transitioned_with_limits` | `true` | `true` | `false` | `true` |
 
 ## Hard Checks
 
@@ -65,6 +65,8 @@ This report is diagnostic output for human review. It is not a verdict, score, a
 | `refusal:CPDWC-004` | active refusal; do_not_compute true | convert refusal to backlog item; search for missing details; treat refusal as capacity |
 
 ## Coherence Vector
+
+These states are preserved from the fixture. The v0.1.x engine does not independently validate coherence-vector claims.
 
 | Dimension | State | Note |
 | --- | --- | --- |
