@@ -1,0 +1,67 @@
+---
+doc_kind: jam-spec
+status: draft
+visibility: public_sample
+area: sensors
+last_updated: 2026-05-17
+---
+
+# Sensor To Receipt Pipeline
+
+## Invitation
+
+Build a small pipeline that turns sensor readings or field observations into reviewable evidence packets and witness receipts.
+
+## What Could Be Built
+
+- A sensor reading schema.
+- A citizen observation form.
+- A packet builder that links observations to claims or commitments.
+- A reviewer step for calibration, context, permission, and uncertainty.
+- A receipt that records what was observed and how it was reviewed.
+
+## Inputs
+
+- `observation_id`
+- `observation_type`: sensor_reading, field_note, photo, audio, manual_count, repair_event
+- `source_device_or_person`
+- `location_precision`
+- `time_window`
+- `measurement`
+- `unit`
+- `calibration_state`
+- `evidence_pointer`
+- `visibility_tier`
+- `review_state`
+- `sensitive_location_flag`
+
+## Outputs
+
+- Sensor or observation evidence packet.
+- Review diagnostics.
+- Claim or commitment link.
+- Witness receipt.
+- Public-safe summary.
+
+## Acceptance Criteria
+
+- Sensor readings and human observations can share one packet model.
+- Location precision can be reduced for sensitive places.
+- Calibration and uncertainty are visible.
+- Public receipts do not expose protected locations or identities.
+- Records can be withdrawn, corrected, or marked not-for-computation.
+
+## Refusal Boundaries
+
+- Do not treat a raw sensor reading as a verified claim.
+- Do not publish sensitive ecological or cultural locations.
+- Do not infer compliance, enforcement, or eligibility without a separate reviewed spec.
+- Do not assume a device owner has authority to publish place-based knowledge.
+
+## First Build Step
+
+Create three sample packets: one temperature sensor reading, one field note, and one restoration repair event, then produce a witness receipt for each.
+
+## Source Notes
+
+Synthesized from bioregional ecological monitoring notes, RegenAI sensor-to-claim patterns, and Creator Jam witness receipt templates.

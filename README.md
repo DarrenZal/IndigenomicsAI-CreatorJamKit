@@ -32,6 +32,12 @@ This repo is for public, sample, or explicitly display-approved material only. D
 - `examples/handoff-packet-studio/` shows how to freeze a selected bundle.
 - `examples/ai-attempt-review-pattern/` shows how to review an AI-assisted attempt without treating AI output as authority.
 
+## Spec Backlog
+
+- `specs/README.md` is the Creator Jam spec menu.
+- The backlog includes witnessing and claims, commitment pooling, flow funding, bioregional mapping, bioregional insights, insurance and risk, Indigenomics AI app flows, sensors, private learning, receipt walls, and spec composition.
+- Participants can build a spec, improve a spec, or compose several specs into a candidate collective build.
+
 ## Boundaries
 
 Receipts record what happened. They do not establish legitimacy, authority, certification, or readiness for reuse.
@@ -50,4 +56,3 @@ python3 scripts/validate-bundle-links.py
 ```
 
 These checks are lightweight. They check shape and references; they do not certify permission, authority, or correctness.
-
