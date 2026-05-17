@@ -44,8 +44,10 @@ This repo is for public, sample, or explicitly display-approved material only. D
 - `workshop/waka-claims-engine-primitive-comparison.md` compares Austin Wade Smith / RiverComputer's Waka project, the RegenAI Claims Engine, and the Creator Jam Coordination Canoe pattern before any interop spec is written.
 - `workshop/coordination-canoe-weave-map.md` maps the central coordination field before the next spec or build artifact is selected.
 - `workshop/composition-engine-technical-pattern.md` describes the operator-facing composition engine pattern from raw garden input to candidate bundles, authority checks, coherence vectors, constraints, and receipts.
+- `workshop/coherence-vs-goodness.md` separates composability, coherence, and desirability/health so technical fit is not mistaken for a good next move.
 - `workshop/tomorrow-spec-build-plan.md` gives a short next-day plan for turning the backlog into fixture-backed builds.
 - `examples/spec-experiments/` contains the first fixture-backed spec experiments.
+- `games/` contains lightweight play formats that teach the same speech-act, refusal, review, and receipt primitives as the kit.
 - `templates/speech-act-transition.md` is the category-drift checkpoint for transitions such as citation to claim, observation to attestation, dream to commitment, witness record to attribution, and receipt to public story.
 - `templates/display-review-checklist.md` is the review gate before a receipt, witness rollup, story card, gallery item, or public readout moves into display.
 - `docs/glossary.md` names `Coordination Canoe` as the provisional local working metaphor and reserves `Waka` for Austin Wade Smith / RiverComputer's project.
@@ -65,6 +67,7 @@ Run:
 ```bash
 python3 scripts/validate-frontmatter.py
 python3 scripts/validate-bundle-links.py
+python3 scripts/composition_engine.py examples/spec-experiments/commitment-pool-dream-witness-composition --write
 ```
 
 These checks are lightweight. They check shape and references; they do not certify permission, authority, or correctness.

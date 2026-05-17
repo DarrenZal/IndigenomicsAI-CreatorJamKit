@@ -5,7 +5,7 @@ from pathlib import Path
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
-CHECK_DIRS = [ROOT / "docs", ROOT / "templates", ROOT / "examples", ROOT / "workshop"]
+CHECK_DIRS = [ROOT / "docs", ROOT / "templates", ROOT / "examples", ROOT / "workshop", ROOT / "games"]
 
 
 def markdown_files():
@@ -46,4 +46,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     sys.exit(main())
-

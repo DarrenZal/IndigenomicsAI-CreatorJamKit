@@ -1,0 +1,315 @@
+{
+  "engine": {
+    "name": "Creator Jam Composition Engine Prototype",
+    "version": "0.1.0",
+    "generated_at": "2026-05-17"
+  },
+  "input": {
+    "experiment_dir": "/Users/darrenzal/projects/IndigenomicsAI-CreatorJamKit/examples/spec-experiments/commitment-pool-dream-witness-composition",
+    "fixture_path": "/Users/darrenzal/projects/IndigenomicsAI-CreatorJamKit/examples/spec-experiments/commitment-pool-dream-witness-composition/fixtures/commitment-pool-dream-witness-fixture.json"
+  },
+  "fixture_id": "commitment-pool-dream-witness-composition-public-sample-v0.1",
+  "composition_attempt": {
+    "attempt_id": "composition:CPDWC-001",
+    "purpose": "Test whether dream, offer, promise, refusal, and withdrawal records can compose into a commitment-pool reviewer receipt without category drift.",
+    "composition_shape": "adapter_needed",
+    "composition_disposition": "approved_for_fixture",
+    "review_date": "2026-05-17",
+    "derived_from_transitions": [
+      "transition:CPDWC-001",
+      "transition:CPDWC-002",
+      "transition:CPDWC-003",
+      "transition:CPDWC-004"
+    ]
+  },
+  "records": [
+    {
+      "record_id": "dream:CPDWC-001",
+      "speech_act": "dream",
+      "explicit_or_inferred": "explicit",
+      "visibility_tier": "public_sample",
+      "permission_state": "approved_for_review",
+      "do_not_compute": false
+    },
+    {
+      "record_id": "authorization:CPDWC-001",
+      "speech_act": "participant_authorization",
+      "explicit_or_inferred": "explicit",
+      "visibility_tier": "public_sample",
+      "permission_state": "approved_for_review",
+      "do_not_compute": false
+    },
+    {
+      "record_id": "offer:CPDWC-002",
+      "speech_act": "offer",
+      "explicit_or_inferred": "explicit",
+      "visibility_tier": "public_sample",
+      "permission_state": "approved_for_review",
+      "do_not_compute": false
+    },
+    {
+      "record_id": "promise:CPDWC-003",
+      "speech_act": "promise",
+      "explicit_or_inferred": "explicit",
+      "visibility_tier": "public_sample",
+      "permission_state": "approved_for_review",
+      "do_not_compute": false
+    },
+    {
+      "record_id": "withdrawal:CPDWC-003",
+      "speech_act": "withdrawal",
+      "explicit_or_inferred": "explicit",
+      "visibility_tier": "public_sample",
+      "permission_state": "approved_for_review",
+      "do_not_compute": false
+    },
+    {
+      "record_id": "refusal:CPDWC-004",
+      "speech_act": "refusal",
+      "explicit_or_inferred": "explicit",
+      "visibility_tier": "boundary_marker_only",
+      "permission_state": "refused",
+      "do_not_compute": true
+    },
+    {
+      "record_id": "protected-source:CPDWC-005",
+      "speech_act": "care_note",
+      "explicit_or_inferred": "explicit",
+      "visibility_tier": "private",
+      "permission_state": "refused",
+      "do_not_compute": true
+    }
+  ],
+  "transitions": [
+    {
+      "transition_id": "transition:CPDWC-001",
+      "from_speech_act": "dream",
+      "to_speech_act": "commitment",
+      "source_record": "dream:CPDWC-001",
+      "target_record": "commitment-candidate:CPDWC-001",
+      "composition_disposition": "approved_for_fixture",
+      "result_status": "transitioned_with_limits",
+      "has_ai_use_receipt": true,
+      "has_authority_record": true,
+      "has_contributor_consent_check": false
+    },
+    {
+      "transition_id": "transition:CPDWC-002",
+      "from_speech_act": "offer",
+      "to_speech_act": "commitment",
+      "source_record": "offer:CPDWC-002",
+      "target_record": "commitment-candidate:CPDWC-002",
+      "composition_disposition": "blocked",
+      "result_status": "blocked",
+      "has_ai_use_receipt": true,
+      "has_authority_record": false,
+      "has_contributor_consent_check": true
+    },
+    {
+      "transition_id": "transition:CPDWC-003",
+      "from_speech_act": "promise",
+      "to_speech_act": "commitment",
+      "source_record": "promise:CPDWC-003",
+      "target_record": "accepted-commitment:CPDWC-003",
+      "composition_disposition": "approved_for_fixture",
+      "result_status": "transitioned",
+      "has_ai_use_receipt": true,
+      "has_authority_record": false,
+      "has_contributor_consent_check": true
+    },
+    {
+      "transition_id": "transition:CPDWC-004",
+      "from_speech_act": "commitment",
+      "to_speech_act": "other",
+      "source_record": "accepted-commitment:CPDWC-003",
+      "target_record": "accepted-commitment:CPDWC-003-narrowed",
+      "composition_disposition": "approved_for_fixture",
+      "result_status": "transitioned_with_limits",
+      "has_ai_use_receipt": true,
+      "has_authority_record": true,
+      "has_contributor_consent_check": false
+    }
+  ],
+  "hard_checks": [
+    {
+      "code": "source_records_explicit_or_inferred",
+      "status": "ok",
+      "detail": "All source records carry explicit_or_inferred.",
+      "records": []
+    },
+    {
+      "code": "transition_ai_use_receipts",
+      "status": "ok",
+      "detail": "All transitions include AI-use receipts.",
+      "transitions": []
+    },
+    {
+      "code": "derived_from_transitions",
+      "status": "ok",
+      "detail": "Composed outputs point to known transition IDs.",
+      "missing_outputs": [],
+      "unknown_refs": []
+    },
+    {
+      "code": "do_not_compute_exclusions",
+      "status": "ok",
+      "detail": "do_not_compute source records are represented as excluded records.",
+      "records": []
+    },
+    {
+      "code": "speech_act_authority_markers",
+      "status": "ok",
+      "detail": "Load-bearing speech-act transitions carry authority markers.",
+      "warnings": []
+    }
+  ],
+  "blocked_transitions": [
+    {
+      "transition_id": "transition:CPDWC-002",
+      "from_speech_act": "offer",
+      "to_speech_act": "commitment",
+      "composition_disposition": "blocked",
+      "result_status": "blocked",
+      "next_action": "Return with repair path: wait for capacity, narrow quantity, or route to another pool.",
+      "boundary_obstructions": [
+        "candidate quantity exceeds routeable remaining capacity",
+        "pool acceptance would silently over-allocate the fixture pool"
+      ]
+    }
+  ],
+  "excluded_records": [
+    {
+      "record_id": "protected-source:CPDWC-005",
+      "excluded_reason": [
+        "permission_state refused",
+        "visibility_tier private",
+        "do_not_compute true",
+        "share_policy protected_private_no_ai_no_public_route",
+        "standing refusal applies"
+      ],
+      "allowed_reference": "Marker only: a protected care note exists outside this fixture's permission boundary.",
+      "prohibited_actions": [
+        "summarize underlying content",
+        "infer commitment",
+        "route into pool",
+        "embed or index",
+        "train on",
+        "display"
+      ]
+    },
+    {
+      "record_id": "refusal:CPDWC-004",
+      "excluded_reason": [
+        "active refusal",
+        "do_not_compute true"
+      ],
+      "allowed_reference": "Refusal boundary exists and is honored.",
+      "prohibited_actions": [
+        "convert refusal to backlog item",
+        "search for missing details",
+        "treat refusal as capacity"
+      ]
+    }
+  ],
+  "composed_outputs": [
+    {
+      "output_id": "commitment-pool-composition:CPDWC-001",
+      "output_type": "commitment_pool_reviewer_receipt",
+      "composition_shape": "adapter_needed",
+      "composition_disposition": "approved_for_fixture",
+      "derived_from_transitions": [
+        "transition:CPDWC-001",
+        "transition:CPDWC-002",
+        "transition:CPDWC-003",
+        "transition:CPDWC-004"
+      ],
+      "included_records": [
+        "dream:CPDWC-001",
+        "authorization:CPDWC-001",
+        "offer:CPDWC-002",
+        "promise:CPDWC-003",
+        "withdrawal:CPDWC-003"
+      ],
+      "excluded_records": [
+        "refusal:CPDWC-004",
+        "protected-source:CPDWC-005"
+      ],
+      "capacity_effects": {
+        "pool_id": "pool:cedar-care-sprint-near-full",
+        "unit": "volunteer_hours",
+        "routeable_remaining_before_fixture": 1,
+        "accepted_from_transition_CPDWC_001": 1,
+        "returned_from_transition_CPDWC_002": 3,
+        "capacity_restored_from_transition_CPDWC_004": 1,
+        "routeable_remaining_after_fixture": 1
+      },
+      "witness_receipts": [
+        {
+          "witness_id": "witness:CPDWC-001",
+          "witness_type": "human_review",
+          "reviewer_id": "reviewer:CPDWC-pool-steward",
+          "statement": "A fictional pool steward reviewed the one-hour contributor-authorized commitment candidate and capacity effect for fixture use only.",
+          "not_established": [
+            "real-world commitment",
+            "funding eligibility",
+            "cultural authority",
+            "ceremonial witnessing",
+            "legitimacy"
+          ]
+        },
+        {
+          "witness_id": "witness:CPDWC-002",
+          "witness_type": "facilitator_note",
+          "reviewer_id": "reviewer:CPDWC-facilitator",
+          "statement": "A fictional facilitator recorded that contributor authorization was required and present for transition:CPDWC-001.",
+          "not_established": [
+            "facilitator authority to create commitments",
+            "ceremonial witnessing",
+            "permission for other uses"
+          ]
+        }
+      ]
+    }
+  ],
+  "coherence_vector": {
+    "logical_coherence": {
+      "state": "holds_for_fixture",
+      "note": "Capacity arithmetic is explicit and no accepted record exceeds routeable capacity."
+    },
+    "epistemic_coherence": {
+      "state": "holds_for_fixture",
+      "note": "Every composed output cites source records and transition IDs."
+    },
+    "normative_coherence": {
+      "state": "holds_with_limits",
+      "note": "Commitments enter only through contributor authority; returned offers are not treated as lower value."
+    },
+    "relational_cultural_coherence": {
+      "state": "holds_for_fixture",
+      "note": "Witness language is bounded to reviewer/software receipts and refusal markers are preserved."
+    },
+    "temporal_coherence": {
+      "state": "holds_with_limits",
+      "note": "Time windows are explicit; post-acceptance withdrawal changes capacity before the commitment window begins."
+    }
+  },
+  "not_established": [
+    "real-world commitment",
+    "funding eligibility",
+    "authority",
+    "legitimacy",
+    "certification",
+    "cultural fit",
+    "ceremonial witnessing",
+    "permission for other uses"
+  ],
+  "not_run": [
+    "live pool update",
+    "real commitment routing",
+    "payment, grant, or allocation execution",
+    "participant or community review workflow",
+    "public receipt wall export",
+    "AI processing of private or protected material"
+  ],
+  "human_review_prompt": "Review the trace for authority gaps, boundary laundering, category drift, missing excluded records, and whether blocked outputs are explained as clearly as composed outputs."
+}

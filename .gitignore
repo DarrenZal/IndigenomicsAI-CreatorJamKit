@@ -2,6 +2,8 @@
 .env
 .env.*
 node_modules/
+__pycache__/
+*.pyc
 .turbo/
 .tmp/
 tmp/
@@ -17,4 +19,3 @@ coverage/
 *.mp4
 *.mov
 *.pdf
-
