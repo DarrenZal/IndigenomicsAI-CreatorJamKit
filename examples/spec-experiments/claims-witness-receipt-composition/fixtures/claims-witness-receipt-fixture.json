@@ -1,0 +1,744 @@
+{
+  "fixture_id": "claims-witness-receipt-composition-public-sample-v0.1",
+  "reference_name": "claims evidence -> witness record -> receipt/story candidate worked composition reference",
+  "created_at": "2026-05-17",
+  "visibility": "public_sample",
+  "spec_ids": [
+    "claims-evidence-coherence-report",
+    "witness-record-interop-profile",
+    "receipt-wall-story-gallery",
+    "speech-act-transition"
+  ],
+  "participant_safety": {
+    "content_mode": "fictional_public_sample",
+    "contains_private_or_protected_content": false,
+    "contains_cultural_or_nation_specific_content": false,
+    "contains_ceremonial_or_authority_content": false,
+    "raw_private_evidence_included": false,
+    "marker_only_boundary_record_included": true,
+    "boundary_note": "The marker-only record demonstrates exclusion behavior only; no underlying content is present or inferable."
+  },
+  "reviewer_type_enum": [
+    "facilitator",
+    "human_reviewer",
+    "sample_steward",
+    "technical_reviewer",
+    "display_reviewer"
+  ],
+  "reviewers": [
+    {
+      "reviewer_id": "reviewer:CWRC-sample-steward",
+      "display_name": "Fictional Sample Steward",
+      "reviewer_type": "sample_steward",
+      "role": "fictional role for checking sample-use boundaries",
+      "authority_boundary": "May check fixture shape and public-sample safety; does not certify truth, legitimacy, consent, cultural fit, or permission for other uses."
+    },
+    {
+      "reviewer_id": "reviewer:CWRC-human-reviewer",
+      "display_name": "Fictional Human Reviewer",
+      "reviewer_type": "human_reviewer",
+      "role": "fictional role for checking claim wording against evidence pointers",
+      "authority_boundary": "May review whether a narrow claim follows from the named fictional evidence; does not establish authority, legitimacy, certification, or cultural authority."
+    },
+    {
+      "reviewer_id": "reviewer:CWRC-technical-reviewer",
+      "display_name": "Fictional Technical Reviewer",
+      "reviewer_type": "technical_reviewer",
+      "role": "fictional role for checking field composition and boundary propagation",
+      "authority_boundary": "May check schema compatibility and exclusion rules; does not approve public display or certify reuse."
+    },
+    {
+      "reviewer_id": "reviewer:CWRC-facilitator",
+      "display_name": "Fictional Facilitator",
+      "reviewer_type": "facilitator",
+      "role": "fictional role for recording a bounded facilitation note",
+      "authority_boundary": "May record what was reviewed in the fixture; does not perform ceremonial witnessing, Knowledge Keeper witnessing, cultural authority, or protocol authority."
+    },
+    {
+      "reviewer_id": "reviewer:CWRC-display-reviewer",
+      "display_name": "Fictional Display Reviewer",
+      "reviewer_type": "display_reviewer",
+      "role": "fictional role for deciding whether a candidate may move toward display",
+      "authority_boundary": "May mark a display candidate pending, returned, or approved for this sample context only; does not grant permission for other uses."
+    }
+  ],
+  "composition_policy": {
+    "evidence_visibility_is_separate_from_claim_visibility": true,
+    "default_visibility_rule": "When records disagree, use the more restrictive visibility unless an explicit reviewer projection narrows the output.",
+    "do_not_compute_rule": "If any source has do_not_compute true, that source is excluded from indexing, summarization, routing, embedding, AI processing, and display.",
+    "display_rule": "A receipt/story candidate with display_approval pending and do_not_show_externally true cannot be shown externally.",
+    "witness_boundary": "Witness records in this fixture are software/reviewer receipts only, not ceremonial witnessing, Knowledge Keeper witnessing, cultural authority, or protocol authority."
+  },
+  "source_records": {
+    "evidence_records": [
+      {
+        "record_id": "evidence:CWRC-001",
+        "record_type": "evidence_pointer",
+        "title": "Riverbend Commons sample garden session log",
+        "source_summary": "Fictional aggregate public-sample log showing two demo garden sessions recorded in May 2026.",
+        "evidence_type": "aggregate_event_log",
+        "evidence_date": "2026-05-08",
+        "evidence_visibility": "public",
+        "visibility_tier": "public_sample",
+        "permission_state": "approved_for_review",
+        "intended_use": "review",
+        "do_not_compute": false,
+        "sensitive_location_flag": false,
+        "restrictions": [
+          "aggregate_only",
+          "no_participant_names",
+          "not_an_impact_claim"
+        ],
+        "boundary_check": {
+          "check_id": "boundary:CWRC-001",
+          "review_state": "reviewed",
+          "reviewer": {
+            "reviewer_id": "reviewer:CWRC-technical-reviewer",
+            "reviewer_type": "technical_reviewer"
+          },
+          "outcome": "available_for_narrow_transition",
+          "allowed_projection": {
+            "summary": "May support a narrow claim that two fictional public-sample sessions were recorded.",
+            "allowed_fields": [
+              "record_id",
+              "title",
+              "source_summary",
+              "evidence_type",
+              "evidence_date",
+              "evidence_visibility"
+            ],
+            "excluded_fields": [
+              "raw_rows",
+              "participant_names",
+              "location_detail_beyond_public_sample_label",
+              "any impact or authority language"
+            ]
+          },
+          "not_established": [
+            "authority",
+            "legitimacy",
+            "certification",
+            "cultural fit",
+            "readiness for reuse",
+            "permission for other uses"
+          ]
+        }
+      },
+      {
+        "record_id": "evidence:CWRC-002",
+        "record_type": "evidence_pointer",
+        "title": "Role-only facilitation checklist",
+        "source_summary": "Fictional checklist noting that reviewer roles, not personal names, should appear in the worked composition reference.",
+        "evidence_type": "review_note",
+        "evidence_date": "2026-05-12",
+        "evidence_visibility": "local_only",
+        "visibility_tier": "local_only",
+        "permission_state": "approved_for_review",
+        "intended_use": "review",
+        "do_not_compute": false,
+        "sensitive_location_flag": false,
+        "restrictions": [
+          "role_only",
+          "not_public_story_copy"
+        ],
+        "boundary_check": {
+          "check_id": "boundary:CWRC-002",
+          "review_state": "reviewed",
+          "reviewer": {
+            "reviewer_id": "reviewer:CWRC-facilitator",
+            "reviewer_type": "facilitator"
+          },
+          "outcome": "available_as_role_only_context",
+          "allowed_projection": {
+            "summary": "May support role-only witness wording in the internal story candidate.",
+            "allowed_fields": [
+              "record_id",
+              "title",
+              "source_summary",
+              "evidence_visibility"
+            ],
+            "excluded_fields": [
+              "facilitator_notes_not_in_fixture",
+              "private contact details",
+              "display approval"
+            ]
+          },
+          "not_established": [
+            "authority",
+            "legitimacy",
+            "certification",
+            "cultural fit",
+            "readiness for reuse",
+            "permission for other uses"
+          ]
+        }
+      },
+      {
+        "record_id": "evidence:CWRC-003",
+        "record_type": "evidence_pointer",
+        "title": "Marker-only source with no display permission",
+        "source_summary": "Marker only: a fictional source exists outside this composition's permission boundary. No underlying content is included.",
+        "evidence_type": "redacted_refusal_marker",
+        "evidence_date": "2026-05-13",
+        "evidence_visibility": "private",
+        "visibility_tier": "do_not_display",
+        "permission_state": "refused",
+        "intended_use": "boundary_marker_only",
+        "do_not_compute": true,
+        "sensitive_location_flag": true,
+        "restrictions": [
+          "do_not_compute",
+          "do_not_summarize",
+          "do_not_display_publicly",
+          "do_not_route",
+          "do_not_train",
+          "do_not_infer_underlying_content"
+        ],
+        "boundary_check": {
+          "check_id": "boundary:CWRC-003",
+          "review_state": "blocked",
+          "reviewer": {
+            "reviewer_id": "reviewer:CWRC-sample-steward",
+            "reviewer_type": "sample_steward"
+          },
+          "outcome": "blocked_and_excluded_from_composed_output",
+          "boundary_obstructions": [
+            "permission_state_refused",
+            "do_not_compute_true",
+            "evidence_visibility_private",
+            "display_approval_absent"
+          ],
+          "allowed_projection": {
+            "summary": "May only be named as an exclusion marker by record id and title.",
+            "allowed_fields": [
+              "record_id",
+              "title",
+              "boundary_obstructions"
+            ],
+            "excluded_fields": [
+              "underlying content",
+              "source details",
+              "participant details",
+              "summary",
+              "story copy",
+              "claim support"
+            ]
+          },
+          "not_established": [
+            "authority",
+            "legitimacy",
+            "certification",
+            "cultural fit",
+            "readiness for reuse",
+            "permission for other uses"
+          ]
+        }
+      }
+    ],
+    "claim_records": [
+      {
+        "record_id": "claim:CWRC-001",
+        "record_type": "claim",
+        "claim_id": "claim:CWRC-001",
+        "claim_text": "The fictional Riverbend Commons demo team recorded two public-sample garden sessions in May 2026.",
+        "claim_subject": "Riverbend Commons demo sessions",
+        "claim_type": "outcome",
+        "intended_use": "internal composition review and public-sample demonstration",
+        "claim_visibility_tier": "public_sample",
+        "visibility_tier": "public_sample",
+        "permission_state": "approved_for_review",
+        "review_state": "reviewed",
+        "reviewer": {
+          "reviewer_id": "reviewer:CWRC-human-reviewer",
+          "reviewer_type": "human_reviewer"
+        },
+        "review_date": "2026-05-14",
+        "evidence_pointers": [
+          "evidence:CWRC-001"
+        ],
+        "evidence_visibility_summary": [
+          {
+            "evidence_id": "evidence:CWRC-001",
+            "evidence_visibility": "public",
+            "claim_visibility_tier": "public_sample"
+          }
+        ],
+        "excluded_evidence_pointers": [
+          "evidence:CWRC-003"
+        ],
+        "confidence": "medium",
+        "do_not_compute": false,
+        "limitations": [
+          "Aggregate session-count wording only.",
+          "Does not describe participant experience.",
+          "Does not support impact, eligibility, or authority language."
+        ],
+        "not_established": [
+          "authority",
+          "legitimacy",
+          "certification",
+          "cultural fit",
+          "readiness for reuse",
+          "permission for other uses"
+        ],
+        "withdrawal_path": {
+          "who_can_withdraw_or_correct": [
+            "reviewer:CWRC-sample-steward",
+            "reviewer:CWRC-human-reviewer"
+          ],
+          "affected_surfaces": [
+            "composition report",
+            "story candidate",
+            "receipt candidate",
+            "indexes or summaries derived from this fixture"
+          ],
+          "action_if_withdrawn": "Remove the claim from composed outputs and mark dependent transitions and story candidates as withdrawn."
+        }
+      }
+    ],
+    "witness_records": [
+      {
+        "record_id": "witness:CWRC-001",
+        "record_type": "witness",
+        "witness_record_id": "witness:CWRC-001",
+        "witness_type": "human_review",
+        "statement": "A fictional human reviewer checked that claim:CWRC-001 follows from evidence:CWRC-001 for the named public-sample demonstration.",
+        "subject": "claim:CWRC-001",
+        "actor_or_issuer": "reviewer:CWRC-human-reviewer",
+        "witnesses": [
+          {
+            "reviewer_id": "reviewer:CWRC-human-reviewer",
+            "reviewer_type": "human_reviewer"
+          }
+        ],
+        "evidence_pointers": [
+          "evidence:CWRC-001"
+        ],
+        "excluded_evidence_pointers": [
+          "evidence:CWRC-003"
+        ],
+        "visibility_tier": "public_sample",
+        "permission_state": "approved_for_review",
+        "review_state": "reviewed",
+        "created_at": "2026-05-14",
+        "limitations": [
+          "software/reviewer receipt only",
+          "no ceremonial witnessing",
+          "no Knowledge Keeper witnessing",
+          "no cultural authority",
+          "no protocol authority"
+        ],
+        "not_established": [
+          "authority",
+          "legitimacy",
+          "certification",
+          "cultural fit",
+          "readiness for reuse",
+          "permission for other uses"
+        ],
+        "ai_use_receipt": {
+          "receipt_id": "ai-use:CWRC-witness-001",
+          "ai_used": false,
+          "approved_for_this_use": "not_applicable",
+          "touched_material": [],
+          "excluded_material": [
+            "private evidence",
+            "protected content",
+            "cultural or ceremonial material",
+            "marker-only source evidence:CWRC-003"
+          ],
+          "output_review_state": "human_reviewed_sample_record"
+        },
+        "withdrawal_path": {
+          "who_can_withdraw_or_correct": [
+            "reviewer:CWRC-human-reviewer",
+            "reviewer:CWRC-sample-steward"
+          ],
+          "affected_surfaces": [
+            "composition report",
+            "story candidate",
+            "receipt event",
+            "derived summaries"
+          ],
+          "action_if_withdrawn": "Mark witness:CWRC-001 and transition:CWRC-002 withdrawn; remove dependent story candidate text from display review."
+        }
+      },
+      {
+        "record_id": "witness:CWRC-002",
+        "record_type": "witness",
+        "witness_record_id": "witness:CWRC-002",
+        "witness_type": "facilitator_note",
+        "statement": "A fictional facilitator noted that evidence:CWRC-003 was excluded and must not be reconstructed from the composition.",
+        "subject": "evidence:CWRC-003",
+        "actor_or_issuer": "reviewer:CWRC-facilitator",
+        "witnesses": [
+          {
+            "reviewer_id": "reviewer:CWRC-facilitator",
+            "reviewer_type": "facilitator"
+          }
+        ],
+        "evidence_pointers": [
+          "evidence:CWRC-003"
+        ],
+        "visibility_tier": "public_sample",
+        "permission_state": "approved_for_review",
+        "review_state": "reviewed",
+        "created_at": "2026-05-14",
+        "limitations": [
+          "exclusion marker only",
+          "do not infer or summarize excluded source"
+        ],
+        "not_established": [
+          "authority",
+          "legitimacy",
+          "certification",
+          "cultural fit",
+          "readiness for reuse",
+          "permission for other uses"
+        ],
+        "ai_use_receipt": {
+          "receipt_id": "ai-use:CWRC-witness-002",
+          "ai_used": false,
+          "approved_for_this_use": "not_applicable",
+          "touched_material": [],
+          "excluded_material": [
+            "underlying source content for evidence:CWRC-003",
+            "private evidence",
+            "protected content"
+          ],
+          "output_review_state": "facilitator_note_sample_record"
+        },
+        "withdrawal_path": {
+          "who_can_withdraw_or_correct": [
+            "reviewer:CWRC-facilitator",
+            "reviewer:CWRC-sample-steward"
+          ],
+          "affected_surfaces": [
+            "composition report",
+            "boundary table",
+            "derived summaries"
+          ],
+          "action_if_withdrawn": "Keep evidence:CWRC-003 excluded; remove the facilitator note text and replace it with a minimal boundary marker if needed."
+        }
+      }
+    ],
+    "receipt_events": [
+      {
+        "receipt_id": "receipt:CWRC-001",
+        "event_type": "reviewer_evaluation",
+        "date": "2026-05-14",
+        "contributor": "reviewer:CWRC-human-reviewer",
+        "contribution": "Reviewed the narrow claim-to-evidence relationship for the fictional sample.",
+        "purpose": "Create a receipt/story candidate for internal display review.",
+        "permission_state": "approved_for_review",
+        "review_state": "reviewed",
+        "refusal_state": "not_applicable",
+        "visibility_tier": "public_sample",
+        "display_approval": "pending",
+        "do_not_show_externally": true,
+        "witnesses": [
+          "witness:CWRC-001",
+          "witness:CWRC-002"
+        ],
+        "not_established": [
+          "authority",
+          "legitimacy",
+          "certification",
+          "cultural fit",
+          "readiness for reuse",
+          "permission for other uses"
+        ],
+        "withdrawal_path": {
+          "who_can_withdraw_or_correct": [
+            "reviewer:CWRC-human-reviewer",
+            "reviewer:CWRC-display-reviewer",
+            "reviewer:CWRC-sample-steward"
+          ],
+          "affected_surfaces": [
+            "receipt event",
+            "story candidate",
+            "composition report"
+          ],
+          "action_if_withdrawn": "Remove the receipt from story candidate derivation and mark dependent output as withdrawn."
+        }
+      }
+    ]
+  },
+  "speech_act_transitions": [
+    {
+      "transition_id": "transition:CWRC-001",
+      "transition_label": "evidence -> claim",
+      "from_speech_act": "evidence_pointer",
+      "to_speech_act": "claim",
+      "source_record": {
+        "id": "evidence:CWRC-001",
+        "title": "Riverbend Commons sample garden session log",
+        "visibility_tier": "public_sample",
+        "evidence_visibility": "public",
+        "permission_state": "approved_for_review",
+        "do_not_compute": false
+      },
+      "target_record": {
+        "id": "claim:CWRC-001",
+        "intended_use": "internal composition review and public-sample demonstration",
+        "target_visibility_tier": "public_sample",
+        "claim_visibility_tier": "public_sample",
+        "public_display_requested": false,
+        "ai_use_requested": false
+      },
+      "transition_review": {
+        "composition_shape": "direct",
+        "composition_disposition": "approved_for_fixture",
+        "transition_reviewer": {
+          "reviewer_id": "reviewer:CWRC-technical-reviewer",
+          "reviewer_type": "technical_reviewer"
+        },
+        "review_date": "2026-05-14",
+        "transition_reason": "The aggregate event-log evidence supports only a narrow claim that two fictional public-sample sessions were recorded."
+      },
+      "boundary_obstructions": [
+        "evidence:CWRC-003 is blocked and excluded from claim support.",
+        "No impact, eligibility, legitimacy, or authority language may be projected."
+      ],
+      "not_established": [
+        "authority",
+        "legitimacy",
+        "certification",
+        "cultural fit",
+        "readiness for reuse",
+        "permission for other uses"
+      ],
+      "allowed_projection": {
+        "summary": "Project only the aggregate event count and sample date into claim:CWRC-001.",
+        "allowed_fields": [
+          "evidence_id",
+          "evidence_date",
+          "evidence_type",
+          "evidence_visibility",
+          "aggregate source summary"
+        ],
+        "excluded_fields": [
+          "raw rows",
+          "participant details",
+          "private marker evidence",
+          "impact language",
+          "authority language"
+        ]
+      },
+      "ai_use_receipt": {
+        "receipt_id": "ai-use:CWRC-transition-001",
+        "ai_used": false,
+        "approved_for_this_use": "not_applicable",
+        "touched_material": [],
+        "excluded_material": [
+          "evidence:CWRC-003",
+          "private evidence",
+          "protected content",
+          "cultural or ceremonial material"
+        ],
+        "output_review_state": "reviewed"
+      },
+      "withdrawal_path": {
+        "who_can_withdraw_or_correct": [
+          "reviewer:CWRC-sample-steward",
+          "reviewer:CWRC-technical-reviewer",
+          "reviewer:CWRC-human-reviewer"
+        ],
+        "affected_surfaces": [
+          "claim:CWRC-001",
+          "witness:CWRC-001",
+          "receipt:CWRC-001",
+          "story-candidate:CWRC-001",
+          "composition report"
+        ],
+        "action_if_withdrawn": "Withdraw claim:CWRC-001 and mark dependent transition:CWRC-002 and story-candidate:CWRC-001 as withdrawn."
+      },
+      "result": {
+        "status": "transitioned_with_limits",
+        "next_action": "Keep claim wording narrow and preserve evidence_visibility separately from claim visibility."
+      }
+    },
+    {
+      "transition_id": "transition:CWRC-002",
+      "transition_label": "witness_record -> story_candidate",
+      "from_speech_act": "witness_record",
+      "to_speech_act": "story_candidate",
+      "source_record": {
+        "id": "witness:CWRC-001",
+        "title": "Human review witness record for claim:CWRC-001",
+        "visibility_tier": "public_sample",
+        "evidence_visibility": "not_applicable",
+        "permission_state": "approved_for_review",
+        "do_not_compute": false,
+        "witness_type": "human_review"
+      },
+      "target_record": {
+        "id": "story-candidate:CWRC-001",
+        "intended_use": "internal display review for a possible receipt wall story",
+        "target_visibility_tier": "do_not_display",
+        "public_display_requested": true,
+        "ai_use_requested": false,
+        "display_approval": "pending",
+        "do_not_show_externally": true
+      },
+      "transition_review": {
+        "composition_shape": "adapter_needed",
+        "composition_disposition": "review_required",
+        "transition_reviewer": {
+          "reviewer_id": "reviewer:CWRC-display-reviewer",
+          "reviewer_type": "display_reviewer"
+        },
+        "review_date": "2026-05-14",
+        "transition_reason": "A reviewer receipt can seed an internal story candidate only if display approval remains pending and the candidate keeps non-authority boundaries visible."
+      },
+      "boundary_obstructions": [
+        "display_approval is pending",
+        "do_not_show_externally is true",
+        "witness records are reviewer/software receipts only",
+        "evidence:CWRC-003 is excluded and cannot be used as story support"
+      ],
+      "not_established": [
+        "authority",
+        "legitimacy",
+        "certification",
+        "cultural fit",
+        "readiness for reuse",
+        "permission for other uses"
+      ],
+      "allowed_projection": {
+        "summary": "Project only role-only review receipt wording and the narrow claim into an internal story candidate.",
+        "allowed_fields": [
+          "claim_id",
+          "narrow claim text",
+          "witness_record_id",
+          "witness_type",
+          "reviewer_type",
+          "display_approval",
+          "do_not_show_externally",
+          "not_established"
+        ],
+        "excluded_fields": [
+          "private marker evidence",
+          "participant names",
+          "underlying private content",
+          "ceremonial witnessing language",
+          "Knowledge Keeper witnessing language",
+          "cultural authority language",
+          "permission for other uses"
+        ]
+      },
+      "ai_use_receipt": {
+        "receipt_id": "ai-use:CWRC-transition-002",
+        "ai_used": false,
+        "approved_for_this_use": "not_applicable",
+        "touched_material": [],
+        "excluded_material": [
+          "evidence:CWRC-003",
+          "private evidence",
+          "protected content",
+          "cultural or ceremonial material"
+        ],
+        "output_review_state": "pending_display_review"
+      },
+      "withdrawal_path": {
+        "who_can_withdraw_or_correct": [
+          "reviewer:CWRC-display-reviewer",
+          "reviewer:CWRC-human-reviewer",
+          "reviewer:CWRC-sample-steward"
+        ],
+        "affected_surfaces": [
+          "story-candidate:CWRC-001",
+          "composition report",
+          "receipt wall drafts",
+          "indexes or summaries derived from this fixture"
+        ],
+        "action_if_withdrawn": "Remove the story candidate from display review and mark dependent outputs as withdrawn or superseded."
+      },
+      "result": {
+        "status": "review_required",
+        "next_action": "Display reviewer must explicitly approve or return the candidate before any external display."
+      }
+    }
+  ],
+  "composed_outputs": {
+    "included_source_records": [
+      "evidence:CWRC-001",
+      "evidence:CWRC-002",
+      "claim:CWRC-001",
+      "witness:CWRC-001",
+      "witness:CWRC-002",
+      "receipt:CWRC-001"
+    ],
+    "excluded_source_records": [
+      {
+        "record_id": "evidence:CWRC-003",
+        "excluded_by_boundary_check": true,
+        "exclusion_reason": "permission_state refused, do_not_compute true, evidence_visibility private, and no display approval",
+        "may_be_named_as_marker_only": true,
+        "may_be_summarized": false,
+        "may_be_used_as_claim_support": false,
+        "may_be_used_as_story_support": false
+      }
+    ],
+    "story_candidates": [
+      {
+        "story_candidate_id": "story-candidate:CWRC-001",
+        "title": "Riverbend Commons sample garden sessions",
+        "story_summary": "Internal display-review candidate: a fictional role-only reviewer receipt says a narrow public-sample claim was checked against aggregate sample evidence.",
+        "visibility_tier": "do_not_display",
+        "display_approval": "pending",
+        "do_not_show_externally": true,
+        "participants_displayed": "none; fictional role-only labels only",
+        "derived_from_transitions": [
+          "transition:CWRC-002"
+        ],
+        "derived_from_records": [
+          "claim:CWRC-001",
+          "witness:CWRC-001",
+          "receipt:CWRC-001"
+        ],
+        "excluded_source_records": [
+          "evidence:CWRC-003"
+        ],
+        "not_established": [
+          "authority",
+          "legitimacy",
+          "certification",
+          "cultural fit",
+          "readiness for reuse",
+          "permission for other uses"
+        ],
+        "withdrawal_path": {
+          "who_can_withdraw_or_correct": [
+            "reviewer:CWRC-display-reviewer",
+            "reviewer:CWRC-sample-steward"
+          ],
+          "affected_surfaces": [
+            "story-card-candidate.md",
+            "composition report",
+            "receipt wall drafts",
+            "search indexes or summaries derived from this candidate"
+          ],
+          "action_if_withdrawn": "Remove the candidate from review queues and mark all derived references as withdrawn."
+        },
+        "ai_use_receipt": {
+          "receipt_id": "ai-use:CWRC-story-candidate-001",
+          "ai_used": true,
+          "approved_for_this_use": true,
+          "touched_material": [
+            "fictional public-sample fixture fields",
+            "local public-sample specs and templates",
+            "role-only reviewer objects"
+          ],
+          "excluded_material": [
+            "private evidence",
+            "protected content",
+            "cultural or ceremonial material",
+            "evidence:CWRC-003 underlying content"
+          ],
+          "output_review_state": "pending_display_review"
+        }
+      }
+    ]
+  }
+}

@@ -50,6 +50,8 @@ transition_review:
   composition_shape: direct | adapter_needed | partial_overlap | no_shared_interface | unknown
   composition_disposition: approved_for_fixture | review_required | blocked | non_composable | preserve_separate
   transition_reviewer:
+    reviewer_id:
+    reviewer_type: facilitator | human_reviewer | sample_steward | technical_reviewer | display_reviewer | other
   review_date:
   transition_reason:
 
@@ -94,6 +96,19 @@ result:
 4. Is AI use approved for this exact transition?
 5. What does this transition explicitly not establish?
 6. Who can withdraw, correct, or narrow the transition later?
+
+## Reviewer Types
+
+| reviewer_type | Use |
+| --- | --- |
+| `facilitator` | Records bounded facilitation notes or workshop handling. |
+| `human_reviewer` | Checks content, wording, evidence, or receipt interpretation. |
+| `sample_steward` | Checks public-sample boundaries and fixture safety. |
+| `technical_reviewer` | Checks field shape, schema, and boundary propagation. |
+| `display_reviewer` | Checks whether a candidate can be shown externally. |
+| `other` | Use only with a plain-language role description. |
+
+For sample fixtures, use fictional roles only.
 
 ## Common Transition Risks
 
