@@ -230,4 +230,4 @@ Candidate v0.3 schema extension: add a first-class `composition_event` block wit
 - **v0.1 (May 13 morning):** Initial spec + JSON Schema + sample receipt — shipped
 - **v0.2 (May 13 afternoon — this doc):** K-review feedback adoption (`attribution_disclosure_level` toggle, `severity_resolution_authority` on blocking flags, hash canonicalization rule, schema evolution rule, refusal state_history with witness_chain_ref)
 - **v0.3 (May 17):** First receipt validated against real multi-witness inference output; severity-routing matrix decision; disclosure-downgrade policy
-- **v0.4 (May 22):** Integration guide for other Jam participants; cross-system anchoring pattern (Waka bridge); group-witness flow speced (jam-track aha-ritual integration)
+- **v0.4 (May 22):** Integration guide for other Jam participants; cross-system anchoring pattern with Austin Wade Smith / RiverComputer's Waka project; group-witness flow speced (jam-track aha-ritual integration)

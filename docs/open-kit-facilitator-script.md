@@ -23,7 +23,7 @@ Use this for the narrow first public Open Kit demo:
 - manual/static rendering
 - optional TELUS/Jupyter showcase only if ready
 
-Do not expand the demo into participant gateway, full multi-witness runtime, Waka bridge, or knowledge commons backend.
+Do not expand the demo into participant gateway, full multi-witness runtime, Waka bridge, or knowledge commons backend. `Waka` here means Austin Wade Smith / RiverComputer's project, not the Creator Jam's Coordination Canoe pattern.
 
 ## Opening
 
@@ -83,7 +83,7 @@ Runtime failure is not bundle failure. If a model, notebook, or endpoint fails, 
 6. Name the permission boundary: public ecological demo content only.
 7. Name the refusal boundary: protected or authority-bound content stays out.
 8. Read the acceptance/refusal summary.
-9. Name what was not run: gateway, full AI runtime, Waka bridge, knowledge commons backend.
+9. Name what was not run: gateway, full AI runtime, RiverComputer Waka bridge, knowledge commons backend.
 
 ## Closing Readout
 

@@ -98,7 +98,7 @@ These tracks support the Jam, but they should not be presented as participant re
 | Frozen build-attempt packet | Preserve the selected Open Kit bundle as build attempt instructions. | Operator/internal; used only after the Offering Integration Session. |
 | Partner/runtime integration | Coordinate model endpoints, notebooks, deployment, access, and logging. | Operator/internal. |
 | TELUS/Jupyter optional showcase path | Show TELUS/Jupyter with public sample receipts if ready. | Deferred/operator track unless explicitly used in the narrow Open Kit rehearsal. |
-| Waka / claims bridge | Explore cross-system anchoring without exporting protected content. | Deferred/operator track. |
+| Waka / claims bridge | Explore cross-system anchoring with Austin Wade Smith / RiverComputer's Waka project without exporting protected content. | Deferred/operator track. |
 | Full multi-witness runtime | Explore deeper AI review and evaluator patterns. | Deferred/operator track; not a blocker for Open Kit. |
 | Knowledge Commons backend | Explore entity linking, contribution maps, and shared memory infrastructure. | Deferred/operator track; not a blocker for Open Kit. |
 
@@ -131,7 +131,7 @@ If you're building something for the Jam and want to connect with these:
 
 - **May 13:** witnessing-receipt schema v0.1 + commitment-pool primer v0.1 committed
 - **May 16:** manual-first offering integration docs + Open Kit rehearsal path drafted
-- **Week 2 (May 19-23):** test the quick card and narrow Open Kit flow with real people; keep Waka, full multi-witness runtime, TELUS/Jupyter, and Knowledge Commons backend as operator/deferred tracks unless explicitly cleared
+- **Week 2 (May 19-23):** test the quick card and narrow Open Kit flow with real people; keep RiverComputer Waka interop, full multi-witness runtime, TELUS/Jupyter, and Knowledge Commons backend as operator/deferred tracks unless explicitly cleared
 - **Jam (May 25-26):** live Open Kit demo + Offering Integration Session support for participants who want it
 
 See `2026-05-13-jam-build-sprint.md` for the day-by-day schedule.

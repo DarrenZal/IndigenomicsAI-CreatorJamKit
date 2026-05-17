@@ -51,7 +51,7 @@ Do not use or request:
 - participant private prompts, private files, or unreviewed participant data
 - production pool credentials or deployment secrets
 - TELUS/Jupyter access as a required condition
-- gateway/token UI, Waka bridge, Knowledge commons backend, or full multi-witness runtime
+- gateway/token UI, RiverComputer Waka bridge, Knowledge commons backend, or full multi-witness runtime
 
 If any protected or authority-bound content appears, stop the run and record `review_required`. Do not send it into AI for checking.
 
@@ -112,7 +112,7 @@ The receipt records the run. It does not establish legitimacy, authority, certif
 | `RF2` | The run is framed as legitimacy, authority, certification, or readiness for reuse. | Stop and repair language. |
 | `RF3` | The demo is framed as a production pool, monitoring program, or economic deployment. | Stop and repair language. |
 | `RF4` | TELUS/Jupyter availability is treated as a condition for success. | Stop and return to the manual/static path. |
-| `RF5` | The task expands into framework selection, gateway design, Waka bridge, or full multi-agent architecture. | Stop and defer to a later offering review. |
+| `RF5` | The task expands into framework selection, gateway design, Waka bridge, or full multi-agent architecture. Waka means the external RiverComputer project, not the local Coordination Canoe pattern. | Stop and defer to a later offering review. |
 
 ## Expected Output From Agent Dry Run
 

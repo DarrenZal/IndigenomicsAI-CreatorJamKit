@@ -62,4 +62,4 @@ Create five fixture records and a `validate-witness-record` script that prints d
 
 ## Source Notes
 
-Synthesized from the RegenAI claims engine notes, Waka/Regen interop notes, multi-witness inference sketches, and Creator Jam receipt work.
+Synthesized from the RegenAI claims engine notes, Waka/Regen interop notes where Waka refers to Austin Wade Smith / RiverComputer's project, multi-witness inference sketches, and Creator Jam receipt work.
