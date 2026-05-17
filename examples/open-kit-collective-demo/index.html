@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Salish Sea Kelp Forest Monitoring — Commitment Pool Primer v0.1</title>
+<style>
+  :root {
+    --bg: #f6f4ee;
+    --fg: #2b2a26;
+    --muted: #6c6a64;
+    --accent: #2c5f3f;
+    --accent-soft: #d4e2d6;
+    --border: #cfcdc4;
+    --card: #ffffff;
+    --warn: #8a4a1f;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #1e1d1a; --fg: #ece9e1; --muted: #9e9b91; --accent: #87b89a; --accent-soft: #2b3d31; --border: #3a3833; --card: #282723; }
+  }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; max-width: 920px; margin: 0 auto; padding: 1.5rem; background: var(--bg); color: var(--fg); line-height: 1.5; }
+  h1 { font-size: 1.6rem; margin: 0 0 .25rem; }
+  h2 { font-size: 1.15rem; margin: 1.5rem 0 .5rem; color: var(--accent); }
+  h3 { font-size: .95rem; margin: 1rem 0 .25rem; }
+  .subtitle { color: var(--muted); font-size: .9rem; margin: 0 0 1.5rem; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.25rem; margin: 1rem 0; }
+  .pill { display: inline-block; background: var(--accent-soft); color: var(--accent); padding: .15rem .55rem; border-radius: 10px; font-size: .8rem; margin: .1rem .2rem .1rem 0; }
+  .muted { color: var(--muted); font-size: .85rem; }
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: .75rem; }
+  .stat-box { background: var(--accent-soft); padding: .5rem .75rem; border-radius: 6px; }
+  .stat-label { font-size: .75rem; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+  .stat-value { font-size: 1.4rem; font-weight: 600; color: var(--accent); }
+  form { display: grid; gap: .65rem; }
+  label { display: block; font-size: .85rem; color: var(--muted); margin-bottom: .15rem; }
+  input[type=text], input[type=number], select, textarea { width: 100%; padding: .45rem .6rem; background: var(--bg); color: var(--fg); border: 1px solid var(--border); border-radius: 4px; font-family: inherit; font-size: .9rem; }
+  textarea { min-height: 60px; resize: vertical; }
+  button { background: var(--accent); color: var(--bg); border: none; padding: .55rem 1.25rem; border-radius: 4px; font-family: inherit; font-size: .9rem; cursor: pointer; }
+  button:hover { opacity: .9; }
+  button.secondary { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
+  .tuple-row { display: grid; grid-template-columns: 2.5rem auto 1fr; gap: .5rem; padding: .2rem 0; font-size: .85rem; border-bottom: 1px dashed var(--border); align-items: baseline; }
+  .tuple-row code { background: var(--accent-soft); color: var(--accent); padding: 0 .35rem; border-radius: 3px; font-size: .8rem; }
+  .tuple-row .label { color: var(--muted); }
+  pre { background: var(--accent-soft); padding: .75rem; border-radius: 4px; overflow-x: auto; font-size: .78rem; line-height: 1.35; max-height: 320px; }
+  .commitment-list { list-style: none; padding: 0; }
+  .commitment-list li { padding: .5rem .75rem; border-left: 3px solid var(--accent); background: var(--bg); margin: .35rem 0; border-radius: 0 4px 4px 0; font-size: .88rem; }
+  .station-coverage { font-family: monospace; font-size: .85rem; line-height: 1.6; }
+  .disclaimer { background: var(--card); border-left: 3px solid var(--warn); padding: .75rem 1rem; margin: 1rem 0; font-size: .85rem; color: var(--muted); }
+  details summary { cursor: pointer; color: var(--muted); font-size: .85rem; margin: .5rem 0; }
+</style>
+</head>
+<body>
+
+<h1>Salish Sea Kelp Forest Monitoring</h1>
+<p class="subtitle">Commitment-Pool Primer v0.1 · runnable, local-only, no tracking · <a href="../../docs/specs/commitment-pool-primer-v0.1.md" style="color: var(--accent);">spec doc</a></p>
+
+<div class="disclaimer">
+  <strong>What this is:</strong> A worked example of a commitment pool. v0.1 — demonstrative, not a production pool. Fork the HTML, swap content for your bioregion. <br>
+  <strong>What this is not:</strong> Not a real ecological monitoring program. Not a substitute for Nation-led or coordinator-led monitoring. Content is bioregional-ecological (kelp / herring / salmon), not cultural-linguistic — see <a href="../../docs/specs/commitment-pool-primer-v0.1.md" style="color: var(--accent);">primer doc</a> §"What this is not" for the full disclaimer.
+</div>
+
+<h2>Pool Dashboard</h2>
+<div class="card">
+  <div class="stats" id="stats-grid">
+    <div class="stat-box"><div class="stat-label">Total commitments</div><div class="stat-value" id="stat-count">0</div></div>
+    <div class="stat-box"><div class="stat-label">Total hours pledged</div><div class="stat-value" id="stat-hours">0</div></div>
+    <div class="stat-box"><div class="stat-label">Stations active</div><div class="stat-value" id="stat-stations">0</div></div>
+    <div class="stat-box"><div class="stat-label">Contributors</div><div class="stat-value" id="stat-contributors">0</div></div>
+  </div>
+  <h3 style="margin-top: 1rem;">Station Coverage</h3>
+  <div class="station-coverage" id="station-coverage">No commitments yet.</div>
+  <h3>Pool Charter (RVLFHG)</h3>
+  <p class="muted">
+    <strong>Registry:</strong> monthly_visit / quarterly_recruitment / temperature_log / secchi_depth / storm_observation / photo ·
+    <strong>Value:</strong> hours + visit_count + observation_completeness ·
+    <strong>Limiter:</strong> 4 stations/contributor, 12 visits/station/year, Salish Sea S of 49°N ·
+    <strong>Fee:</strong> 0% (gift economy v0.1) ·
+    <strong>Vault:</strong> Salish Sea Marine Survey commons (placeholder) ·
+    <strong>Governance:</strong> v0.1 steering group TBD
+  </p>
+</div>
+
+<h2>Make a Commitment</h2>
+<div class="card">
+<form id="commitment-form">
+  <div>
+    <label for="contributor-name">Your name (or pseudonym)</label>
+    <input type="text" id="contributor-name" required placeholder="Alice">
+  </div>
+  <div>
+    <label for="contributor-id">Your ID (DID, email, or any stable identifier)</label>
+    <input type="text" id="contributor-id" required placeholder="did:example:alice OR alice@example.org">
+  </div>
+  <div>
+    <label for="station">Station</label>
+    <select id="station" required>
+      <option value="">— pick a station —</option>
+      <option value="race-rocks">Race Rocks Ecological Reserve</option>
+      <option value="east-sooke">East Sooke Park (Aylard Farm)</option>
+      <option value="cordova-bay">Cordova Bay</option>
+      <option value="boundary-pass">Boundary Pass</option>
+      <option value="discovery-island">Discovery Island</option>
+      <option value="haro-strait">Haro Strait (open water)</option>
+    </select>
+  </div>
+  <div>
+    <label for="commitment-type">Commitment type (Registry-admissible)</label>
+    <select id="commitment-type" required>
+      <option value="">— pick a type —</option>
+      <option value="monthly_visit" data-hours="6">Monthly site visit (~6 hr each)</option>
+      <option value="quarterly_recruitment" data-hours="4">Quarterly kelp recruitment observation (~4 hr)</option>
+      <option value="temperature_log" data-hours="0.5">Surface temperature log (per visit; ~0.5 hr)</option>
+      <option value="secchi_depth" data-hours="0.5">Secchi disk depth reading (per visit; ~0.5 hr)</option>
+      <option value="storm_observation" data-hours="2">Storm-event observation (irregular; ~2 hr)</option>
+      <option value="photo" data-hours="0.25">Geo-tagged photo contribution (~0.25 hr each)</option>
+    </select>
+  </div>
+  <div>
+    <label for="quantity">Quantity (count over the next 12 months)</label>
+    <input type="number" id="quantity" required min="1" value="12">
+  </div>
+  <div>
+    <label for="self-statement">Self-attestation statement</label>
+    <textarea id="self-statement" required placeholder="I commit to the schedule above. I will honor refusal at any time if coordinators determine my contribution is no longer welcome..."></textarea>
+  </div>
+  <div>
+    <label for="transparency-tier">Transparency tier</label>
+    <select id="transparency-tier" required>
+      <option value="T1">T1 — Only I see it</option>
+      <option value="T2">T2 — Visible to direct collaborators</option>
+      <option value="T3" selected>T3 — Public with attribution</option>
+      <option value="T4">T4 — Fully open + machine-readable</option>
+    </select>
+  </div>
+  <button type="submit">Pledge commitment + generate receipt</button>
+</form>
+</div>
+
+<div id="tuple-display" class="card" style="display:none;">
+  <h2>Your Commitment Tuple</h2>
+  <p class="muted">Per the Ruddick CVLE × RVLFHG formalism — 10 fields define one commitment.</p>
+  <div id="tuple-content"></div>
+</div>
+
+<div id="receipt-display" class="card" style="display:none;">
+  <h2>Witnessing Receipt (JSON)</h2>
+  <p class="muted">Uses <code>witnessing-receipt-v0.2</code> fields for Jam readiness. Download + integrate with your tooling.</p>
+  <pre id="receipt-json"></pre>
+  <button class="secondary" id="download-receipt">Download receipt</button>
+</div>
+
+<h2>Pool Composition</h2>
+<div class="card">
+  <ul class="commitment-list" id="commitment-list">
+    <li class="muted">No commitments yet.</li>
+  </ul>
+  <details>
+    <summary>Pool state (raw JSON)</summary>
+    <pre id="pool-state">[]</pre>
+  </details>
+</div>
+
+<details style="margin-top: 2rem;">
+<summary>How to remix this primer for your own bioregion</summary>
+<div class="card">
+  <ol style="font-size: .9rem;">
+    <li>Save this HTML file</li>
+    <li>Swap the <code>&lt;option&gt;</code> stations + commitment types for your bioregion's stations and commitment forms</li>
+    <li>Update the Pool Charter (RVLFHG) text in the dashboard section</li>
+    <li>Update the disclaimer to reflect your context</li>
+    <li>That's it — the schema (commitment tuple, witnessing receipt) doesn't change. Only content.</li>
+  </ol>
+  <p class="muted">If you remix this for a Nation-specific context, make sure FPIC + CARE + TK-Labels + Nation-specific authorization frameworks are honored. The schema has slots for these; populate them honestly.</p>
+</div>
+</details>
+
+<script>
+const pool = [];
+
+function nowIso() { return new Date().toISOString(); }
+function uuid() { return 'srm-' + Math.random().toString(36).slice(2, 8); }
+
+function refreshDashboard() {
+  document.getElementById('stat-count').textContent = pool.length;
+  document.getElementById('stat-hours').textContent = pool.reduce((s, c) => s + c.hours, 0).toFixed(1);
+  document.getElementById('stat-stations').textContent = new Set(pool.map(c => c.station)).size;
+  document.getElementById('stat-contributors').textContent = new Set(pool.map(c => c.contributor_id)).size;
+
+  // Station coverage chart (ASCII bars)
+  const stationCounts = {};
+  pool.forEach(c => stationCounts[c.station] = (stationCounts[c.station] || 0) + c.hours);
+  const coverage = Object.keys(stationCounts).length
+    ? Object.entries(stationCounts).map(([s, h]) => {
+        const bars = '█'.repeat(Math.max(1, Math.round(h / 6)));
+        return `${s.padEnd(22)} ${bars} ${h.toFixed(1)} hr`;
+      }).join('\n')
+    : 'No commitments yet.';
+  document.getElementById('station-coverage').textContent = coverage;
+
+  // Commitment list
+  const listEl = document.getElementById('commitment-list');
+  if (pool.length === 0) {
+    listEl.innerHTML = '<li class="muted">No commitments yet.</li>';
+  } else {
+    listEl.innerHTML = pool.map(c => `
+      <li>
+        <strong>${c.contributor_name}</strong> · ${c.quantity}× ${c.commitment_type.replace(/_/g, ' ')} at ${c.station}
+        <span class="pill">${c.hours.toFixed(1)} hr</span>
+        <span class="pill">${c.transparency_tier}</span>
+        <span class="muted">${c.receipt_id}</span>
+      </li>
+    `).join('');
+  }
+  document.getElementById('pool-state').textContent = JSON.stringify(pool, null, 2);
+}
+
+function buildTuple(input, contributor, totalHours) {
+  // C = (i, j, K, b, q, χ, t, e, r, m) — the Ruddick tuple
+  return {
+    i: contributor.id + ' (' + contributor.name + ')',
+    j: 'Salish Sea Marine Survey commons (the pool)',
+    K: input.transparency_tier === 'T3' || input.transparency_tier === 'T4' ? 'public' : (input.transparency_tier === 'T2' ? 'community' : 'private'),
+    b: `${input.quantity}× ${input.commitment_type.replace(/_/g, ' ')} at ${input.station} over the next 12 months`,
+    q: `${input.quantity} occurrences (~${totalHours.toFixed(1)} hours total)`,
+    chi: 'future_commitment',
+    t: nowIso(),
+    e: 'site_photos_geotagged + observation_form_v3 + temperature_log + secchi_disk_reading',
+    r: 'self + Race Rocks coordinator may withdraw/refuse at any time; no penalty for refusal',
+    m: { license: 'CC-BY-SA-4.0', care_acknowledged: true, fpic_status: 'not_applicable', sovereignty_class: input.transparency_tier === 'T1' ? 'private' : 'public' }
+  };
+}
+
+function buildReceipt(input, contributor, tuple, totalHours) {
+  const receiptId = 'witnessing-receipt:' + uuid();
+  const createdAt = nowIso();
+  const witnessChainRef = 'manual-primer-v0.2:' + receiptId;
+  return {
+    receipt_id: receiptId,
+    schema_version: '0.2',
+    contributor: {
+      id: contributor.id,
+      name: contributor.name,
+      role: 'jam_participant',
+      sovereignty_context: 'Salish Sea coastal community network — individual contributor; no Nation-specific authority claimed'
+    },
+    contribution: {
+      type: 'commitment',
+      body: {
+        kind: 'ecological_stewardship_commitment',
+        intent: tuple.b,
+        scope: input.station,
+        quantity: tuple.q,
+        evidence_form: tuple.e.split(' + '),
+        redeems_against: 'Salish Sea Marine Survey commitment-pool'
+      },
+      content_hash: 'sha256:placeholder',
+      ref: null
+    },
+    temporal: {
+      created_at: createdAt,
+      valid_from: new Date(Date.now() + 14 * 86400000).toISOString().slice(0, 10),
+      valid_until: new Date(Date.now() + 379 * 86400000).toISOString().slice(0, 10),
+      temporal_role: 'future_commitment',
+      assertion_time: createdAt,
+      event_time: 'next 12 months from valid_from'
+    },
+    place: {
+      bioregion: 'Salish Sea',
+      location_specific: input.station,
+      jurisdiction: 'Province of BC, Canada; traditional territory of Coast Salish Nations (acknowledged, not claimed-on-behalf-of)'
+    },
+    purpose: 'Contribute to bioregional baseline monitoring. Build relational tenure with the bioregion through repeated witnessed presence.',
+    linked_to: ['witnessing-receipt:salish-sea-marine-survey-charter-v0.1'],
+    witnesses: {
+      self_attestation: {
+        asserted_by: contributor.id,
+        asserted_at: createdAt,
+        statement: input.self_statement
+      },
+      peer_witnesses: [],
+      ai_witnesses: [],
+      schema_witness: {
+        schema_version: '0.2',
+        validates: true,
+        validator_id: 'ws:validator-primer-v0.2',
+        errors: []
+      },
+      group_witnesses: [],
+      pgs_witnesses: []
+    },
+    attribution_disclosure_level: 'summary',
+    transparency_tier: input.transparency_tier,
+    sovereignty: {
+      class: tuple.m.sovereignty_class,
+      authorization_basis: 'Self-attested commitment by individual contributor. Bioregional-ecological content, not Nation-specific.',
+      nation_specific_content: false
+    },
+    ip_framework: {
+      license: tuple.m.license,
+      ocap_classification: null,
+      tk_label: null,
+      fpic_status: tuple.m.fpic_status,
+      care_principles_acknowledged: tuple.m.care_acknowledged
+    },
+    source_claim_ledger: { source_claim_ids: [] },
+    multi_witness_bind: {
+      pipeline_run_id: witnessChainRef,
+      audit_trace_summary: 'Manual primer run; no AI audit stages executed.',
+      audit_trace_ref: null
+    },
+    attribution_chain: { prior_receipts: [], derived_works: [] },
+    refusal: {
+      state: 'active',
+      reason: null,
+      withdrawal_authority: 'self (' + contributor.id + ') AND ' + input.station + ' coordinator authority',
+      state_history: [{
+        state: 'active',
+        transitioned_at: createdAt,
+        transitioned_by: contributor.id,
+        reason: 'Initial creation',
+        witness_chain_ref: witnessChainRef
+      }]
+    }
+  };
+}
+
+document.getElementById('commitment-form').addEventListener('submit', e => {
+  e.preventDefault();
+  const typeSelect = document.getElementById('commitment-type');
+  const hoursEach = parseFloat(typeSelect.selectedOptions[0].dataset.hours);
+  const quantity = parseInt(document.getElementById('quantity').value);
+  const totalHours = hoursEach * quantity;
+
+  const input = {
+    contributor_name: document.getElementById('contributor-name').value,
+    contributor_id: document.getElementById('contributor-id').value,
+    station: document.getElementById('station').value,
+    commitment_type: typeSelect.value,
+    quantity: quantity,
+    self_statement: document.getElementById('self-statement').value,
+    transparency_tier: document.getElementById('transparency-tier').value,
+  };
+  const contributor = { id: input.contributor_id, name: input.contributor_name };
+  const tuple = buildTuple(input, contributor, totalHours);
+  const receipt = buildReceipt(input, contributor, tuple, totalHours);
+
+  // Display tuple
+  const tupleHtml = Object.entries({
+    'i': ['issuer', tuple.i],
+    'j': ['promisee', tuple.j],
+    'K': ['scope', tuple.K],
+    'b': ['body', tuple.b],
+    'q': ['quantity', tuple.q],
+    'χ': ['temporal orientation', tuple.chi],
+    't': ['time', tuple.t],
+    'e': ['evidence', tuple.e],
+    'r': ['remedy', tuple.r],
+    'm': ['metadata', JSON.stringify(tuple.m)]
+  }).map(([k, [label, val]]) => `
+    <div class="tuple-row"><code>${k}</code><span class="label">${label}</span><span>${val}</span></div>
+  `).join('');
+  document.getElementById('tuple-content').innerHTML = tupleHtml;
+  document.getElementById('tuple-display').style.display = 'block';
+
+  // Display receipt
+  document.getElementById('receipt-json').textContent = JSON.stringify(receipt, null, 2);
+  document.getElementById('receipt-display').style.display = 'block';
+
+  // Pool state update
+  pool.push({
+    ...input,
+    hours: totalHours,
+    receipt_id: receipt.receipt_id,
+    receipt: receipt
+  });
+  refreshDashboard();
+
+  // Reset form (keep contributor info)
+  document.getElementById('station').value = '';
+  document.getElementById('commitment-type').value = '';
+  document.getElementById('self-statement').value = '';
+
+  // Download handler
+  document.getElementById('download-receipt').onclick = () => {
+    const blob = new Blob([JSON.stringify(receipt, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `${receipt.receipt_id}.json`;
+    a.click();
+  };
+
+  document.getElementById('tuple-display').scrollIntoView({ behavior: 'smooth' });
+});
+
+refreshDashboard();
+</script>
+
+</body>
+</html>

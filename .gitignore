@@ -1,0 +1,20 @@
+.DS_Store
+.env
+.env.*
+node_modules/
+.turbo/
+.tmp/
+tmp/
+dist/
+build/
+coverage/
+
+# Keep local screenshots and exports out of the participant kit unless
+# explicitly reviewed and committed as sample assets.
+*.png
+*.jpg
+*.jpeg
+*.mp4
+*.mov
+*.pdf
+

@@ -1,0 +1,151 @@
+{
+  "receipt_id": "witnessing-receipt:srm-001",
+  "schema_version": "0.2",
+  "contributor": {
+    "id": "did:example:participant-alice",
+    "name": "Alice (jam participant)",
+    "role": "jam_participant",
+    "sovereignty_context": "Salish Sea coastal community network — individual contributor; no Nation-specific authority claimed"
+  },
+  "contribution": {
+    "type": "commitment",
+    "body": {
+      "kind": "ecological_stewardship_commitment",
+      "intent": "Commit to monitoring kelp recruitment at Race Rocks station monthly for 12 months, contributing observations to the Salish Sea Marine Survey commons.",
+      "scope": "Race Rocks Ecological Reserve, southern Vancouver Island, BC",
+      "quantity": "12 monthly site visits, approx 6 hr each",
+      "evidence_form": [
+        "site_photos_geotagged",
+        "kelp_recruitment_observation_form_v3",
+        "surface_temperature_log",
+        "secchi_disk_depth_reading"
+      ],
+      "redeems_against": "Salish Sea Marine Survey commitment-pool — shared bioregional baseline dataset"
+    },
+    "content_hash": "sha256:placeholder",
+    "ref": null
+  },
+  "temporal": {
+    "created_at": "2026-05-13T18:30:00-07:00",
+    "valid_from": "2026-06-01",
+    "valid_until": "2027-05-31",
+    "temporal_role": "future_commitment",
+    "assertion_time": "2026-05-13T18:30:00-07:00",
+    "event_time": "2026-06-01/2027-05-31"
+  },
+  "place": {
+    "bioregion": "Salish Sea",
+    "location_specific": "Race Rocks Ecological Reserve, southern Vancouver Island, BC",
+    "jurisdiction": "Province of BC, Canada; traditional territory of the Songhees and Esquimalt Nations (acknowledged, not claimed-on-behalf-of)"
+  },
+  "purpose": "Contribute to bioregional kelp-forest baseline monitoring. Build relational tenure with the bioregion through repeated witnessed presence. Make a small commitment that can be redeemed against a shared dataset others also draw from.",
+  "linked_to": [
+    "witnessing-receipt:salish-sea-marine-survey-charter-v0.1"
+  ],
+  "witnesses": {
+    "self_attestation": {
+      "asserted_by": "did:example:participant-alice",
+      "asserted_at": "2026-05-13T18:30:00-07:00",
+      "statement": "I commit to the monitoring schedule described above. I will honor refusal at any time if Race Rocks coordinators determine my contribution is no longer welcome or needed. I am not authorized to speak on behalf of any Nation in this commitment."
+    },
+    "peer_witnesses": [],
+    "ai_witnesses": [
+      {
+        "witness_type": "S4_voice_audit",
+        "pipeline_run_id": "mw-run:placeholder-2026-05-13-18-30",
+        "result": {
+          "severity": "pass",
+          "summary": "No voice_discipline violations detected; verb_discipline + voice_discipline checks clean",
+          "confidence": 0.92
+        },
+        "audit_trace": {
+          "checks_run": [
+            "verb_discipline",
+            "voice_discipline_auto_optimism",
+            "voice_discipline_no_synthesis_across_asymmetric_registers"
+          ],
+          "flagged": []
+        }
+      },
+      {
+        "witness_type": "S5_citation_audit",
+        "pipeline_run_id": "mw-run:placeholder-2026-05-13-18-30",
+        "result": {
+          "severity": "pass",
+          "summary": "All extractable claims grounded in commitment body itself; no external-source claims to audit",
+          "confidence": 0.95
+        },
+        "audit_trace": {
+          "claims_extracted": 2,
+          "claims_grounded": 2,
+          "claims_unsupported": 0
+        }
+      },
+      {
+        "witness_type": "S6_worldview_audit",
+        "pipeline_run_id": "mw-run:placeholder-2026-05-13-18-30",
+        "result": {
+          "severity": "pass",
+          "summary": "No extractive-abstraction drift; no ontological-erasure-via-guardrails; no alignment-faking signals",
+          "confidence": 0.88
+        },
+        "audit_trace": {
+          "drift_classes_checked": [
+            "extractive_abstraction",
+            "ontological_erasure_via_guardrails",
+            "alignment_faking"
+          ],
+          "drift_classes_flagged": []
+        }
+      }
+    ],
+    "schema_witness": {
+      "schema_version": "0.2",
+      "validates": true,
+      "validator_id": "ws:validator-v0.2",
+      "errors": []
+    },
+    "group_witnesses": [],
+    "pgs_witnesses": []
+  },
+  "attribution_disclosure_level": "summary",
+  "transparency_tier": "T3",
+  "sovereignty": {
+    "class": "public",
+    "authorization_basis": "Self-attested commitment by individual contributor; public openness is contributor's explicit choice. Contribution is bioregional-ecological, not Nation-specific.",
+    "nation_specific_content": false
+  },
+  "ip_framework": {
+    "license": "CC-BY-SA-4.0",
+    "ocap_classification": null,
+    "tk_label": null,
+    "fpic_status": "not_applicable",
+    "care_principles_acknowledged": true
+  },
+  "source_claim_ledger": {
+    "source_claim_ids": []
+  },
+  "multi_witness_bind": {
+    "pipeline_run_id": "mw-run:placeholder-2026-05-13-18-30",
+    "audit_trace_summary": "Voice / citation / worldview audits all passed. Composition produced no blocking flags. Receipt cleared for emission.",
+    "audit_trace_ref": null
+  },
+  "attribution_chain": {
+    "prior_receipts": [],
+    "derived_works": []
+  },
+  "refusal": {
+    "state": "active",
+    "reason": null,
+    "withdrawal_authority": "self (did:example:participant-alice) AND Race Rocks ecological reserve coordinator authority",
+    "state_history": [
+      {
+        "state": "active",
+        "transitioned_at": "2026-05-13T18:30:00-07:00",
+        "transitioned_by": "did:example:participant-alice",
+        "reason": "Initial creation",
+        "witness_chain_ref": "mw-run:placeholder-2026-05-13-18-30"
+      }
+    ]
+  }
+}

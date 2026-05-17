@@ -1,0 +1,319 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://indigenomics.ai/schemas/witnessing-receipt-v0.2.json",
+  "title": "Witnessing Receipt v0.2",
+  "description": "Structured record of a contribution. v0.2 — incorporates K review feedback (kIndigenomics/AI issue #21): attribution-as-toggle, severity-resolution-authority, hash canonicalization rule, refusal state_history required.",
+  "type": "object",
+  "required": [
+    "receipt_id",
+    "schema_version",
+    "contributor",
+    "contribution",
+    "temporal",
+    "witnesses",
+    "attribution_disclosure_level",
+    "transparency_tier",
+    "sovereignty",
+    "ip_framework",
+    "refusal"
+  ],
+  "properties": {
+    "receipt_id": {
+      "type": "string",
+      "pattern": "^witnessing-receipt:[a-z0-9-]+$"
+    },
+    "schema_version": {
+      "type": "string",
+      "const": "0.2"
+    },
+    "contributor": {
+      "type": "object",
+      "required": ["id", "name", "role"],
+      "properties": {
+        "id": {"type": "string"},
+        "name": {"type": "string"},
+        "role": {
+          "type": "string",
+          "enum": ["jam_participant", "operator", "system", "nation_representative", "community_member", "other"]
+        },
+        "sovereignty_context": {"type": "string"}
+      }
+    },
+    "contribution": {
+      "type": "object",
+      "required": ["type", "body", "content_hash"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["claim", "commitment", "data", "artifact", "question", "refusal", "attestation", "correction", "withdrawal"]
+        },
+        "body": {"type": "object"},
+        "content_hash": {
+          "type": "string",
+          "description": "SHA-256 over RFC 8785 (JCS)-canonicalized JSON of body.",
+          "pattern": "^sha256:[a-f0-9]{64}$|^sha256:placeholder$"
+        },
+        "ref": {"type": ["string", "null"]}
+      }
+    },
+    "temporal": {
+      "type": "object",
+      "required": ["created_at", "temporal_role", "assertion_time"],
+      "properties": {
+        "created_at": {"type": "string", "format": "date-time"},
+        "valid_from": {"type": "string", "format": "date"},
+        "valid_until": {"type": "string", "format": "date"},
+        "temporal_role": {
+          "type": "string",
+          "enum": ["past_certification", "present_assertion", "future_commitment", "validity_range"]
+        },
+        "assertion_time": {"type": "string", "format": "date-time"},
+        "event_time": {"type": "string"}
+      }
+    },
+    "place": {
+      "type": "object",
+      "properties": {
+        "bioregion": {"type": "string"},
+        "location_specific": {"type": "string"},
+        "jurisdiction": {"type": "string"}
+      }
+    },
+    "purpose": {"type": "string"},
+    "linked_to": {
+      "type": "array",
+      "items": {"type": "string", "pattern": "^witnessing-receipt:"}
+    },
+    "witnesses": {
+      "type": "object",
+      "required": ["self_attestation"],
+      "properties": {
+        "self_attestation": {
+          "type": "object",
+          "required": ["asserted_by", "asserted_at", "statement"],
+          "properties": {
+            "asserted_by": {"type": "string"},
+            "asserted_at": {"type": "string", "format": "date-time"},
+            "statement": {"type": "string"}
+          }
+        },
+        "peer_witnesses": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["witness_id", "witnessed_at"],
+            "properties": {
+              "witness_id": {"type": "string"},
+              "witness_name": {"type": "string"},
+              "witnessed_at": {"type": "string", "format": "date-time"},
+              "role": {"type": "string"},
+              "statement": {"type": "string"}
+            }
+          }
+        },
+        "ai_witnesses": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["witness_type", "result"],
+            "properties": {
+              "witness_type": {
+                "type": "string",
+                "enum": [
+                  "S4_voice_audit",
+                  "S5_citation_audit",
+                  "S6_worldview_audit",
+                  "S7_composition",
+                  "schema_conformance",
+                  "vagueness_detection"
+                ]
+              },
+              "pipeline_run_id": {"type": "string"},
+              "result": {
+                "type": "object",
+                "required": ["severity", "summary"],
+                "properties": {
+                  "severity": {
+                    "type": "string",
+                    "enum": ["pass", "concern", "blocking"]
+                  },
+                  "summary": {"type": "string"},
+                  "confidence": {"type": "number", "minimum": 0, "maximum": 1}
+                }
+              },
+              "severity_resolution_authority": {
+                "type": "object",
+                "required": ["authority_type", "routing_rationale"],
+                "properties": {
+                  "authority_type": {
+                    "type": "string",
+                    "enum": [
+                      "expert_team_member",
+                      "subject_authority_holder",
+                      "any_discerning_analyst",
+                      "system_only",
+                      "contributor_self"
+                    ]
+                  },
+                  "authority_id": {"type": "string"},
+                  "routing_rationale": {"type": "string"}
+                }
+              },
+              "audit_trace": {"type": "object"}
+            },
+            "if": {
+              "properties": {
+                "result": {
+                  "properties": {"severity": {"const": "blocking"}}
+                }
+              }
+            },
+            "then": {
+              "required": ["severity_resolution_authority"]
+            }
+          }
+        },
+        "schema_witness": {
+          "type": "object",
+          "properties": {
+            "schema_version": {"type": "string"},
+            "validates": {"type": "boolean"},
+            "validator_id": {"type": "string"},
+            "errors": {"type": "array", "items": {"type": "string"}}
+          }
+        },
+        "group_witnesses": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "group_id": {"type": "string"},
+              "witnessed_at": {"type": "string", "format": "date-time"},
+              "witness_count": {"type": "integer", "minimum": 0},
+              "protocol_used": {"type": "string"}
+            }
+          }
+        },
+        "pgs_witnesses": {
+          "type": "array",
+          "items": {"type": "object"}
+        }
+      }
+    },
+    "attribution_disclosure_level": {
+      "type": "string",
+      "enum": ["full", "summary", "opt_in", "hidden"],
+      "description": "Declares max visibility of witness chain + attribution lineage. Per K review #21. Default opt_in for production-facing surfaces."
+    },
+    "transparency_tier": {
+      "type": "string",
+      "enum": ["T1", "T2", "T3", "T4"]
+    },
+    "sovereignty": {
+      "type": "object",
+      "required": ["class", "authorization_basis", "nation_specific_content"],
+      "properties": {
+        "class": {
+          "type": "string",
+          "enum": ["public", "community", "nation_specific", "private"]
+        },
+        "authorization_basis": {"type": "string"},
+        "nation_specific_content": {"type": "boolean"},
+        "nation_specific_authorization": {
+          "type": "object",
+          "required": ["nation", "authorizing_authority", "authorization_artifact_ref"],
+          "properties": {
+            "nation": {"type": "string"},
+            "authorizing_authority": {"type": "string"},
+            "authorization_artifact_ref": {"type": "string"}
+          }
+        }
+      },
+      "if": {
+        "properties": {"nation_specific_content": {"const": true}}
+      },
+      "then": {
+        "required": ["nation_specific_authorization"]
+      }
+    },
+    "ip_framework": {
+      "type": "object",
+      "required": ["license", "fpic_status", "care_principles_acknowledged"],
+      "properties": {
+        "license": {"type": "string"},
+        "ocap_classification": {
+          "type": ["object", "null"],
+          "properties": {
+            "ownership": {"type": "string"},
+            "control": {"type": "string"},
+            "access": {"type": "string"},
+            "possession": {"type": "string"}
+          }
+        },
+        "tk_label": {"type": ["string", "null"]},
+        "fpic_status": {
+          "type": "string",
+          "enum": ["obtained", "pending", "not_applicable", "withheld"]
+        },
+        "care_principles_acknowledged": {"type": "boolean"}
+      }
+    },
+    "source_claim_ledger": {
+      "type": "object",
+      "properties": {
+        "source_claim_ids": {
+          "type": "array",
+          "items": {"type": "string"}
+        }
+      }
+    },
+    "multi_witness_bind": {
+      "type": "object",
+      "properties": {
+        "pipeline_run_id": {"type": "string"},
+        "audit_trace_summary": {"type": "string"},
+        "audit_trace_ref": {"type": ["string", "null"]}
+      }
+    },
+    "attribution_chain": {
+      "type": "object",
+      "properties": {
+        "prior_receipts": {
+          "type": "array",
+          "items": {"type": "string", "pattern": "^witnessing-receipt:"}
+        },
+        "derived_works": {
+          "type": "array",
+          "items": {"type": "string", "pattern": "^witnessing-receipt:"}
+        }
+      }
+    },
+    "refusal": {
+      "type": "object",
+      "required": ["state", "withdrawal_authority", "state_history"],
+      "properties": {
+        "state": {
+          "type": "string",
+          "enum": ["active", "refused", "withdrawn", "retracted", "superseded"]
+        },
+        "reason": {"type": ["string", "null"]},
+        "withdrawal_authority": {"type": "string"},
+        "state_history": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["state", "transitioned_at", "transitioned_by"],
+            "properties": {
+              "state": {"type": "string"},
+              "transitioned_at": {"type": "string", "format": "date-time"},
+              "transitioned_by": {"type": "string"},
+              "reason": {"type": "string"},
+              "witness_chain_ref": {"type": ["string", "null"]}
+            }
+          }
+        }
+      }
+    }
+  }
+}
