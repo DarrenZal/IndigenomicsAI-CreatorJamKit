@@ -222,6 +222,8 @@ The sheaf intuition remains useful: local views can agree on overlaps, and obstr
 
 For this work, cosheaves may often be the better operator metaphor. A sheaf asks whether local data can glue into a coherent global object. A cosheaf can assemble local contributions into a larger object through colimits without pretending that the global object overrides local sources.
 
+`workshop/discourse-sheaf-application-map.md` extends this operator note using discourse sheaves, reviewed projections, fixed boundary conditions, and expression-map dynamics.
+
 In kit language:
 
 - local records remain canonical
