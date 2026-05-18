@@ -19,13 +19,13 @@ This report is diagnostic output for human review. It is not a verdict, score, a
 
 | Record | Speech Act | Explicit Or Inferred | Visibility | Permission | do_not_compute |
 | --- | --- | --- | --- | --- | --- |
-| `evidence:CWRC-001` | `evidence_pointer` | `` | `public_sample` | `approved_for_review` | `false` |
-| `evidence:CWRC-002` | `evidence_pointer` | `` | `local_only` | `approved_for_review` | `false` |
-| `evidence:CWRC-003` | `evidence_pointer` | `` | `do_not_display` | `refused` | `true` |
-| `claim:CWRC-001` | `claim` | `` | `public_sample` | `approved_for_review` | `false` |
-| `witness:CWRC-001` | `witness` | `` | `public_sample` | `approved_for_review` | `` |
-| `witness:CWRC-002` | `witness` | `` | `public_sample` | `approved_for_review` | `` |
-| `receipt:CWRC-001` | `reviewer_evaluation` | `` | `public_sample` | `approved_for_review` | `` |
+| `evidence:CWRC-001` | `evidence_pointer` | `explicit` | `public_sample` | `approved_for_review` | `false` |
+| `evidence:CWRC-002` | `evidence_pointer` | `explicit` | `local_only` | `approved_for_review` | `false` |
+| `evidence:CWRC-003` | `evidence_pointer` | `explicit` | `do_not_display` | `refused` | `true` |
+| `claim:CWRC-001` | `claim` | `explicit` | `public_sample` | `approved_for_review` | `false` |
+| `witness:CWRC-001` | `witness` | `explicit` | `public_sample` | `approved_for_review` | `` |
+| `witness:CWRC-002` | `witness` | `explicit` | `public_sample` | `approved_for_review` | `` |
+| `receipt:CWRC-001` | `reviewer_evaluation` | `explicit` | `public_sample` | `approved_for_review` | `` |
 
 ## Speech-Act Transitions
 
@@ -38,7 +38,7 @@ This report is diagnostic output for human review. It is not a verdict, score, a
 
 | Check | Status | Detail |
 | --- | --- | --- |
-| `source_records_explicit_or_inferred` | `warn` | Missing explicit_or_inferred. |
+| `source_records_explicit_or_inferred` | `ok` | All source records carry explicit_or_inferred. |
 | `transition_ai_use_receipts` | `ok` | All transitions include AI-use receipts. |
 | `derived_from_transitions` | `ok` | Composed outputs point to known transition IDs. |
 | `do_not_compute_exclusions` | `ok` | do_not_compute source records are represented as excluded records. |

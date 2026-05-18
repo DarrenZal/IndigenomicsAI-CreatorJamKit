@@ -28,6 +28,9 @@ The compatible projection is a summary-only receipt saying that support occurred
 
 - `fixtures/blocked-composition-fixture.json`
 - `reports/blocked-composition-receipt.md`
+- `reports/composition-engine-report.md`
+- `reports/trade-off-surface.md`
+- `traces/composition-trace.json`
 
 ## Participant-Safe Scope
 

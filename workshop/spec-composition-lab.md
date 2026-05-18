@@ -30,6 +30,10 @@ Start from the specs in `specs/`. The most useful source map is:
 - `specs/bioregional-mapping-layer-board.md`, `specs/sensor-to-receipt-pipeline.md`, `specs/living-atlas-coherence-packet.md`, `specs/bioregional-insights-briefing.md`, and `specs/risk-insurance-coherence-map.md` for place, sensors, atlas records, insight generation, and risk boundaries.
 - `specs/indigenomics-ai-participant-gateway.md`, `specs/indigenomics-ai-graph-chat-witness-sidecar.md`, and `specs/private-learning-ledger.md` for app entry, AI use receipts, citation review, and learning boundaries.
 
+## Executable Fixture Diagnostics
+
+Run `python3 scripts/composition_engine.py examples/spec-experiments/<experiment-dir> --write` to generate a human-readable diagnostic report and machine-readable trace for any fixture-backed experiment.
+
 ## Experiment Questions
 
 Ask these questions before trying to build anything:

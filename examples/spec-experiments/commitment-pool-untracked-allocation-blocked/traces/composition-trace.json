@@ -21,7 +21,7 @@
     {
       "record_id": "allocation:care-introduction-001",
       "speech_act": "introduction",
-      "explicit_or_inferred": null,
+      "explicit_or_inferred": "explicit",
       "visibility_tier": null,
       "permission_state": "approved_for_private_receipt",
       "do_not_compute": true
@@ -36,7 +36,7 @@
       "target_record": "",
       "composition_disposition": "non_composable",
       "result_status": "blocked",
-      "has_ai_use_receipt": false,
+      "has_ai_use_receipt": true,
       "has_authority_record": false,
       "has_contributor_consent_check": false,
       "explicit_contributor_authority": false
@@ -45,19 +45,15 @@
   "hard_checks": [
     {
       "code": "source_records_explicit_or_inferred",
-      "status": "warn",
-      "detail": "Missing explicit_or_inferred.",
-      "records": [
-        "allocation:care-introduction-001"
-      ]
+      "status": "ok",
+      "detail": "All source records carry explicit_or_inferred.",
+      "records": []
     },
     {
       "code": "transition_ai_use_receipts",
-      "status": "warn",
-      "detail": "Some transitions lack AI-use receipts.",
-      "transitions": [
-        "transition:allocation-to-route-diagnostic-blocked-001"
-      ]
+      "status": "ok",
+      "detail": "All transitions include AI-use receipts.",
+      "transitions": []
     },
     {
       "code": "derived_from_transitions",
@@ -68,12 +64,10 @@
     },
     {
       "code": "do_not_compute_exclusions",
-      "status": "warn",
-      "detail": "Some do_not_compute source records are represented by blocked transition obstructions, but not by explicit excluded records.",
+      "status": "ok",
+      "detail": "do_not_compute source records are represented as excluded records.",
       "records": [],
-      "represented_by_blocked_transition": [
-        "allocation:care-introduction-001"
-      ]
+      "represented_by_blocked_transition": []
     },
     {
       "code": "speech_act_authority_markers",
@@ -105,11 +99,21 @@
     {
       "record_id": "allocation:care-introduction-001",
       "excluded_reason": [
-        "do_not_compute true"
+        "do_not_compute true",
+        "do_not_route true",
+        "recipient hidden",
+        "amount not tracked",
+        "private receipt policy"
       ],
       "allowed_reference": "A fictional contributor made a private introduction that may support a future care sprint.",
-      "prohibited_actions": [],
-      "engine_derived_marker": true
+      "prohibited_actions": [
+        "route into commitment pool",
+        "infer amount",
+        "infer recipient",
+        "summarize private notes",
+        "embed or index private notes",
+        "display private details"
+      ]
     }
   ],
   "composed_outputs": [],

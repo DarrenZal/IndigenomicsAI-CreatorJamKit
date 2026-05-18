@@ -1,11 +1,13 @@
 ---
 doc_kind: workshop-rollup
-status: draft
+status: superseded
 visibility: public_sample
 last_updated: 2026-05-17
 ---
 
 # 2026-05-17 Midday Workfield
+
+Superseded by `workshop/2026-05-17-workfield-rollup.md`.
 
 This is a mid-day rollup, not an end-of-day handoff. The kit now has enough fixture evidence to keep building while also keeping the orchestration thread coherent.
 

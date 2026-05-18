@@ -14,7 +14,7 @@
     {
       "record_id": "evidence:CWRC-001",
       "speech_act": "evidence_pointer",
-      "explicit_or_inferred": null,
+      "explicit_or_inferred": "explicit",
       "visibility_tier": "public_sample",
       "permission_state": "approved_for_review",
       "do_not_compute": false
@@ -22,7 +22,7 @@
     {
       "record_id": "evidence:CWRC-002",
       "speech_act": "evidence_pointer",
-      "explicit_or_inferred": null,
+      "explicit_or_inferred": "explicit",
       "visibility_tier": "local_only",
       "permission_state": "approved_for_review",
       "do_not_compute": false
@@ -30,7 +30,7 @@
     {
       "record_id": "evidence:CWRC-003",
       "speech_act": "evidence_pointer",
-      "explicit_or_inferred": null,
+      "explicit_or_inferred": "explicit",
       "visibility_tier": "do_not_display",
       "permission_state": "refused",
       "do_not_compute": true
@@ -38,7 +38,7 @@
     {
       "record_id": "claim:CWRC-001",
       "speech_act": "claim",
-      "explicit_or_inferred": null,
+      "explicit_or_inferred": "explicit",
       "visibility_tier": "public_sample",
       "permission_state": "approved_for_review",
       "do_not_compute": false
@@ -46,7 +46,7 @@
     {
       "record_id": "witness:CWRC-001",
       "speech_act": "witness",
-      "explicit_or_inferred": null,
+      "explicit_or_inferred": "explicit",
       "visibility_tier": "public_sample",
       "permission_state": "approved_for_review",
       "do_not_compute": null
@@ -54,7 +54,7 @@
     {
       "record_id": "witness:CWRC-002",
       "speech_act": "witness",
-      "explicit_or_inferred": null,
+      "explicit_or_inferred": "explicit",
       "visibility_tier": "public_sample",
       "permission_state": "approved_for_review",
       "do_not_compute": null
@@ -62,7 +62,7 @@
     {
       "record_id": "receipt:CWRC-001",
       "speech_act": "reviewer_evaluation",
-      "explicit_or_inferred": null,
+      "explicit_or_inferred": "explicit",
       "visibility_tier": "public_sample",
       "permission_state": "approved_for_review",
       "do_not_compute": null
@@ -99,17 +99,9 @@
   "hard_checks": [
     {
       "code": "source_records_explicit_or_inferred",
-      "status": "warn",
-      "detail": "Missing explicit_or_inferred.",
-      "records": [
-        "evidence:CWRC-001",
-        "evidence:CWRC-002",
-        "evidence:CWRC-003",
-        "claim:CWRC-001",
-        "witness:CWRC-001",
-        "witness:CWRC-002",
-        "receipt:CWRC-001"
-      ]
+      "status": "ok",
+      "detail": "All source records carry explicit_or_inferred.",
+      "records": []
     },
     {
       "code": "transition_ai_use_receipts",

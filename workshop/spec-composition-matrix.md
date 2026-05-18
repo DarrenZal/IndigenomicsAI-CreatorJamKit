@@ -73,6 +73,8 @@ These fields are the first places to test coherence:
 | Dream To Fulfillment Board | Transition diagnostics, bundle candidates, receipts | Commitment pools, flow funding, witness profile | Pressuring dreams or care into commitments. |
 | Receipt Wall Story Gallery | Story cards, approval diagnostics, public manifest | Witness profile, allocations, gateway, sidecar | Publishing without display approval. |
 | Spec Composer Bundle Board | Bundle diagnostics, frozen build instructions | All specs | Composition being mistaken for consent. |
+| Waka / Claims Engine Primitive Comparison | Primitive overlap table, semantic-difference notes, bridge risks | Waka posture discovery, claims engine, Coordination Canoe pattern | Speaking for Austin, treating mapping as adoption, or assuming shared words have shared epistemics. |
+| Trade-Off Surface | Gains, losses, fragilities, foreclosures, affected perspectives, human decision route | Any composition after hard checks and coherence review | Deliberation support being mistaken for approval, goodness, health, or authority. |
 
 ## High-Value Composition Tests
 
@@ -86,6 +88,8 @@ These fields are the first places to test coherence:
 | Atlas -> insights -> sidecar | Living Atlas + Insights Briefing + Graph Chat Sidecar | Direct for public sample records; adapter needed for local-only records | Approved for fixture or review required | Whether app answers can show source coherence without leaking context. |
 | Gateway -> composer -> selected build | Participant Gateway + Spec Composer + Build Attempt Templates | Direct if consent and AI-use preferences are explicit | Approved for fixture or review required | Whether participant entry can flow into spec-driven builds. |
 | Commitment pool -> untracked allocation | Commitment Pool Route + Untracked Allocation | Partial overlap | Non-composable except summary-only receipt | Whether deliberate non-legibility can remain a valid outcome. |
+| Waka / Claims Engine comparison | Waka primitive comparison + Claims Engine + Creator Jam Coordination Canoe pattern | Partial overlap; analytical bridge only | Review required before any interop spec | Which shared primitives have the same words but different epistemics, and where mapping must not become adoption. |
+| Trade-off surface on blocked allocation | Trade-Off Surface + Commitment Pool + Untracked Allocation | Adapter needed from diagnostic trace to deliberation surface | Approved for fixture while preserving `non_composable` result | Whether desirability support handles blocked compositions without turning refusal or non-legibility into a defect. |
 | Allocation -> receipt wall | Untracked Allocation + Receipt Wall | Adapter needed | Often preserve separate or summary-only | Whether deliberate non-legibility can remain a valid outcome. |
 
 ## Known Non-Composability Candidates
@@ -108,6 +112,7 @@ These should be tested openly. A blocked composition is a successful discovery i
 - Any category shift should emit a `templates/speech-act-transition.md` record.
 - The sheaf-theory intuition may be useful as a light metaphor: local sections can agree on overlaps without forcing one global object. In jam language, each spec can keep its local boundaries while overlaps are tested explicitly.
 - `workshop/composition-engine-technical-pattern.md` names the operator-facing engine loop behind this matrix: LLMs propose compositions; authority, provenance, constraints, reviewers, and receipts govern them.
+- Run `python3 scripts/composition_engine.py examples/spec-experiments/<experiment-dir> --write` to generate a diagnostic report and trace for any fixture-backed experiment.
 
 ## Tomorrow Output Targets
 

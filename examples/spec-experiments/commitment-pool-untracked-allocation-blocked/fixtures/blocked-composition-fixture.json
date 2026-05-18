@@ -38,6 +38,7 @@
   "untracked_allocation_record": {
     "allocation_id": "allocation:care-introduction-001",
     "allocation_type": "introduction",
+    "explicit_or_inferred": "explicit",
     "public_summary": "A fictional contributor made a private introduction that may support a future care sprint.",
     "private_notes_pointer": "redacted://private-steward-note/not-in-fixture",
     "recipient_visibility": "hidden",
@@ -101,11 +102,45 @@
       ],
       "action_if_withdrawn": "Remove public summary and preserve only a private withdrawn-marker if approved."
     },
+    "ai_use_receipt": {
+      "receipt_id": "ai-use:allocation-to-route-diagnostic-blocked-001",
+      "ai_used": false,
+      "approved_for_this_use": "not_applicable",
+      "touched_material": [],
+      "excluded_material": [
+        "private notes",
+        "recipient identity",
+        "amount",
+        "protected or private content"
+      ],
+      "output_review_state": "blocked_fixture_reviewed"
+    },
     "result": {
       "status": "blocked",
       "next_action": "Preserve as summary-only receipt. Do not route, value, infer, or search private notes."
     }
   },
+  "excluded_records": [
+    {
+      "record_id": "allocation:care-introduction-001",
+      "excluded_reason": [
+        "do_not_compute true",
+        "do_not_route true",
+        "recipient hidden",
+        "amount not tracked",
+        "private receipt policy"
+      ],
+      "allowed_reference": "A fictional contributor made a private introduction that may support a future care sprint.",
+      "prohibited_actions": [
+        "route into commitment pool",
+        "infer amount",
+        "infer recipient",
+        "summarize private notes",
+        "embed or index private notes",
+        "display private details"
+      ]
+    }
+  ],
   "blocked_route_diagnostic": {
     "route_status": "not_computable",
     "diagnostic_codes": [

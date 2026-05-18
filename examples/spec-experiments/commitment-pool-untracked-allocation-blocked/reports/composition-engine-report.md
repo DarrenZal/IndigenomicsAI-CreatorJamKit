@@ -24,22 +24,22 @@ This report is diagnostic output for human review. It is not a verdict, score, a
 
 | Record | Speech Act | Explicit Or Inferred | Visibility | Permission | do_not_compute |
 | --- | --- | --- | --- | --- | --- |
-| `allocation:care-introduction-001` | `introduction` | `` | `` | `approved_for_private_receipt` | `true` |
+| `allocation:care-introduction-001` | `introduction` | `explicit` | `` | `approved_for_private_receipt` | `true` |
 
 ## Speech-Act Transitions
 
 | Transition | From | To | Disposition | Result | AI Receipt | Authority Record | Contributor Consent | Explicit Contributor Authority |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `transition:allocation-to-route-diagnostic-blocked-001` | `allocation_record` | `route_diagnostic` | `non_composable` | `blocked` | `false` | `false` | `false` | `false` |
+| `transition:allocation-to-route-diagnostic-blocked-001` | `allocation_record` | `route_diagnostic` | `non_composable` | `blocked` | `true` | `false` | `false` | `false` |
 
 ## Hard Checks
 
 | Check | Status | Detail |
 | --- | --- | --- |
-| `source_records_explicit_or_inferred` | `warn` | Missing explicit_or_inferred. |
-| `transition_ai_use_receipts` | `warn` | Some transitions lack AI-use receipts. |
+| `source_records_explicit_or_inferred` | `ok` | All source records carry explicit_or_inferred. |
+| `transition_ai_use_receipts` | `ok` | All transitions include AI-use receipts. |
 | `derived_from_transitions` | `ok` | No composed outputs were found to check. |
-| `do_not_compute_exclusions` | `warn` | Some do_not_compute source records are represented by blocked transition obstructions, but not by explicit excluded records. |
+| `do_not_compute_exclusions` | `ok` | do_not_compute source records are represented as excluded records. |
 | `speech_act_authority_markers` | `ok` | Load-bearing speech-act transitions carry authority markers. |
 
 ## Blocked Or Returned Items
@@ -52,7 +52,7 @@ This report is diagnostic output for human review. It is not a verdict, score, a
 
 | Record | Reason | Prohibited Actions |
 | --- | --- | --- |
-| `allocation:care-introduction-001` | do_not_compute true |  |
+| `allocation:care-introduction-001` | do_not_compute true; do_not_route true; recipient hidden; amount not tracked; private receipt policy | route into commitment pool; infer amount; infer recipient; summarize private notes; embed or index private notes; display private details |
 
 ## Coherence Vector
 

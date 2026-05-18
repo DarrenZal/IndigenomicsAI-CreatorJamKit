@@ -74,6 +74,7 @@
       {
         "record_id": "evidence:CWRC-001",
         "record_type": "evidence_pointer",
+        "explicit_or_inferred": "explicit",
         "title": "Riverbend Commons sample garden session log",
         "source_summary": "Fictional aggregate public-sample log showing two demo garden sessions recorded in May 2026.",
         "evidence_type": "aggregate_event_log",
@@ -127,6 +128,7 @@
       {
         "record_id": "evidence:CWRC-002",
         "record_type": "evidence_pointer",
+        "explicit_or_inferred": "explicit",
         "title": "Role-only facilitation checklist",
         "source_summary": "Fictional checklist noting that reviewer roles, not personal names, should appear in the worked composition reference.",
         "evidence_type": "review_note",
@@ -176,6 +178,7 @@
       {
         "record_id": "evidence:CWRC-003",
         "record_type": "evidence_pointer",
+        "explicit_or_inferred": "explicit",
         "title": "Marker-only source with no display permission",
         "source_summary": "Marker only: a fictional source exists outside this composition's permission boundary. No underlying content is included.",
         "evidence_type": "redacted_refusal_marker",
@@ -239,6 +242,7 @@
       {
         "record_id": "claim:CWRC-001",
         "record_type": "claim",
+        "explicit_or_inferred": "explicit",
         "claim_id": "claim:CWRC-001",
         "claim_text": "The fictional Riverbend Commons demo team recorded two public-sample garden sessions in May 2026.",
         "claim_subject": "Riverbend Commons demo sessions",
@@ -300,6 +304,7 @@
       {
         "record_id": "witness:CWRC-001",
         "record_type": "witness",
+        "explicit_or_inferred": "explicit",
         "witness_record_id": "witness:CWRC-001",
         "witness_type": "human_review",
         "statement": "A fictional human reviewer checked that claim:CWRC-001 follows from evidence:CWRC-001 for the named public-sample demonstration.",
@@ -366,6 +371,7 @@
       {
         "record_id": "witness:CWRC-002",
         "record_type": "witness",
+        "explicit_or_inferred": "explicit",
         "witness_record_id": "witness:CWRC-002",
         "witness_type": "facilitator_note",
         "statement": "A fictional facilitator noted that evidence:CWRC-003 was excluded and must not be reconstructed from the composition.",
@@ -426,6 +432,7 @@
       {
         "receipt_id": "receipt:CWRC-001",
         "event_type": "reviewer_evaluation",
+        "explicit_or_inferred": "explicit",
         "date": "2026-05-14",
         "contributor": "reviewer:CWRC-human-reviewer",
         "contribution": "Reviewed the narrow claim-to-evidence relationship for the fictional sample.",
