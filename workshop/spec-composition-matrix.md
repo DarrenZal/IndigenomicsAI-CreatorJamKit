@@ -75,6 +75,7 @@ These fields are the first places to test coherence:
 | Spec Composer Bundle Board | Bundle diagnostics, frozen build instructions | All specs | Composition being mistaken for consent. |
 | Waka / Claims Engine Primitive Comparison | Primitive overlap table, semantic-difference notes, bridge risks | Waka posture discovery, claims engine, Coordination Canoe pattern | Speaking for Austin, treating mapping as adoption, or assuming shared words have shared epistemics. |
 | Trade-Off Surface | Gains, losses, fragilities, foreclosures, affected perspectives, human decision route | Any composition after hard checks and coherence review | Deliberation support being mistaken for approval, goodness, health, or authority. |
+| Transition Receipt Spec | Content-addressed transition receipts, input/output CIDs, discipline metadata, chained provenance | Speech-act transitions, composition engine traces, Claims Engine comparison, app gateway | Receipt chains being mistaken for consent, authority, legitimacy, certification, or interop adoption. |
 
 ## High-Value Composition Tests
 
@@ -90,6 +91,7 @@ These fields are the first places to test coherence:
 | Commitment pool -> untracked allocation | Commitment Pool Route + Untracked Allocation | Partial overlap | Non-composable except summary-only receipt | Whether deliberate non-legibility can remain a valid outcome. |
 | Waka / Claims Engine comparison | Waka primitive comparison + Claims Engine + Creator Jam Coordination Canoe pattern | Partial overlap; analytical bridge only | Review required before any interop spec | Which shared primitives have the same words but different epistemics, and where mapping must not become adoption. |
 | Trade-off surface on blocked allocation | Trade-Off Surface + Commitment Pool + Untracked Allocation | Adapter needed from diagnostic trace to deliberation surface | Approved for fixture while preserving `non_composable` result | Whether desirability support handles blocked compositions without turning refusal or non-legibility into a defect. |
+| Transition receipt chain | Speech-Act Transition + Transition Receipt Spec + Composition Engine trace | Adapter needed from semantic transition record to content-addressed receipt | Approved for fixture; review required before operational anchoring | Whether transition lineage can be recorded without treating the receipt as authorization or display approval. |
 | Allocation -> receipt wall | Untracked Allocation + Receipt Wall | Adapter needed | Often preserve separate or summary-only | Whether deliberate non-legibility can remain a valid outcome. |
 
 ## Known Non-Composability Candidates
