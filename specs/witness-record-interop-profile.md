@@ -63,3 +63,15 @@ Create five fixture records and a `validate-witness-record` script that prints d
 ## Source Notes
 
 Synthesized from the RegenAI claims engine notes, Waka/Regen interop notes where Waka refers to Austin Wade Smith / RiverComputer's project, multi-witness inference sketches, and Creator Jam receipt work.
+
+## Next steps
+
+If your team picks this spec:
+
+1. Read `examples/sample-submission-pair/sample-team-submission-v0.md` for what a filled-in submission looks like.
+2. Open `templates/team-submission-v0.md` — fill in your team's vision, spec, offerings, boundaries, authorization, and witnessed_working using the five questions from `docs/facilitator-quick-card.md`.
+3. Before freeze, run `python3 tools/spec-linter.py <your-draft.json>` to catch the most common failure modes.
+4. Walk through the freeze checklist with your facilitator.
+5. After build: `python3 tools/witness-record-validator.py <your-witness-record.md>` Tuesday morning.
+
+If this spec is preflighted, see `specs/preflights/<this-spec-name>/` for the worked example + TELUS lane runs. Index: `specs/preflights/README.md`.

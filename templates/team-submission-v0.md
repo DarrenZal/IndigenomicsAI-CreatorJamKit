@@ -13,6 +13,26 @@ target_jam: 2026-05-25
 
 # Team Submission v0
 
+> **First time here?** This is the schema reference (~340 lines, dense). Don't read it cold — open `examples/sample-submission-pair/sample-team-submission-v0.md` for a filled-in worked example first, then come back to this doc when you need detail on a specific field.
+
+## Boundary vocabulary (used throughout the schema)
+
+These terms appear in `boundaries[].boundary_type` and `authorization.*_scope`. See `docs/MENTOR_FIELD_GUIDE.md` §2 for the full table with mentor scripts.
+
+- **`marker-only`** — content is held by team; only the boundary's existence is recorded (use for cultural/ceremonial/Nation-specific material)
+- **`not-for-AI`** — can be discussed/shared/displayed, but never sent to a compute engine (use for sensitive locations, observer identities)
+- **`not-for-reuse`** — useful for the Jam, but do not build products with it (use for experimental protocols, one-time prompts)
+- **`private`** — only for the contributor or named stewards (use for personal notes, private commitments)
+- **`protected`** — requires explicit authority to use; do not disclose the content to ask permission (use for cultural, treaty-bound, credential-bound material)
+
+Scope values for `authorization`:
+
+- **`display_scope`**: `whole` / `partial` / `spoken-only` / `none`
+- **`ai_input_scope`**: `whole` / `partial` / `none`
+- **`reuse_scope`**: `not-granted` / `ask-first` / `team-only` / `public-ok`
+
+You don't have to disclose protected material to record a boundary. The exporter strips boundary content before any model attempt runs.
+
 ## Purpose
 
 `team-submission-v0` is the rich gateway or fallback form record for a Creator
