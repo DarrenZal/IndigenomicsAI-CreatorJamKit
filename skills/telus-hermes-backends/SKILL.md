@@ -1,11 +1,11 @@
 ---
 name: telus-hermes-backends
-description: Use when setting up, verifying, or troubleshooting Hermes Agent with direct TELUS OpenAI-compatible model backends for Creator Jam operator or staff workflows. Covers GPT OSS, Gemma, and Qwen endpoint configuration, safe secret handling, verification commands, and when to use direct TELUS endpoints instead of the participant Gateway.
+description: Use when setting up, verifying, or troubleshooting Hermes Agent with TELUS OpenAI-compatible backends or the Indigenomics Gateway for Creator Jam workflows. Covers GPT OSS, Gemma, and Qwen endpoint configuration, Gateway tool calling, safe secret handling, verification commands, and model choice.
 ---
 
 # TELUS Hermes Backends
 
-Use this skill when an operator asks to run Hermes Agent against TELUS-hosted models.
+Use this skill when an operator asks to run Hermes Agent against TELUS-hosted models or the Indigenomics Gateway.
 
 Do not commit TELUS API keys, participant Gateway keys, `.env` files, request dumps, logs with Authorization headers, or generated `~/.hermes/config.yaml` files that contain secrets.
 
@@ -13,9 +13,9 @@ For deeper model-choice, reasoning, context, tool-use, and parameter guidance, r
 
 ## Decision
 
-- Use the **Creator Jam Gateway** for participants and normal student API examples.
-- Use **direct TELUS model endpoints** for Hermes-as-agent workflows that need terminal tools, shell execution, MCP, browser tools, or other tool calls.
-- Do not route full Hermes agent tool use through the participant Gateway unless a separate staff-only Gateway profile has been created for that purpose. The participant Gateway adds Creator Jam guardrails that are intentionally conservative around operating-system/tool access.
+- Use the **Creator Jam Gateway** for participants, student API examples, and Gateway-mediated Hermes sessions.
+- Use **direct TELUS model endpoints** for staff/operator diagnostics or when Gateway policy, rate limits, or event access gates should be bypassed.
+- The Indigenomics Gateway must support OpenAI-style tool calling for Hermes: `tools`, `tool_choice`, `parallel_tool_calls`, assistant `tool_calls`, tool-result messages, and streamed tool-call deltas.
 
 ## TELUS model map
 
@@ -80,6 +80,21 @@ display:
 
 For Gemma or GPT OSS, change `default`, `base_url`, and `api_key` to the matching row above.
 
+Gateway-mediated Hermes config shape:
+
+```yaml
+model:
+  provider: custom
+  default: telus-qwen
+  base_url: https://regen.gaiaai.xyz/events/creator-jam/api/v1
+  api_key: "<TEAM_GATEWAY_KEY>"
+  api_mode: chat_completions
+  context_length: 262144
+  max_tokens: 2048
+```
+
+Use the public Gateway model id, such as `telus-qwen`, when the base URL is the Gateway.
+
 ## Verify
 
 Run a simple chat check:
@@ -108,6 +123,6 @@ Expected result: Hermes reports a directory and the session summary includes too
 
 - `401` or `403`: wrong key for that TELUS service, wrong endpoint, missing `Bearer` auth, or a stale copied key.
 - Empty Qwen content with `finish_reason=length`: raise `max_tokens` to at least `1024`.
-- Hermes works for chat but not tools through the participant Gateway: expected; use direct TELUS endpoints for Hermes agent tool use.
+- Hermes works for chat but not tools through the Gateway: regression. Confirm the Gateway is forwarding request `tools` fields and preserving streamed `tool_calls` deltas.
 - `System message must be at the beginning`: the Gateway or proxy is inserting another system message after Hermes' system message. Merge all system messages into the first message before forwarding.
 - `OPENAI_API_KEY` interpolation in `model.api_key` may not be reliable across Hermes versions. Write the config with the helper script in an operator-owned Hermes home.

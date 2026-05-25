@@ -1,8 +1,8 @@
 # Hermes Agent on TELUS Models: Operator Guide
 
-This guide explains the configuration points that matter when running Hermes Agent against the direct TELUS OpenAI-compatible endpoints.
+This guide explains the configuration points that matter when running Hermes Agent against direct TELUS OpenAI-compatible endpoints or the Indigenomics Gateway.
 
-Use direct TELUS endpoints for staff/operator Hermes sessions. Use the Creator Jam Gateway for participant API access.
+Use the Creator Jam Gateway for participant API access and Gateway-mediated Hermes sessions. Use direct TELUS endpoints for staff/operator diagnostics or when event Gateway policy and access gates should be bypassed.
 
 ## Model Choice
 
@@ -12,7 +12,34 @@ Use direct TELUS endpoints for staff/operator Hermes sessions. Use the Creator J
 | Gemma `google/gemma-4-31b-it` | Fast concise answers, writing, review, extraction, low-latency operator checks | Keep tool instructions explicit and bounded. |
 | GPT OSS `gpt-oss:120b` | General fallback, broad reasoning, robust chat and tool calls | May spend more tokens on reasoning; keep max-turn and output budgets visible. |
 
-All three direct TELUS endpoints have been verified for OpenAI chat completions and OpenAI-style tool calls. Hermes terminal tool-loop checks have also been verified for all three when configured with direct TELUS keys.
+All three direct TELUS endpoints have been verified for OpenAI chat completions and OpenAI-style tool calls. Hermes terminal tool-loop checks have also been verified for all three when configured with direct TELUS keys. The Indigenomics Gateway has also been verified with Hermes terminal tool use through streamed OpenAI-style tool-call deltas.
+
+## Qwen vLLM Deployment Notes
+
+The TELUS Qwen backend is deployed on one NVIDIA H200 with vLLM and these relevant serving settings:
+
+```bash
+vllm serve <model> \
+  --trust-remote-code \
+  --dtype bfloat16 \
+  --enable-auto-tool-choice \
+  --tool-call-parser qwen3_xml \
+  --reasoning-parser qwen3 \
+  --enable-chunked-prefill \
+  --max-num-batched-tokens 131072 \
+  --enable-prefix-caching \
+  --gpu-memory-utilization 0.95 \
+  --max-num-seqs 8 \
+  --max-model-len 262144
+```
+
+Operational implications:
+
+- `--max-model-len 262144` supports the Hermes/Gateway `context_length: 262144` setting.
+- `--enable-auto-tool-choice` and `--tool-call-parser qwen3_xml` mean OpenAI-style `tools` plus `tool_choice: "auto"` are the right interface.
+- `--reasoning-parser qwen3` means reasoning may be returned separately from final content; keep `max_tokens` high enough that reasoning does not consume the whole response budget.
+- `--enable-chunked-prefill` and `--enable-prefix-caching` help long prompts and repeated Hermes/Gateway system/tool prefixes, but they do not remove the need to manage tool-output size and agent turns.
+- `--max-num-batched-tokens 131072`, `--max-num-seqs 8`, and `--gpu-memory-utilization 0.95` describe throughput/concurrency posture. Under event load, failures can be capacity symptoms even when individual prompts are valid.
 
 ## Core Hermes Configuration
 
@@ -55,7 +82,20 @@ Wrong model ids often show up as `400`, `404`, or provider-specific validation e
 
 The OpenAI-compatible API root ending in `/v1`.
 
-For Hermes, use direct TELUS URLs. Do not use the participant Gateway for full agent tool workflows unless a dedicated staff-only Gateway policy exists.
+For direct TELUS work, use direct TELUS URLs. For participant or team-mediated work, use the Gateway URL and public Gateway model ids.
+
+Gateway example:
+
+```yaml
+model:
+  provider: custom
+  default: telus-qwen
+  base_url: https://regen.gaiaai.xyz/events/creator-jam/api/v1
+  api_key: "<TEAM_GATEWAY_KEY>"
+  api_mode: chat_completions
+  context_length: 262144
+  max_tokens: 2048
+```
 
 ### `model.api_key`
 
@@ -190,6 +230,8 @@ Use `max_tokens: 1024` for smoke tests and `2048` for serious agent work.
 4. Hermes terminal tool-loop runs `pwd` and summarizes the directory.
 5. Hermes performs a small real repo task with tests.
 
+For Gateway verification, include a streaming Hermes tool-loop check. The Gateway must preserve `tools`, `tool_choice`, `parallel_tool_calls`, assistant `tool_calls`, tool-result messages, and streamed `tool_calls` deltas.
+
 Do not skip directly to a complex workflow when validating a new key or endpoint.
 
 ## Troubleshooting
@@ -198,7 +240,7 @@ Do not skip directly to a complex workflow when validating a new key or endpoint
 - `404` or unknown model: `model.default` does not match the TELUS backend.
 - Empty content with `finish_reason=length`: raise `max_tokens`.
 - Tool call not made: make the prompt explicit, enable the right toolset, and allow more turns.
-- Hermes works through direct TELUS but not Gateway: expected for agent workflows; the participant Gateway is not a full operator-agent proxy.
+- Hermes works through direct TELUS but not Gateway: regression. Confirm the Gateway request schema allows extra OpenAI fields, strips invalid `stream_options` when forcing upstream non-streaming, and emits streamed tool-call deltas.
 - `System message must be at the beginning`: a proxy is injecting another system message after Hermes' system message. Merge system messages before forwarding.
 - Config env interpolation fails: write an explicit operator-local `api_key` via the helper.
 
@@ -206,5 +248,5 @@ Do not skip directly to a complex workflow when validating a new key or endpoint
 
 - Keep TELUS keys in operator environment variables or local Hermes config only.
 - Never commit `.env`, request dumps, logs with Authorization headers, or `~/.hermes/config.yaml`.
-- Participant Gateway keys are for student API use, not Hermes staff agent sessions.
+- Gateway keys are team-scoped credentials. Do not commit them; rotate or revoke temporary smoke-test keys after verification.
 - If sharing commands, show placeholders for keys.
