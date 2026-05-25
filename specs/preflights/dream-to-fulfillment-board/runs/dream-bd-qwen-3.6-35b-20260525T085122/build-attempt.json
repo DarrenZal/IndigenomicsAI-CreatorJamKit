@@ -1,0 +1,37 @@
+{
+  "packet_id": "preflight-dream-fulfillment",
+  "packet_path": "/Users/darrenzal/projects/IndigenomicsAI-CreatorJamKit/specs/preflights/dream-to-fulfillment-board/build-packet.json",
+  "run_id": "dream-bd-qwen-3.6-35b-20260525T085122",
+  "run_at": "2026-05-25T08:51:22Z",
+  "mode": "TELUS build-attempt lane",
+  "model": {
+    "catalog_id": "qwen-3.6-35b",
+    "provider_config_model": "Qwen/Qwen3.6-35B-A3B"
+  },
+  "team": "Dream Board (preflight sample)",
+  "frozen": true,
+  "attempt_1": {
+    "codegen_ok": true,
+    "codegen_elapsed_ms": 8436,
+    "code_extracted": true,
+    "error": null,
+    "test": {
+      "passed": 4,
+      "total": 4,
+      "failing": []
+    }
+  },
+  "repair": null,
+  "final": {
+    "code_source": "attempt-1",
+    "test": {
+      "passed": 4,
+      "total": 4
+    },
+    "all_passed": true
+  },
+  "finding": "built clean",
+  "finding_detail": "attempt 1 passed all acceptance tests; no repair needed",
+  "final_code": "import sys\nimport json\n\ndef main():\n    if len(sys.argv) < 2:\n        print(\"error: no input file specified\")\n        sys.exit(0)\n\n    input_path = sys.argv[1]\n\n    try:\n        with open(input_path, 'r') as f:\n            data = json.load(f)\n    except (json.JSONDecodeError, FileNotFoundError, IOError):\n        print(\"error:\")\n        sys.exit(0)\n\n    valid_stages = [\"dream\", \"offer_or_need\", \"promise\", \"witnessed\", \"fulfilled\", \"withdrawn\"]\n    stage_order = [\"dream\", \"offer_or_need\", \"promise\", \"witnessed\", \"fulfilled\", \"withdrawn\"]\n\n    items = data.get(\"items\", [])\n    if not isinstance(items, list):\n        print(\"error:\")\n        sys.exit(0)\n\n    kept_items = []\n    for item in items:\n        if not isinstance(item, dict):\n            continue\n        if \"id\" not in item or \"title\" not in item or \"stage\" not in item or \"updated_at\" not in item:\n            continue\n        if not isinstance(item[\"id\"], str) or not isinstance(item[\"title\"], str):\n            continue\n        if not isinstance(item[\"updated_at\"], str):\n            continue\n        stage = item[\"stage\"]\n        if stage not in valid_stages:\n            continue\n        kept_items.append(item)\n\n    # Group by stage\n    stage_groups = {}\n    for item in kept_items:\n        stage = item[\"stage\"]\n        if stage not in stage_groups:\n            stage_groups[stage] = []\n        stage_groups[stage].append(item)\n\n    # Sort items within each stage: by updated_at desc, then id asc\n    for stage in stage_groups:\n        stage_groups[stage].sort(key=lambda x: (-ord(x[\"updated_at\"][0]) if x[\"updated_at\"] else 0, x[\"id\"]))\n        # More robust sorting:\n        stage_groups[stage].sort(key=lambda x: (x[\"updated_at\"], x[\"id\"]), reverse=False)\n        # We need updated_at desc, so we can negate or use a custom key\n        # Let's do it properly:\n        stage_groups[stage].sort(key=lambda x: (x[\"updated_at\"], x[\"id\"]))\n        # Now reverse the list to get desc order for updated_at, but we need stable sort\n        # Actually, let's use a tuple key with negation for date\n        # Since dates are YYYY-MM-DD, we can reverse the string comparison by negating\n        # But simpler: sort by updated_at desc, then id asc\n        stage_groups[stage].sort(key=lambda x: (x[\"updated_at\"], x[\"id\"]))\n        # To get desc for updated_at, we can reverse the list after sorting by updated_at asc, id asc\n        # But that would also reverse id order. So we need a different approach.\n        # Let's use a key that inverts the date string.\n        # Since dates are fixed format, we can just sort with a custom key.\n        stage_groups[stage].sort(key=lambda x: (x[\"updated_at\"], x[\"id\"]))\n        # This sorts by updated_at asc, id asc. We want updated_at desc, id asc.\n        # So we can sort by (-date_value, id) but date is string.\n        # Alternative: sort by updated_at desc, then id asc.\n        # We can do: stage_groups[stage].sort(key=lambda x: (x[\"updated_at\"], x[\"id\"]), reverse=False)\n        # Then reverse the list? No, that reverses both.\n        # Let's use a tuple key where we invert the date.\n        # Since dates are YYYY-MM-DD, we can convert to a comparable number.\n        # Or we can just sort twice: first by id asc, then by updated_at desc (stable sort).\n        stage_groups[stage].sort(key=lambda x: x[\"id\"])\n        stage_groups[stage].sort(key=lambda x: x[\"updated_at\"], reverse=True)\n\n    # Count distinct stages\n    distinct_stages = set()\n    for item in kept_items:\n        distinct_stages.add(item[\"stage\"])\n\n    K = len(kept_items)\n    S = len(distinct_stages)\n\n    print(f\"DREAM-TO-FULFILLMENT BOARD ({K} items across {S} stages)\")\n    print()\n\n    first_block = True\n    for stage in stage_order:\n        if stage in stage_groups and len(stage_groups[stage]) > 0:\n            if not first_block:\n                print()\n            first_block = False\n            count = len(stage_groups[stage])\n            print(f\"## {stage} ({count})\")\n            for item in stage_groups[stage]:\n                print(f\"- {item['id']}: {item['title']}\")\n\nif __name__ == \"__main__\":\n    main()",
+  "boundary": "This build-attempt record states what happened. It does not establish that the tool is correct, complete, safe, or fit for reuse."
+}

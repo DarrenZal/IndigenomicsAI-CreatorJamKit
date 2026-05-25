@@ -1,0 +1,9 @@
+test_t1_basic (__main__.PreflightTest.test_t1_basic) ... ok
+test_t2_no_overlap (__main__.PreflightTest.test_t2_no_overlap) ... ok
+test_t3_distinct_count (__main__.PreflightTest.test_t3_distinct_count) ... ok
+test_zz_invalid_json (__main__.PreflightTest.test_zz_invalid_json) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.131s
+
+OK

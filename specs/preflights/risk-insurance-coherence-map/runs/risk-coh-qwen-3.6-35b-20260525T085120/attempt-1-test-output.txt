@@ -1,0 +1,16 @@
+test_t1_basic (__main__.PreflightTest.test_t1_basic) ... ok
+test_t2_no_ranking (__main__.PreflightTest.test_t2_no_ranking) ... FAIL
+test_zz_invalid_json (__main__.PreflightTest.test_zz_invalid_json) ... ok
+
+======================================================================
+FAIL: test_t2_no_ranking (__main__.PreflightTest.test_t2_no_ranking)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/3c/6p_c61tj3y5ccqzmvfxmdg080000gn/T/m2-lite-test-59ywji7o/test_tool.py", line 33, in test_t2_no_ranking
+    self.assertNotIn('score', proc.stdout)
+AssertionError: 'score' unexpectedly found in 'RESILIENCE SIGNAL MAP (3 public / 3 total)\n\narea: a\n  signals: 3 (kinds: observation)\n  severity markers: high\n\nBOUNDARY: this map does not rank, score, underwrite, or price. It states what was observed.\n'
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.077s
+
+FAILED (failures=1)

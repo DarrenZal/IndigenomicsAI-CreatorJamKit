@@ -1,0 +1,84 @@
+{
+  "packet_version": "v0",
+  "freeze_record": {
+    "frozen": true,
+    "frozen_at": "2026-05-25",
+    "frozen_by": "preflight",
+    "facilitator_confirmed": {
+      "consent_privacy_complete": true,
+      "boundaries_reviewed": true,
+      "public_private_status_confirmed": true,
+      "ai_input_scope_confirmed": true,
+      "build_path_confirmed": true,
+      "witnessed_working_clear": true
+    }
+  },
+  "excluded_inputs": [],
+  "build_instructions": {
+    "path": "build-instructions.md"
+  },
+  "review_checks": [
+    "tool runs cleanly stdlib-only",
+    "passes acceptance tests",
+    "no outputs hardcoded"
+  ],
+  "witness_record_seed": {
+    "team": "preflight",
+    "date": "2026-05-25",
+    "fields": [
+      "what we brought",
+      "what we attempted",
+      "what worked",
+      "what did not work",
+      "what we learned",
+      "boundaries that remain"
+    ],
+    "receipt_statement": "This record states what happened. It does not establish authority, approval, certification, legitimacy, community consent, or readiness for reuse."
+  },
+  "packet_id": "preflight-graph-chat-sidecar",
+  "team_spec": {
+    "team_name": "Sidecar (preflight sample)",
+    "site": "preflight",
+    "vision": "Audit a chat response's citation coverage against cited claims.",
+    "spec": "Build `python3 tool.py <response_json_path>`. Reads { \"response_text\":\"...\",\"cited_claim_ids\":[\"...\"],\"available_claims\":[{\"claim_id\":\"...\",\"reviewer\":\"...\"|null}] }. Compute: cited_count=len(cited_claim_ids); valid_cited=number of cited_claim_ids present in available_claims; uncited_with_evidence=number of available_claims whose claim_id NOT in cited_claim_ids; unreviewed_cited=number of cited claims whose reviewer is null. Print header 'CITATION COVERAGE SIDECAR'; blank; '- cited: <cited_count>'; '- valid_cited: <valid_cited>'; '- uncited_with_evidence: <uncited_with_evidence>'; '- unreviewed_cited: <unreviewed_cited>'; blank; if unreviewed_cited > 0: 'WARNING: <unreviewed_cited> cited claims have no named reviewer.'. On invalid JSON: 'error:' line, exit 0. Stdlib only.",
+    "build_target": "single-file CLI"
+  },
+  "allowed_inputs": [
+    {
+      "name": "sample.json",
+      "kind": "json-data",
+      "note": "preflight fixture",
+      "content": {
+        "response_text": "x",
+        "cited_claim_ids": [
+          "c1",
+          "c2"
+        ],
+        "available_claims": [
+          {
+            "claim_id": "c1",
+            "reviewer": "R"
+          },
+          {
+            "claim_id": "c2",
+            "reviewer": null
+          },
+          {
+            "claim_id": "c3",
+            "reviewer": "R"
+          }
+        ]
+      }
+    }
+  ],
+  "acceptance_criteria": {
+    "description": [
+      "see build-instructions.md"
+    ],
+    "test_file": {
+      "name": "acceptance-test.py",
+      "language": "python-stdlib",
+      "path": "acceptance-test.py"
+    }
+  }
+}

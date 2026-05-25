@@ -1,0 +1,37 @@
+{
+  "packet_id": "preflight-dream-fulfillment",
+  "packet_path": "/Users/darrenzal/projects/IndigenomicsAI-CreatorJamKit/specs/preflights/dream-to-fulfillment-board/build-packet.json",
+  "run_id": "dream-bd-gemma-4-31b-20260525T085122",
+  "run_at": "2026-05-25T08:51:22Z",
+  "mode": "TELUS build-attempt lane",
+  "model": {
+    "catalog_id": "gemma-4-31b",
+    "provider_config_model": "google/gemma-4-31b-it"
+  },
+  "team": "Dream Board (preflight sample)",
+  "frozen": true,
+  "attempt_1": {
+    "codegen_ok": true,
+    "codegen_elapsed_ms": 17198,
+    "code_extracted": true,
+    "error": null,
+    "test": {
+      "passed": 4,
+      "total": 4,
+      "failing": []
+    }
+  },
+  "repair": null,
+  "final": {
+    "code_source": "attempt-1",
+    "test": {
+      "passed": 4,
+      "total": 4
+    },
+    "all_passed": true
+  },
+  "finding": "built clean",
+  "finding_detail": "attempt 1 passed all acceptance tests; no repair needed",
+  "final_code": "import json\nimport sys\n\ndef main():\n    if len(sys.argv) < 2:\n        return\n\n    input_path = sys.argv[1]\n    \n    try:\n        with open(input_path, 'r') as f:\n            data = json.load(f)\n    except (json.JSONDecodeError, IOError):\n        print(\"error:\")\n        sys.exit(0)\n\n    if not isinstance(data, dict) or \"items\" not in data:\n        # Based on spec, if JSON is valid but structure is wrong, \n        # it doesn't explicitly say 'error:', but usually implies \n        # handling the data provided. We'll treat missing 'items' as empty.\n        items_list = []\n    else:\n        items_list = data[\"items\"]\n\n    if not isinstance(items_list, list):\n        items_list = []\n\n    valid_stages = [\"dream\", \"offer_or_need\", \"promise\", \"witnessed\", \"fulfilled\", \"withdrawn\"]\n    \n    kept_items = []\n    for item in items_list:\n        if not isinstance(item, dict):\n            continue\n        \n        item_id = item.get(\"id\")\n        stage = item.get(\"stage\")\n        \n        if item_id is not None and stage in valid_stages:\n            kept_items.append(item)\n\n    # Calculate K and S\n    k = len(kept_items)\n    present_stages = set(item[\"stage\"] for item in kept_items)\n    s = len(present_stages)\n\n    print(f\"DREAM-TO-FULFILLMENT BOARD ({k} items across {s} stages)\")\n    print()\n\n    # Group items by stage\n    stage_groups = {stage: [] for stage in valid_stages}\n    for item in kept_items:\n        stage_groups[item[\"stage\"]].append(item)\n\n    first_block = True\n    for stage in valid_stages:\n        items_in_stage = stage_groups[stage]\n        if not items_in_stage:\n            continue\n        \n        if not first_block:\n            print()\n        \n        # Sort: updated_at desc, then id asc\n        # updated_at is YYYY-MM-DD, so string sort works.\n        # To sort desc for date and asc for id, we can use a custom key.\n        items_in_stage.sort(key=lambda x: (x.get(\"updated_at\", \"\"), x.get(\"id\", \"\")), reverse=False)\n        # Since we need updated_at DESC and id ASC, we can't just use reverse=True.\n        # We sort by id ASC first, then by updated_at DESC (stable sort).\n        items_in_stage.sort(key=lambda x: x.get(\"id\", \"\"))\n        items_in_stage.sort(key=lambda x: x.get(\"updated_at\", \"\"), reverse=True)\n\n        print(f\"## {stage} ({len(items_in_stage)})\")\n        for item in items_in_stage:\n            print(f\"- {item.get('id')}: {item.get('title', '')}\")\n        \n        first_block = False\n\nif __name__ == \"__main__\":\n    main()",
+  "boundary": "This build-attempt record states what happened. It does not establish that the tool is correct, complete, safe, or fit for reuse."
+}

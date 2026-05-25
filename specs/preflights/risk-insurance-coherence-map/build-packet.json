@@ -1,0 +1,95 @@
+{
+  "packet_version": "v0",
+  "freeze_record": {
+    "frozen": true,
+    "frozen_at": "2026-05-25",
+    "frozen_by": "preflight",
+    "facilitator_confirmed": {
+      "consent_privacy_complete": true,
+      "boundaries_reviewed": true,
+      "public_private_status_confirmed": true,
+      "ai_input_scope_confirmed": true,
+      "build_path_confirmed": true,
+      "witnessed_working_clear": true
+    }
+  },
+  "excluded_inputs": [],
+  "build_instructions": {
+    "path": "build-instructions.md"
+  },
+  "review_checks": [
+    "tool runs cleanly stdlib-only",
+    "passes acceptance tests",
+    "no outputs hardcoded"
+  ],
+  "witness_record_seed": {
+    "team": "preflight",
+    "date": "2026-05-25",
+    "fields": [
+      "what we brought",
+      "what we attempted",
+      "what worked",
+      "what did not work",
+      "what we learned",
+      "boundaries that remain"
+    ],
+    "receipt_statement": "This record states what happened. It does not establish authority, approval, certification, legitimacy, community consent, or readiness for reuse."
+  },
+  "packet_id": "preflight-risk-coherence",
+  "team_spec": {
+    "team_name": "Risk Coherence (preflight sample)",
+    "site": "preflight",
+    "vision": "Show resilience signals without becoming an underwriting or actuarial model.",
+    "spec": "Build `python3 tool.py <signals_json_path>`. Reads { \"signals\": [ {\"signal_id\":\"...\",\"area\":\"...\",\"kind\":\"observation\"|\"claim\"|\"refusal\"|\"steward_note\",\"severity_marker\":\"low\"|\"medium\"|\"high\"|\"refused-to-grade\",\"public_share\":<boolean>}, ... ] }. Group public signals by normalized area (strip+collapse+lower). Print: header 'RESILIENCE SIGNAL MAP (<P> public / <N> total)', blank, for each distinct area alphabetical: 'area: <area>' then '  signals: <count> (kinds: <comma sep kinds alphabetical>)' then '  severity markers: <comma sep markers alphabetical, no counts>', blank between areas, then 'BOUNDARY: this map does not rank, score, underwrite, or price. It states what was observed.'. Drop non-public signals from the area output (but count them in <P>=public / <N>=total). **The tool MUST NOT output any aggregated number-of-high markers vs low \u2014 that would be ranking. Just list the markers present.** On invalid JSON: 'error:' line, exit 0. Stdlib only.",
+    "build_target": "single-file CLI"
+  },
+  "allowed_inputs": [
+    {
+      "name": "sample.json",
+      "kind": "json-data",
+      "note": "preflight fixture",
+      "content": {
+        "signals": [
+          {
+            "signal_id": "s1",
+            "area": "watershed health",
+            "kind": "observation",
+            "severity_marker": "medium",
+            "public_share": true
+          },
+          {
+            "signal_id": "s2",
+            "area": "watershed health",
+            "kind": "claim",
+            "severity_marker": "high",
+            "public_share": true
+          },
+          {
+            "signal_id": "s3",
+            "area": "governance capacity",
+            "kind": "steward_note",
+            "severity_marker": "refused-to-grade",
+            "public_share": true
+          },
+          {
+            "signal_id": "s4",
+            "area": "watershed health",
+            "kind": "observation",
+            "severity_marker": "low",
+            "public_share": false
+          }
+        ]
+      }
+    }
+  ],
+  "acceptance_criteria": {
+    "description": [
+      "see build-instructions.md"
+    ],
+    "test_file": {
+      "name": "acceptance-test.py",
+      "language": "python-stdlib",
+      "path": "acceptance-test.py"
+    }
+  }
+}

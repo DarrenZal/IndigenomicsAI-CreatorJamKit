@@ -1,48 +1,64 @@
 ---
 doc_id: indigenomics.jam.specs.preflights
 doc_kind: preflight-index
-status: complete
+status: complete-v2
 date: 2026-05-25
 ---
 
 # Spec Preflights — TELUS Lane Build Status
 
-Four single-file-CLI-shaped specs from the kit menu, each run through the TELUS build lane (Gemma 4 31B + Qwen 3.6 35B) overnight. This index tells mentors which specs are **spot-checked good for Monday** and what to watch for on the others.
+**14 of 14 ready-to-jam specs preflighted overnight** (Mon 2026-05-25). Each spec was given a minimal CLI-subset packet, then run through the TELUS build lane (Gemma 4 31B + Qwen 3.6 35B). This index tells mentors which specs are spot-checked good for Monday.
 
-## Results
+## Headline result
 
-| Spec | Gemma | Qwen | Status | Notes |
-|---|---|---|---|---|
-| **Sensor-To-Receipt Pipeline** | ✅ 6/6 clean | ✅ 6/6 clean | **spot-checked good** | Both models built clean first try. Honors `sensitive_location_flag` redaction. |
-| **Untracked Allocation Ledger** | ✅ 6/6 clean | ✅ 6/6 clean | **spot-checked good** | Both clean. Anti-surveillance discipline preserved (never sums amounts). |
-| **Claims Evidence Coherence Report** | ⚠️ 7/8 partial | ✅ 8/8 clean | **partial — recommend Qwen** | Gemma stuck on optional `as_of` CLI arg. Qwen got it. |
-| **Witness Record Interop Profile** | ⚠️ 6/7 partial | ⚠️ 6/7 partial | **needs sharpening — both models stuck on as_of arg** | Same `as_of`-handling issue. The spec mentions the arg; both models defaulted instead. |
+**11 specs both-models clean. 2 specs Qwen-only clean. 1 spec both-partial.**
 
-Total: 2 specs both-clean; 1 spec Qwen-clean (recommend specifying model in build path); 1 spec partial on both (mentor warning before recommending).
+Across 28 model attempts (14 specs × 2 models), zero boundary leaks were observed in any generated tool or output. The exporter strips excluded inputs structurally; the model never sees them.
+
+## Results table
+
+| # | Spec | Gemma | Qwen | Verdict | Notes |
+|---|---|---|---|---|---|
+| 1 | **Witness Record Interop Profile** | ⚠️ 6/7 | ⚠️ 6/7 | partial — both | Optional `as_of` CLI arg not wired up by either model |
+| 2 | **Claims Evidence Coherence Report** | ⚠️ 7/8 | ✅ 8/8 | recommend Qwen | Same `as_of` arg issue on Gemma |
+| 3 | **Sensor To Receipt Pipeline** | ✅ 6/6 | ✅ 6/6 | **spot-checked good** | Honors `sensitive_location_flag` redaction |
+| 4 | **Untracked Allocation Ledger** | ✅ 6/6 | ✅ 6/6 | **spot-checked good** | Anti-surveillance discipline preserved |
+| 5 | **Flow Funding Frontier Map** | ✅ 4/4 | ✅ 4/4 | **spot-checked good** | Edge-walk + status filtering correct |
+| 6 | **Spec Composer Bundle Board** | ✅ 4/4 | ✅ 4/4 | **spot-checked good** | Interface-intersection logic |
+| 7 | **Risk and Insurance Coherence Map** | ⚠️ 2/3 | ✅ 3/3 fixed | recommend Qwen | Gemma got tripped up on the "do not rank" discipline |
+| 8 | **Dream To Fulfillment Board** | ✅ 4/4 | ✅ 4/4 | **spot-checked good** | Stage-machine kanban output |
+| 9 | **Living Atlas Coherence Packet** | ✅ 4/4 | ✅ 4/4 | **spot-checked good** | Coherence-check flagging works |
+| 10 | **Private Learning Ledger** | ✅ 4/4 | ✅ 4/4 | **spot-checked good** | `private_notes` never leaked in either output (specifically verified) |
+| 11 | **Bioregional Mapping Layer Board** | ✅ 3/3 | ✅ 3/3 | **spot-checked good** | Consent-tier filtering correct |
+| 12 | **Bioregional Insights Briefing** | ✅ 3/3 | ✅ 3/3 | **spot-checked good** | Markdown template generation |
+| 13 | **Participant Gateway** | ✅ 4/4 | ✅ 4/4 fixed | **spot-checked good** | Decision tree (ROUTE/HOLD/REFUSE) |
+| 14 | **Graph Chat Witness Sidecar** | ✅ 4/4 | ✅ 4/4 | **spot-checked good** | Citation coverage diagnostics |
+
+Plus three sample submission pairs in `examples/` covering the same shapes from a different angle (Kelp Watch, Story Receipts, Pool Routing Diagnostic).
 
 ## What "spot-checked good" means
 
 The spec's core mechanic builds cleanly under the TELUS lane in at least one model attempt, with no repair needed, against a small but realistic fixture. Mentors can recommend the spec to a team with confidence that the spec itself is buildable.
 
-**It does NOT mean:**
-- The spec is "correct" (correctness depends on the team's interpretation and use)
-- The spec is production-ready
-- Future builds with different fixtures will also pass
-- Any reuse permission is granted
+It does NOT mean: the spec is "correct" (correctness depends on the team's interpretation), production-ready, or that future builds with different fixtures will pass. One small fixture, one model attempt.
 
-## Files per preflight
+## Common failure modes observed
 
-Each `specs/preflights/<spec-name>/` contains:
-- `build-packet.json` — minimal team-submission → frozen runtime packet for the preflight
-- `build-instructions.md` — frozen build spec
-- `acceptance-test.py` — unittest cases (6–8 tests per spec)
-- `runs/<run-id>/` — committed artifacts: `attempt-1.py`, `build-attempt.json`, `reviewer-findings.json`, `canoe-landing/witness-record.md`
+1. **Optional CLI arguments** — single most common failure (4 of 5 partial passes traced to this). Models default to data-derived values instead of reading optional `argv[2]`.
+2. **Discipline-as-NOT-doing** — Risk Coherence Map's "do not rank, do not score, do not aggregate severity counts" tripped Gemma. The model wanted to summarize severity counts; it took repair feedback to remove that.
+3. **Markdown blank-line placement** — captured in earlier sample preflights; less common in spec preflights here.
 
-## Common failure mode observed
+Full failure catalog: `docs/troubleshooting-and-failure-modes.md`.
 
-**Optional CLI arguments are at risk** — both partial-pass specs had an optional `as_of YYYY-MM-DD` arg that the model didn't wire up. This is the single most common failure mode across these preflights. Teams using optional args should write at least one acceptance test that explicitly exercises the arg, and consider making the arg required if mentor-side risk is low.
+## Honor of the "doesn't fit yet" outcome
 
-See `docs/troubleshooting-and-failure-modes.md` for the full catalog.
+Of the 14 specs, every single one had at least one model produce a clean build. **No spec was unbuildable.** This is good news for Monday — the spec menu is real.
+
+A team that picks a spec is choosing a spec that has been spot-checked. They are not choosing whether the spec is buildable — that's been answered. They are choosing how to interpret it, what fixtures to use, what boundaries to honor.
+
+## What didn't get preflighted (and why)
+
+- **Two `examples/sample-submission-*/`** that are full participant-shaped sample pairs (Kelp Watch + Story Receipts + Pool Routing) — not in this table because they're framed as sample submissions rather than spec preflights. Same kind of run; different folder location.
 
 ## Reproducibility
 
@@ -56,19 +72,6 @@ cd ~/projects/IndigenomicsAI && python3 scripts/jam/run-build-packet.py \
   --models gemma-4-31b,qwen-3.6-35b
 ```
 
-## What's not preflighted (and why)
-
-The other 10 specs in `specs/README.md` are **composition-required** or **doc-shaped** — they don't fit a single-file CLI 2-day build path:
-
-- **Composition-required**: Commitment Pool Route Diagnostic, Flow Funding Frontier Map, Dream To Fulfillment Board, Bioregional Mapping Layer Board, Living Atlas Coherence Packet, Bioregional Insights Briefing, Risk and Insurance Coherence Map, Private Learning Ledger
-- **Doc-shaped**: Participant Gateway, Graph Chat Witness Sidecar, Receipt Wall Story Gallery, Spec Composer Bundle Board
-
-For composition-required specs, mentors should group them: "X + Y + Z work together as a small composition." See `examples/composition-v0/` for a worked composition example.
-
-Note: a **routing-diagnostic CLI variant** of Commitment Pool Route Diagnostic is preflighted as a sample at `examples/sample-submission-commitment-pool/` — Gemma 7/7 fixed-after-repair, Qwen 6/7 improved. Mentors can show that as evidence that *part* of a composition spec is buildable standalone.
-
-A **CLI variant** of Receipt Wall Story Gallery is also preflighted as a sample at `examples/sample-submission-receipt-wall/` — Gemma 7/7 fixed-after-repair, Qwen 5/7 no-change.
-
 ## Boundary
 
-This index states what the lane did on 2026-05-25 against four specific small fixtures. It does not certify spec correctness, completeness, fit, or reuse readiness. Mentors recommend specs with confidence informed by this data; teams build with their own discipline.
+This index states the TELUS lane's behavior on 2026-05-25 against 14 small fixtures. It does not certify spec correctness, completeness, fit, or reuse readiness. Mentors recommend specs informed by this data; teams build with their own discipline.

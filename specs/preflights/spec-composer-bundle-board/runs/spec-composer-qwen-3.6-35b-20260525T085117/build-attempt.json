@@ -1,0 +1,37 @@
+{
+  "packet_id": "preflight-spec-composer",
+  "packet_path": "/Users/darrenzal/projects/IndigenomicsAI-CreatorJamKit/specs/preflights/spec-composer-bundle-board/build-packet.json",
+  "run_id": "spec-composer-qwen-3.6-35b-20260525T085117",
+  "run_at": "2026-05-25T08:51:17Z",
+  "mode": "TELUS build-attempt lane",
+  "model": {
+    "catalog_id": "qwen-3.6-35b",
+    "provider_config_model": "Qwen/Qwen3.6-35B-A3B"
+  },
+  "team": "Spec Composer (preflight sample)",
+  "frozen": true,
+  "attempt_1": {
+    "codegen_ok": true,
+    "codegen_elapsed_ms": 4756,
+    "code_extracted": true,
+    "error": null,
+    "test": {
+      "passed": 4,
+      "total": 4,
+      "failing": []
+    }
+  },
+  "repair": null,
+  "final": {
+    "code_source": "attempt-1",
+    "test": {
+      "passed": 4,
+      "total": 4
+    },
+    "all_passed": true
+  },
+  "finding": "built clean",
+  "finding_detail": "attempt 1 passed all acceptance tests; no repair needed",
+  "final_code": "import sys\nimport json\n\ndef main():\n    if len(sys.argv) < 2:\n        print(\"error: no input file specified\")\n        sys.exit(0)\n    \n    input_path = sys.argv[1]\n    \n    try:\n        with open(input_path, 'r') as f:\n            data = json.load(f)\n    except (json.JSONDecodeError, FileNotFoundError, IOError):\n        print(\"error: invalid JSON or file not found\")\n        sys.exit(0)\n    \n    if not isinstance(data, dict) or 'fragments' not in data:\n        print(\"error: invalid JSON structure\")\n        sys.exit(0)\n    \n    fragments = data['fragments']\n    \n    if not isinstance(fragments, list):\n        print(\"error: fragments is not a list\")\n        sys.exit(0)\n    \n    # Filter valid fragments\n    valid_fragments = []\n    for frag in fragments:\n        if not isinstance(frag, dict):\n            continue\n        if 'id' not in frag:\n            continue\n        if not isinstance(frag.get('produces'), list):\n            continue\n        if not isinstance(frag.get('consumes'), list):\n            continue\n        valid_fragments.append(frag)\n    \n    # Find candidate pairs\n    candidate_pairs = []\n    for i, a in enumerate(valid_fragments):\n        for j, b in enumerate(valid_fragments):\n            if i == j:\n                continue\n            # Check if A.produces shares at least one item with B.consumes\n            shared = set(a['produces']) & set(b['consumes'])\n            if shared:\n                candidate_pairs.append((a['id'], b['id'], sorted(shared)))\n    \n    # Sort by (A.id, B.id) ascending\n    candidate_pairs.sort(key=lambda x: (x[0], x[1]))\n    \n    # Calculate distinct interfaces\n    all_interfaces = set()\n    for frag in valid_fragments:\n        all_interfaces.update(frag['produces'])\n        all_interfaces.update(frag['consumes'])\n    \n    n = len(valid_fragments)\n    p = len(candidate_pairs)\n    s = len(all_interfaces)\n    \n    # Print output\n    print(f\"BUNDLE BOARD ({p} candidate pairs of {n} fragments)\")\n    print()\n    \n    for a_id, b_id, shared in candidate_pairs:\n        shared_str = \", \".join(shared)\n        print(f\"{a_id} -> {b_id} via {shared_str}\")\n    \n    print()\n    print(f\"SUMMARY: {p} candidate pairs, {n} fragments, {s} distinct interfaces\")\n\nif __name__ == \"__main__\":\n    main()",
+  "boundary": "This build-attempt record states what happened. It does not establish that the tool is correct, complete, safe, or fit for reuse."
+}

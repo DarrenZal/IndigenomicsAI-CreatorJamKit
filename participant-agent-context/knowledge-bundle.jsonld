@@ -1,0 +1,2010 @@
+{
+  "@context": {
+    "@vocab": "https://github.com/DarrenZal/IndigenomicsAI-CreatorJamKit/vocab#",
+    "schema": "https://schema.org/",
+    "name": "schema:name",
+    "description": "schema:description",
+    "author": "schema:author",
+    "isBasedOn": "schema:isBasedOn",
+    "datePublished": "schema:datePublished",
+    "url": "schema:url",
+    "text": "schema:text",
+    "citation": "schema:citation",
+    "license": "schema:license"
+  },
+  "@graph": [
+    {
+      "@id": "kit:bundle",
+      "@type": "schema:Dataset",
+      "name": "IndigenomicsAI Creator Jam — Participant Agent Knowledge Bundle",
+      "description": "Structured knowledge bundle for LLM agents helping participant teams at the 2026-05-25 / 2026-05-26 Creator Jam.",
+      "datePublished": "2026-05-25",
+      "version": "v0",
+      "audience": "participants and their LLM agents"
+    },
+    {
+      "@id": "kit:person/carol-anne-hilton",
+      "@type": "schema:Person",
+      "name": "Carol Anne Hilton",
+      "affiliation": "Indigenomics Institute",
+      "description": "CEO, Indigenomics Institute. Author of Indigenomics: Taking a Seat at the Economic Table (2021) and The Rise of Indigenous Economic Power (2024). Hesquiaht / Nuu-chah-nulth."
+    },
+    {
+      "@id": "kit:source/book1",
+      "@type": "schema:Book",
+      "name": "Indigenomics: Taking a Seat at the Economic Table",
+      "author": {
+        "@id": "kit:person/carol-anne-hilton"
+      },
+      "datePublished": "2021"
+    },
+    {
+      "@id": "kit:source/book2",
+      "@type": "schema:Book",
+      "name": "The Rise of Indigenous Economic Power",
+      "author": {
+        "@id": "kit:person/carol-anne-hilton"
+      },
+      "datePublished": "2024"
+    },
+    {
+      "@id": "kit:principle/book1-1",
+      "@type": "Principle",
+      "name": "Everything Is Connected",
+      "principleNumber": 1,
+      "description": "Relational economics — the economic construct of relativity. All living things form part of an integrated whole brought into harmony through mutual respect.",
+      "source": "Book 1",
+      "isBasedOn": {
+        "@id": "kit:source/book1"
+      },
+      "pageStart": 62,
+      "nuuChahNulth": "hish uk ish tsa walk",
+      "translation": "Everything is one and interconnected"
+    },
+    {
+      "@id": "kit:principle/book1-2",
+      "@type": "Principle",
+      "name": "Story",
+      "principleNumber": 2,
+      "description": "Stories transmit teachings, history, relationships, protocol, and knowledge about reality across generations. The core means of cross-generational transmittance of knowledge systems.",
+      "source": "Book 1",
+      "isBasedOn": {
+        "@id": "kit:source/book1"
+      },
+      "pageStart": 65
+    },
+    {
+      "@id": "kit:quote/book1-principle-2",
+      "@type": "Quote",
+      "text": "All that we are is story. From the moment we are born to the time we continue on our spirit journey, we are involved in the creation of the story of our time here.",
+      "attribution": "Carol Anne Hilton, Indigenomics: Taking a Seat at the Economic Table, p. 65",
+      "author": {
+        "@id": "kit:person/carol-anne-hilton"
+      },
+      "isBasedOn": {
+        "@id": "kit:source/book1"
+      },
+      "pageReference": "65",
+      "anchorsPrinciple": {
+        "@id": "kit:principle/book1-2"
+      },
+      "paraphrase": false
+    },
+    {
+      "@id": "kit:principle/book1-3",
+      "@type": "Principle",
+      "name": "Animate Life Force",
+      "principleNumber": 3,
+      "description": "Life is everywhere. Indigenous worldview recognizes life force as a constant truth — all creation consists of energy waves, everything is animate, all creation is interrelated.",
+      "source": "Book 1",
+      "isBasedOn": {
+        "@id": "kit:source/book1"
+      },
+      "pageStart": 69
+    },
+    {
+      "@id": "kit:quote/book1-principle-3",
+      "@type": "Quote",
+      "text": "What you people call your natural resources our people call our relatives.",
+      "attribution": "Carol Anne Hilton, Indigenomics: Taking a Seat at the Economic Table, p. 69",
+      "author": {
+        "@id": "kit:person/carol-anne-hilton"
+      },
+      "isBasedOn": {
+        "@id": "kit:source/book1"
+      },
+      "pageReference": "69",
+      "anchorsPrinciple": {
+        "@id": "kit:principle/book1-3"
+      },
+      "paraphrase": false
+    },
+    {
+      "@id": "kit:principle/book1-4",
+      "@type": "Principle",
+      "name": "Transformation",
+      "principleNumber": 4,
+      "description": "The changing of form. Shape shifting between worlds, dimensions, physical and spiritual. Challenges assumptions about the nature of reality. Things are constantly undergoing processes of transformation, deformation and restoration.",
+      "source": "Book 1",
+      "isBasedOn": {
+        "@id": "kit:source/book1"
+      },
+      "pageStart": 73
+    },
+    {
+      "@id": "kit:principle/book1-5",
+      "@type": "Principle",
+      "name": "The Teachings",
+      "principleNumber": 5,
+      "description": "Original instructions — the responsibilities and ethics at the heart of Indigenous identity. Languages hold within them how to be, how to conduct oneself. Proximity to teachings reflects quality of life.",
+      "source": "Book 1",
+      "isBasedOn": {
+        "@id": "kit:source/book1"
+      },
+      "pageStart": 76
+    },
+    {
+      "@id": "kit:principle/book1-6",
+      "@type": "Principle",
+      "name": "Creation Story",
+      "principleNumber": 6,
+      "description": "Connection to origin and Creation is foundational. Creation stories define relationship to place, set requirements for how to be, demonstrate place-based values including resource management and governance systems.",
+      "source": "Book 1",
+      "isBasedOn": {
+        "@id": "kit:source/book1"
+      },
+      "pageStart": 81
+    },
+    {
+      "@id": "kit:principle/book1-7",
+      "@type": "Principle",
+      "name": "Protocol",
+      "principleNumber": 7,
+      "description": "The highest form of expression of recognition. The responsibility of remembering, acknowledging, and witnessing. Right relations as a core premise. Thousands of years of forming and confirming relationships.",
+      "source": "Book 1",
+      "isBasedOn": {
+        "@id": "kit:source/book1"
+      },
+      "pageStart": 83
+    },
+    {
+      "@id": "kit:principle/book1-8",
+      "@type": "Principle",
+      "name": "To Witness",
+      "principleNumber": 8,
+      "description": "The sacred responsibility of remembering. Witnesses validate experience, agreements, ceremony across time. Knowledge was the most valued of all possessions. Relationship as transactional across time.",
+      "source": "Book 1",
+      "isBasedOn": {
+        "@id": "kit:source/book1"
+      },
+      "pageStart": 85
+    },
+    {
+      "@id": "kit:principle/book1-9",
+      "@type": "Principle",
+      "name": "To Make Visible",
+      "principleNumber": 9,
+      "description": "The limitations of human understanding of reality. Duality of spiritual and physical reality. What is visible and what is invisible — what we experience on Earth is only part of the whole dimension.",
+      "source": "Book 1",
+      "isBasedOn": {
+        "@id": "kit:source/book1"
+      },
+      "pageStart": 86
+    },
+    {
+      "@id": "kit:principle/book1-10",
+      "@type": "Principle",
+      "name": "Renewal",
+      "principleNumber": 10,
+      "description": "Shedding the old, being newborn, transition from one state to another. Ceremony is embedded with renewal — reinforcing commitments, protocols, and generational relationships.",
+      "source": "Book 1",
+      "isBasedOn": {
+        "@id": "kit:source/book1"
+      },
+      "pageStart": 88
+    },
+    {
+      "@id": "kit:theme/land-transfer",
+      "@type": "Theme",
+      "themeNumber": 1,
+      "name": "Land Transfer",
+      "description": "The growing estimate of Indigenous-controlled or -owned lands is a significant development in the Canadian and the Indigenous economy. Indigenous land transfers are facilitated through specific claims or settlement cases that address historic wrongs against Indigenous Peoples and are catalyzing economic growth.",
+      "layer": "B",
+      "gdpCoverage": "excluded",
+      "bookPages": "154-157",
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "phase3Description": "Land repatriation drives wealth, leveragability and stewardship.",
+      "economicValueCreation": "Land is the foundational asset of Indigenous wealth. Repatriation converts land from a colonial loss into a balance sheet entry — enabling collateral, development, resource revenue, and long-term stewardship economies. Every acre returned expands the economic base from which Nations build.",
+      "relationships": [
+        {
+          "type": "feeds_into",
+          "target": "kit:theme/settlement-values",
+          "note": "Land transfers often arise from settlement processes"
+        },
+        {
+          "type": "tension_with",
+          "target": "kit:theme/fee-simple-land",
+          "note": "Different mechanisms for land acquisition"
+        }
+      ]
+    },
+    {
+      "@id": "kit:theme/indigenous-funds",
+      "@type": "Theme",
+      "themeNumber": 2,
+      "name": "Indigenous Funds",
+      "description": "Increasingly, Indigenous Nations and businesses are identifying the space and structure for Indigenous-led capital. This development provides a significant opportunity for financial partners to create collaborative structures that advance investment accessibility, alignment, and economic reconciliation outcomes.",
+      "layer": "B",
+      "gdpCoverage": "excluded",
+      "bookPages": "157-158",
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "phase3Description": "Indigenous-led capital and investment vehicles.",
+      "economicValueCreation": "Indigenous-controlled funds pool and deploy capital on Nation-defined terms — shifting decisions on risk, return, and impact from external managers to Indigenous hands. They activate value by directing investment into communities, enterprises, and infrastructure that compound local wealth.",
+      "relationships": [
+        {
+          "type": "overlaps_with",
+          "target": "kit:theme/capital-alignment",
+          "note": "Funds are a vehicle for capital alignment"
+        },
+        {
+          "type": "feeds_into",
+          "target": "kit:theme/entrepreneurship",
+          "note": "Funds provide capital for enterprises"
+        }
+      ]
+    },
+    {
+      "@id": "kit:theme/indigenous-legal",
+      "@type": "Theme",
+      "themeNumber": 3,
+      "name": "Indigenous Legal Developments",
+      "description": "The tension between the advancement of Indigenous Rights and the advancement of Indigenous economic space in the Canadian economy is constantly being expressed. Court rulings (Haida, Tsilhqot'in, Mi'kmaw treaty rights) expand rights-based economic activities.",
+      "layer": "B",
+      "gdpCoverage": "excluded",
+      "bookPages": "158-160",
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "phase3Description": "Court rulings expand rights-based economic activities and regulatory adjustment.",
+      "economicValueCreation": "Landmark rulings establish the legal certainty that unlocks investment. Rights recognized in court translate directly into consultation requirements, revenue-sharing obligations, and veto power — giving Nations economic leverage in every major project on or near their territories.",
+      "relationships": [
+        {
+          "type": "feeds_into",
+          "target": "kit:theme/undrip",
+          "note": "Legal precedents inform UNDRIP implementation"
+        },
+        {
+          "type": "feeds_into",
+          "target": "kit:theme/equity-participation",
+          "note": "Legal wins enable ownership stakes"
+        }
+      ]
+    },
+    {
+      "@id": "kit:theme/partnerships",
+      "@type": "Theme",
+      "themeNumber": 4,
+      "name": "Increasing Indigenous Project and Partnership Values",
+      "description": "A key trend in Indigenous economic empowerment is the increasing project values of Indigenous business partnerships. Partnerships are foundational to creating outcomes in Indigenous economic reconciliation. At least 38 Canadian energy projects worth $27B+ feature Indigenous equity ownership.",
+      "layer": "A+B",
+      "gdpCoverage": "partially_captured",
+      "bookPages": "160-162",
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "phase3Description": "Co-ownership and partnership development in economic projects.",
+      "economicValueCreation": "Partnerships move Nations from benefit agreements to equity positions — converting relationship into ownership. Co-ownership structures generate ongoing revenue, build institutional capacity, and establish Nations as long-term economic actors rather than project stakeholders.",
+      "relationships": [
+        {
+          "type": "overlaps_with",
+          "target": "kit:theme/major-projects",
+          "note": "Major projects often structured as partnerships"
+        },
+        {
+          "type": "subset_of",
+          "target": "kit:theme/equity-participation",
+          "note": "Equity participation is the ownership mechanism within partnerships"
+        }
+      ]
+    },
+    {
+      "@id": "kit:theme/major-projects",
+      "@type": "Theme",
+      "themeNumber": 5,
+      "name": "Infrastructure Development — Major Projects",
+      "description": "The First Nations Major Projects Coalition (FNMPC) supports Indigenous Nations in participating in major infrastructure and resource projects across Canada. Focus on equity ownership, environmental stewardship, and governance over large-scale developments.",
+      "layer": "A+B",
+      "gdpCoverage": "partially_captured",
+      "bookPages": "162-163",
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "phase3Description": "Indigenous ownership in large-scale developments.",
+      "economicValueCreation": "Ownership stakes in pipelines, transmission lines, ports, and energy infrastructure generate revenue streams measured in billions. These are generational assets — delivering recurring cash flows, employment, and equity appreciation that anchor Nation economies for decades.",
+      "relationships": [
+        {
+          "type": "overlaps_with",
+          "target": "kit:theme/partnerships",
+          "note": ""
+        },
+        {
+          "type": "overlaps_with",
+          "target": "kit:theme/clean-energy",
+          "note": "Many major projects are clean energy"
+        },
+        {
+          "type": "depends_on",
+          "target": "kit:theme/financial-architecture",
+          "note": "Loan guarantees enable major project equity"
+        }
+      ]
+    },
+    {
+      "@id": "kit:theme/indigenous-trade",
+      "@type": "Theme",
+      "themeNumber": 6,
+      "name": "Indigenous Trade",
+      "description": "Indigenous trade structures and agreements are modern tools advancing the Indigenous economy. Canada's Trade Diversification Strategy includes Indigenous Peoples in international trade and investment agreements. The IPETCA is a collaborative initiative advancing Indigenous economic participation in international trade.",
+      "layer": "A+B",
+      "gdpCoverage": "partially_captured",
+      "bookPages": "163-165",
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "phase3Description": "Indigenous businesses and Nations shaping and advancing global trade agreements and activity.",
+      "economicValueCreation": "Indigenous participation in trade frameworks opens export pathways for Nation-owned enterprises — from natural resources to cultural goods to technology. Inclusion in trade agreements activates international markets and positions the Indigenous economy within the global value chain.",
+      "relationships": [
+        {
+          "type": "tension_with",
+          "target": "kit:theme/procurement",
+          "note": "Trade is international; procurement is primarily domestic supply-chain"
+        }
+      ]
+    },
+    {
+      "@id": "kit:theme/capital-alignment",
+      "@type": "Theme",
+      "themeNumber": 7,
+      "name": "Capital Alignment",
+      "description": "Shift from the singular narrative of 'capital access as barrier' toward positive action examining the alignment of capital to the growth of the Indigenous economy. Finance aligned with Indigenous values and economic participation.",
+      "layer": "B",
+      "gdpCoverage": "excluded",
+      "bookPages": "165-166",
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "phase3Description": "Finance aligned with Indigenous values. Corporate leadership increasing access to capital.",
+      "economicValueCreation": "Aligning financial products — bonds, credit facilities, impact funds — with Indigenous values removes structural barriers to capital access. When institutions design instruments that reflect Indigenous governance and priorities, Nations can mobilize capital at scale without compromising self-determination.",
+      "relationships": [
+        {
+          "type": "overlaps_with",
+          "target": "kit:theme/indigenous-funds",
+          "note": ""
+        },
+        {
+          "type": "feeds_into",
+          "target": "kit:theme/financial-architecture",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "@id": "kit:theme/procurement",
+      "@type": "Theme",
+      "themeNumber": 8,
+      "name": "Procurement",
+      "description": "Indigenous procurement has rapidly ascended as a core economic enabler. Policy space for Indigenous procurement as an economic design tool for government and industry is a significant advancement. Example: Article 24 of the Nunavut Settlement Agreement mandates Government of Canada to support Inuit businesses through procurement.",
+      "layer": "A+B",
+      "gdpCoverage": "partially_captured",
+      "bookPages": "166-168",
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "phase3Description": "Framework to increase Indigenous-owned business participation in government and corporate supply chains — an economic and reconciliation tool shifting who benefits from public and private spending.",
+      "economicValueCreation": "Federal procurement targets direct tens of billions in annual spending toward Indigenous businesses. This activates value by converting existing government expenditure into Indigenous revenue — building business capacity, employment, and enterprise growth without requiring new capital investment.",
+      "relationships": [
+        {
+          "type": "feeds_into",
+          "target": "kit:theme/entrepreneurship",
+          "note": "Procurement contracts grow Indigenous businesses"
+        },
+        {
+          "type": "feeds_into",
+          "target": "kit:theme/call-to-action-92",
+          "note": "TRC 92 includes corporate procurement commitments"
+        }
+      ]
+    },
+    {
+      "@id": "kit:theme/assets-under-management",
+      "@type": "Theme",
+      "themeNumber": 9,
+      "name": "Indigenous Assets Under Management",
+      "description": "The pathway to asset management in the Indigenous economy has had serious setbacks from Indian Act limitations. Chronic underfunding of infrastructure, difficulty accessing insurance for assets on reserve. Growing portfolio of Nation-owned financial assets.",
+      "layer": "B",
+      "gdpCoverage": "excluded",
+      "bookPages": "168-170",
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "phase3Description": "Growing Nation-owned portfolios — investments, land holdings, trusts, and equity positions owned, managed, or governed by Indigenous Nations and institutions.",
+      "economicValueCreation": "AUM is the aggregate measure of Indigenous economic power. As Nations accumulate diversified portfolios — equities, real assets, infrastructure, cash — they generate compounding returns, reduce dependency on transfer payments, and build the financial resilience to fund self-determined priorities.",
+      "relationships": [
+        {
+          "type": "overlaps_with",
+          "target": "kit:theme/indigenous-trusts",
+          "note": ""
+        },
+        {
+          "type": "feeds_into",
+          "target": "kit:theme/sovereign-wealth-funds",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "@id": "kit:theme/entrepreneurship",
+      "@type": "Theme",
+      "themeNumber": 10,
+      "name": "The Rise of Indigenous Entrepreneurship",
+      "description": "Indigenous Peoples are creating new businesses at five times the rate of non-Indigenous peoples. Statistics Canada reports nearly 19,000 businesses in Indigenous communities (~17,000 in First Nations, ~2,000 in Inuit). The rise of Indigenous entrepreneurship is a powerful phenomenon.",
+      "layer": "A+B",
+      "gdpCoverage": "partially_captured",
+      "bookPages": "170-173",
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "phase3Description": "Indigenous business creation outpaces national averages.",
+      "economicValueCreation": "Indigenous entrepreneurship is the fastest-growing segment of the Canadian economy. It activates value through job creation, supply chain development, and community reinvestment — diversifying Nation economies beyond resource dependency and building an Indigenous private sector of lasting depth.",
+      "relationships": [
+        {
+          "type": "depends_on",
+          "target": "kit:theme/indigenous-funds",
+          "note": "Entrepreneurs need capital access"
+        },
+        {
+          "type": "feeds_into",
+          "target": "kit:theme/procurement",
+          "note": "Indigenous businesses become procurement suppliers"
+        }
+      ]
+    },
+    {
+      "@id": "kit:theme/indigenous-trusts",
+      "@type": "Theme",
+      "themeNumber": 11,
+      "name": "Indigenous Trusts",
+      "description": "Trust structures commonly used to safeguard assets for future generations. Connected to both settlement process and asset management. The quickening pace of Indigenous trust development has made this a highly competitive arena with financial partners.",
+      "layer": "B",
+      "gdpCoverage": "excluded",
+      "bookPages": "173-175",
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "phase3Description": "Judicial Settlement Trusts protect and manage settlement funds with transparent governance. Wealth Management Trusts invest and grow Nation-owned capital to generate income and build intergenerational prosperity.",
+      "economicValueCreation": "Trusts are the primary vehicle through which settlement capital is preserved and grown. They activate value by converting one-time inflows into permanent, managed wealth — providing Nations with patient capital, income generation, and a financial foundation that extends across generations.",
+      "relationships": [
+        {
+          "type": "feeds_into",
+          "target": "kit:theme/settlement-values",
+          "note": "Settlements flow into trust structures"
+        },
+        {
+          "type": "tension_with",
+          "target": "kit:theme/sovereign-wealth-funds",
+          "note": "Trusts preserve; SWFs grow"
+        },
+        {
+          "type": "overlaps_with",
+          "target": "kit:theme/assets-under-management",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "@id": "kit:theme/sovereign-wealth-funds",
+      "@type": "Theme",
+      "themeNumber": 12,
+      "name": "Indigenous Sovereign Wealth Funds",
+      "description": "Sovereign wealth funds invest state-earned revenues; created through legislation within a sovereign government. This financial mechanism is being adapted by Indigenous Nations as an increasing trend. What makes it 'sovereign' is that it is created through an act of legislation within a sovereign government.",
+      "layer": "B",
+      "gdpCoverage": "excluded",
+      "bookPages": "175-177",
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "phase3Description": "Nation-led long-term financial planning — investing collective wealth aligned with cultural values to sustain self-determined growth and secure prosperity for future generations.",
+      "economicValueCreation": "Sovereign Wealth Funds are the apex of Nation-controlled finance — pooling collective wealth into globally diversified portfolios governed entirely by Indigenous priorities. They generate returns that fund governance, social programs, and economic development independent of government transfers.",
+      "relationships": [
+        {
+          "type": "tension_with",
+          "target": "kit:theme/indigenous-trusts",
+          "note": ""
+        },
+        {
+          "type": "depends_on",
+          "target": "kit:theme/indigenous-institutions",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "@id": "kit:theme/esgi-reporting",
+      "@type": "Theme",
+      "themeNumber": 13,
+      "name": "ESGI Reporting — Changing the Context of Corporate Reporting",
+      "description": "Emergence of ESGI narrative — Indigenous inclusion as essential addition to traditional ESG. Growing perspective on how Indigenous issues can be better integrated into existing ESG standards and corporate reporting.",
+      "layer": "B",
+      "gdpCoverage": "excluded",
+      "bookPages": "177-178",
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "phase3Description": "Expanding ESG to include Indigenous rights.",
+      "economicValueCreation": "ESGI transforms reporting into economic leverage. Companies that fail on Indigenous indicators face reputational and investment risk, while those that perform well unlock access to a growing class of values-aligned capital.",
+      "relationships": [
+        {
+          "type": "overlaps_with",
+          "target": "kit:theme/corporate-reconciliation",
+          "note": ""
+        },
+        {
+          "type": "feeds_into",
+          "target": "kit:theme/call-to-action-92",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "@id": "kit:theme/corporate-reconciliation",
+      "@type": "Theme",
+      "themeNumber": 14,
+      "name": "Corporate Response to Economic Reconciliation",
+      "description": "Growing trend for corporations to measure and report social and economic outcomes through partnerships with Indigenous businesses and communities. Focused on Indigenous spend, impact, contracts extended to Indigenous businesses. Builds visibility, accountability, and transparency.",
+      "layer": "B",
+      "gdpCoverage": "excluded",
+      "bookPages": "178-180",
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "phase3Description": "Companies tracking reconciliation commitments with measurable outcomes and accountabilities.",
+      "economicValueCreation": "RAPs convert reconciliation intent into measurable economic commitments — procurement targets, employment benchmarks, equity provisions. They activate value by institutionalizing the flow of corporate spending, opportunity, and ownership toward Indigenous peoples and Nations.",
+      "relationships": [
+        {
+          "type": "depends_on",
+          "target": "kit:theme/call-to-action-92",
+          "note": "TRC 92 directs corporate reconciliation"
+        },
+        {
+          "type": "overlaps_with",
+          "target": "kit:theme/procurement",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "@id": "kit:theme/indigenous-institutions",
+      "@type": "Theme",
+      "themeNumber": 15,
+      "name": "Indigenous-led Economic Institutions",
+      "description": "Development of Indigenous-led institutions is integral to establishing foundational structures supporting Indigenous economic growth, self-determination, and participation. The FMA institutions (FNFA, FNTC, FNFMB, FNII) are exemplary.",
+      "layer": "B",
+      "gdpCoverage": "excluded",
+      "bookPages": "180-182",
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "phase3Description": "Self-determined governance and finance bodies creating Nation-based control over governance and financial systems aligned with Indigenous laws and values.",
+      "economicValueCreation": "Indigenous-led financial institutions — development banks, credit unions, lending bodies — build the infrastructure through which capital circulates within the Indigenous economy. They activate value by keeping capital local, reducing reliance on external institutions, and designing products suited to Nation economies.",
+      "relationships": [
+        {
+          "type": "overlaps_with",
+          "target": "kit:theme/financial-architecture",
+          "note": ""
+        },
+        {
+          "type": "feeds_into",
+          "target": "kit:theme/indigenous-funds",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "@id": "kit:theme/policy-reconciliation",
+      "@type": "Theme",
+      "themeNumber": 16,
+      "name": "Government Policies, Agreements, and Reconciliation Arrangements",
+      "description": "Government policies and agreements are effective tools for building nation-to-nation relationships and advancing Indigenous economic outcomes. BC has established considerable reconciliation agreements focused on closing the socioeconomic gap.",
+      "layer": "B",
+      "gdpCoverage": "excluded",
+      "bookPages": "182-184",
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "phase3Description": "Formal arrangements between Indigenous Nations and governments recognizing rights, title, and decision-making authority — embedding reconciliation into law through shared governance and economic partnership frameworks.",
+      "economicValueCreation": "Agreements that enshrine rights and shared decision-making reduce sovereign risk and create the policy certainty investors require. They activate economic value by giving Nations defined authority over land use, resource development, and regulatory processes — turning governance into an economic asset.",
+      "relationships": [
+        {
+          "type": "depends_on",
+          "target": "kit:theme/undrip",
+          "note": ""
+        },
+        {
+          "type": "feeds_into",
+          "target": "kit:theme/indigenous-legal",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "@id": "kit:theme/financial-architecture",
+      "@type": "Theme",
+      "themeNumber": 17,
+      "name": "Financial Architecture — Designing Tools for Indigenous Economic Growth",
+      "description": "Indigenomics emphasizes modern Indigenous economic design — building tools and financial architecture for increasing Indigenous economic inclusion. Loan guarantees are the key enabler for Indigenous equity participation in major projects.",
+      "layer": "B",
+      "gdpCoverage": "excluded",
+      "bookPages": "184-185",
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "phase3Description": "Loan guarantees unlock capital for Indigenous Nations, enabling ownership in major projects — converting financing access into long-term power, equity, and Nation-led growth.",
+      "economicValueCreation": "Loan guarantees are a structural mechanism that converts creditworthiness into equity. By enabling Nations to borrow at scale against government-backed instruments, they unlock participation in projects that would otherwise be inaccessible — transforming financial architecture into an engine of ownership.",
+      "relationships": [
+        {
+          "type": "feeds_into",
+          "target": "kit:theme/major-projects",
+          "note": "Loan guarantees enable project equity"
+        },
+        {
+          "type": "feeds_into",
+          "target": "kit:theme/equity-participation",
+          "note": ""
+        },
+        {
+          "type": "overlaps_with",
+          "target": "kit:theme/indigenous-institutions",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "@id": "kit:theme/undrip",
+      "@type": "Theme",
+      "themeNumber": 18,
+      "name": "UNDRIP Implementation into Law",
+      "description": "Implementing UNDRIP establishes new economic space across governments and corporate sector as emerging leadership responses are activated. The actual level of power in UNDRIP is 'maybe 10 percent of what is available in the full spectrum of Indigenous legal wins.'",
+      "layer": "B",
+      "gdpCoverage": "excluded",
+      "bookPages": "185-186",
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "phase3Description": "Turning rights into economic law.",
+      "economicValueCreation": "UNDRIP implementation embeds free, prior, and informed consent into Canadian law — giving Nations binding authority over decisions affecting their lands and resources. This activates economic value by converting international rights standards into domestic negotiating power, consent requirements, and revenue entitlements.",
+      "relationships": [
+        {
+          "type": "depends_on",
+          "target": "kit:theme/indigenous-legal",
+          "note": ""
+        },
+        {
+          "type": "overlaps_with",
+          "target": "kit:theme/call-to-action-92",
+          "note": ""
+        },
+        {
+          "type": "feeds_into",
+          "target": "kit:theme/policy-reconciliation",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "@id": "kit:theme/clean-energy",
+      "@type": "Theme",
+      "themeNumber": 19,
+      "name": "Indigenous Clean Energy Revolution",
+      "description": "Over 200 medium-to-large renewable energy generating projects with Indigenous involvement now in operation, with close to 200 more in planning/construction. Nations leading renewable energy development.",
+      "layer": "A+B",
+      "gdpCoverage": "partially_captured",
+      "bookPages": "185-188",
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "phase3Description": "Nations leading renewable energy projects — representing billions in assets and ownership across 200+ large-scale renewable projects, anchoring Indigenous leadership in the energy transition.",
+      "economicValueCreation": "Clean energy is the largest single driver of new Indigenous asset creation in Canada. Nations are moving from impact benefit agreements to full equity co-ownership in projects valued in the billions — generating long-term, contracted revenue streams that anchor the Indigenous economy in the net-zero future.",
+      "relationships": [
+        {
+          "type": "overlaps_with",
+          "target": "kit:theme/major-projects",
+          "note": ""
+        },
+        {
+          "type": "overlaps_with",
+          "target": "kit:theme/net-zero",
+          "note": "Clean energy is a mechanism for net zero"
+        },
+        {
+          "type": "overlaps_with",
+          "target": "kit:theme/equity-participation",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "@id": "kit:theme/call-to-action-92",
+      "@type": "Theme",
+      "themeNumber": 20,
+      "name": "Call to Action #92 Implementation",
+      "description": "TRC Call to Action #92 specifically outlines adopting UNDRIP as reconciliation framework and applying its principles to corporate policy and core operational activities involving Indigenous Peoples and their lands and resources.",
+      "layer": "B",
+      "gdpCoverage": "excluded",
+      "bookPages": "188-189",
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "phase3Description": "TRC guidance urging the corporate sector to adopt UNDRIP as a reconciliation framework — building respectful relationships, ensuring equitable access, and recognizing Indigenous rights in all economic partnerships.",
+      "economicValueCreation": "CA #92 establishes Indigenous inclusion as a baseline expectation in project development, investment decisions, and supply chain management — driving measurable capital flows toward Indigenous participation and creating a normative standard that obligates corporate Canada to act.",
+      "relationships": [
+        {
+          "type": "feeds_into",
+          "target": "kit:theme/corporate-reconciliation",
+          "note": ""
+        },
+        {
+          "type": "depends_on",
+          "target": "kit:theme/undrip",
+          "note": ""
+        },
+        {
+          "type": "feeds_into",
+          "target": "kit:theme/procurement",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "@id": "kit:theme/equity-participation",
+      "@type": "Theme",
+      "themeNumber": 21,
+      "name": "Indigenous Equity Participation",
+      "description": "Equity participation facilitates an Indigenous group's ownership, whole or in part, of a company or project. This rapidly evolving trend unlocks new levels of control and influence and is a key mechanism for cross-generational wealth generation.",
+      "layer": "A+B",
+      "gdpCoverage": "partially_captured",
+      "bookPages": "189-190",
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "phase3Description": "From compensation to co-ownership stakes.",
+      "economicValueCreation": "The shift from impact payments to equity stakes fundamentally changes the value Nations capture from economic activity on their territories. Equity participation means Nations share in project appreciation, financing upside, and long-term returns — building permanent wealth rather than receiving time-limited compensation.",
+      "relationships": [
+        {
+          "type": "subset_of",
+          "target": "kit:theme/partnerships",
+          "note": ""
+        },
+        {
+          "type": "depends_on",
+          "target": "kit:theme/financial-architecture",
+          "note": "Loan guarantees enable equity purchase"
+        },
+        {
+          "type": "overlaps_with",
+          "target": "kit:theme/major-projects",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "@id": "kit:theme/fee-simple-land",
+      "@type": "Theme",
+      "themeNumber": 22,
+      "name": "Indigenous Fee Simple Land Purchases",
+      "description": "Indigenous Nations purchasing fee simple land has become a solution for securing key parcels for cultural, conservation, or economic purposes. Growing trend — it is faster to purchase than to go through land claims or Indian Act negotiation.",
+      "layer": "B",
+      "gdpCoverage": "excluded",
+      "bookPages": "190-191",
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "phase3Description": "Buying land directly on the open market.",
+      "economicValueCreation": "Fee simple purchases enable Nations to expand their land base and economic footprint outside the reserve system. Acquired lands can be developed commercially, converted to reserve status, or held as appreciating assets — giving Nations flexible, market-accessible mechanisms to grow their territorial and economic presence.",
+      "relationships": [
+        {
+          "type": "tension_with",
+          "target": "kit:theme/land-transfer",
+          "note": "Market purchase vs government transfer — different mechanisms"
+        }
+      ]
+    },
+    {
+      "@id": "kit:theme/net-zero",
+      "@type": "Theme",
+      "themeNumber": 23,
+      "name": "The Net Zero Agenda and the Indigenous Economy",
+      "description": "The road to net zero crosses Indigenous Territories and requires consent to access the resources needed for a low-carbon future. Four forms of capital identified: Natural Capital (Indigenous lands), Financial Capital (growing wealth), Intellectual Capital (Traditional Knowledge), Human Capital (young growing population).",
+      "layer": "B",
+      "gdpCoverage": "excluded",
+      "bookPages": "189-193",
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "phase3Description": "Nations central to climate strategy.",
+      "economicValueCreation": "Canada cannot achieve its climate commitments without Indigenous partnership — positioning Nations as indispensable actors in the net-zero transition. This centrality activates value through preferential project access, carbon credit development, green finance eligibility, and government investment in Indigenous-led climate solutions.",
+      "relationships": [
+        {
+          "type": "overlaps_with",
+          "target": "kit:theme/clean-energy",
+          "note": ""
+        },
+        {
+          "type": "feeds_into",
+          "target": "kit:theme/major-projects",
+          "note": "Net zero drives critical mineral projects"
+        }
+      ]
+    },
+    {
+      "@id": "kit:theme/settlement-values",
+      "@type": "Theme",
+      "themeNumber": 24,
+      "name": "Settlement Values",
+      "description": "Over 627 outstanding First Nations claims actively under assessment. Known as specific claims, these deal with historical wrongs including administration of reserve lands and monies, breaches of treaty obligations. Settlements fuel wealth creation and trust development.",
+      "layer": "B",
+      "gdpCoverage": "excluded",
+      "bookPages": "193-195",
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "phase3Description": "Claims settlements fueling new wealth.",
+      "economicValueCreation": "Settlements represent the largest single-event capital injections into many Nation economies. When paired with sound trust structures and investment strategies, they activate compounding wealth — converting historical redress into present-day investment capacity, entrepreneurship funding, and intergenerational financial security.",
+      "relationships": [
+        {
+          "type": "feeds_into",
+          "target": "kit:theme/indigenous-trusts",
+          "note": "Settlements flow into trusts"
+        },
+        {
+          "type": "feeds_into",
+          "target": "kit:theme/assets-under-management",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "@id": "kit:theme/urban-reserves",
+      "@type": "Theme",
+      "themeNumber": 25,
+      "name": "Urban Reserves",
+      "description": "An Indigenous urban reserve is similar to a municipal property but is a section of reserve land within a larger municipality. Urban reserves are created to stimulate business activity, generate revenue, and create investment and employment opportunities otherwise unavailable on other reserve lands. 'First Nations economic zones.'",
+      "layer": "B",
+      "gdpCoverage": "excluded",
+      "bookPages": "195-197",
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "phase3Description": "Nations establishing reserve lands within cities to drive business development, investment, and employment — expanding Nation-owned assets and creating spaces of economic sovereignty within Canada's urban centres.",
+      "economicValueCreation": "Urban reserves transform city-located land into tax-advantaged, Nation-governed commercial zones. They activate value by attracting business tenants, generating lease and tax revenue, creating urban employment, and establishing a visible economic presence that extends Nation sovereignty into Canada's highest-density economic markets.",
+      "relationships": [
+        {
+          "type": "feeds_into",
+          "target": "kit:theme/entrepreneurship",
+          "note": "Urban reserves create business opportunities"
+        },
+        {
+          "type": "overlaps_with",
+          "target": "kit:theme/land-transfer",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "@id": "kit:quote/book2-undrip-1",
+      "@type": "Quote",
+      "text": "Like so many others, I have spent my years recovering; recovering from the effects of the Indian Act and recovering from a generational response to economic displacement as an Indigenous person. It is from here that I draw both my response and inspiration.",
+      "attribution": "Carol Anne Hilton, The Rise of Indigenous Economic Power, p. 126, 7",
+      "author": {
+        "@id": "kit:person/carol-anne-hilton"
+      },
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "pageReference": "126, 7",
+      "anchorsTheme": {
+        "@id": "kit:theme/undrip"
+      },
+      "layer": "ontological",
+      "context": "Powerful personal statement establishing the foundational premise that Indigenous economic development must be understood as recovery from colonial displacement",
+      "paraphrase": false
+    },
+    {
+      "@id": "kit:quote/book2-undrip-2",
+      "@type": "Quote",
+      "text": "Aligning the Indian Act to be in accordance with UNDRIP involves legislative changes and a broader shift in the relationship between the Canadian government, regional governments, and Indigenous Nations that move toward true partnership and respect for Indigenous sovereignty, rights, and self-determination",
+      "attribution": "Carol Anne Hilton, The Rise of Indigenous Economic Power, p. 223",
+      "author": {
+        "@id": "kit:person/carol-anne-hilton"
+      },
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "pageReference": "223",
+      "anchorsTheme": {
+        "@id": "kit:theme/undrip"
+      },
+      "layer": "ontological",
+      "context": "Defines the fundamental nature of reconciliation as requiring sovereignty recognition",
+      "paraphrase": false
+    },
+    {
+      "@id": "kit:quote/book2-policy-reconciliation-1",
+      "@type": "Quote",
+      "text": "Impediments to Indigenous economic development—put in place by the Indian Act, which effectively took Indigenous communities out of the mainstream economy—have held Indigenous Peoples back for generations.",
+      "attribution": "Carol Anne Hilton, The Rise of Indigenous Economic Power, p. 8, 9",
+      "author": {
+        "@id": "kit:person/carol-anne-hilton"
+      },
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "pageReference": "8, 9",
+      "anchorsTheme": {
+        "@id": "kit:theme/policy-reconciliation"
+      },
+      "layer": "ontological",
+      "context": "Foundational statement about systemic barriers to Indigenous economic participation",
+      "paraphrase": false
+    },
+    {
+      "@id": "kit:quote/book2-policy-reconciliation-2",
+      "@type": "Quote",
+      "text": "The Indian Act of 1867 has never reflected the spirit and intent of the Royal Proclamation of 1763, which described a sharing of resources and a respect for the existing governance of Indigenous communities.",
+      "attribution": "Carol Anne Hilton, The Rise of Indigenous Economic Power, p. 10",
+      "author": {
+        "@id": "kit:person/carol-anne-hilton"
+      },
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "pageReference": "10",
+      "anchorsTheme": {
+        "@id": "kit:theme/policy-reconciliation"
+      },
+      "layer": "ontological",
+      "context": "Historical foundation showing the contradiction between colonial policy intentions and implementation",
+      "paraphrase": false
+    },
+    {
+      "@id": "kit:quote/book2-unthemed-1",
+      "@type": "Quote",
+      "text": "History tells us that economics started in the eighteenth century and is an early articulation of Adam Smith's work. Indigenous economies have been functioning for thousands of years.",
+      "attribution": "Carol Anne Hilton, The Rise of Indigenous Economic Power, p. 13, 14",
+      "author": {
+        "@id": "kit:person/carol-anne-hilton"
+      },
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "pageReference": "13, 14",
+      "anchorsTheme": {
+        "@id": "kit:theme/unthemed"
+      },
+      "layer": "ontological",
+      "context": "Powerful reframing that positions Indigenous economies as having deep historical precedence over Western economic theory",
+      "paraphrase": false
+    },
+    {
+      "@id": "kit:quote/book2-unthemed-2",
+      "@type": "Quote",
+      "text": "Indigenomics focuses to the foundation of humanity's success that must come from economic systems that have life at the center—the elemental forces of air, water, earth, and fire—and must include the contributive wis- dom of all peoples to the economy itself.",
+      "attribution": "Carol Anne Hilton, The Rise of Indigenous Economic Power, p. 14",
+      "author": {
+        "@id": "kit:person/carol-anne-hilton"
+      },
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "pageReference": "14",
+      "anchorsTheme": {
+        "@id": "kit:theme/unthemed"
+      },
+      "layer": "ontological",
+      "context": "Core ontological principle defining what economic systems should be centered on according to Indigenomics philosophy",
+      "paraphrase": false
+    },
+    {
+      "@id": "kit:quote/book2-land-transfer-1",
+      "@type": "Quote",
+      "text": "The lands we collectively live, work, and play on hold the vibration of the original treaties, covering over 3.5 million square kilometers or about 35 percent of the country's total land mass. This is the common invisible thread across our collective reality.",
+      "attribution": "Carol Anne Hilton, The Rise of Indigenous Economic Power, p. 15, 16",
+      "author": {
+        "@id": "kit:person/carol-anne-hilton"
+      },
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "pageReference": "15, 16",
+      "anchorsTheme": {
+        "@id": "kit:theme/land-transfer"
+      },
+      "layer": "ontological",
+      "context": "Powerful metaphysical framing of Indigenous land rights as foundational to Canadian reality",
+      "paraphrase": false
+    },
+    {
+      "@id": "kit:quote/book2-land-transfer-2",
+      "@type": "Quote",
+      "text": "This is Indian Act economics in action—land value exists for everyone except the Indians. The market value of lands is not for the Indians. Indians are not allowed to set",
+      "attribution": "Carol Anne Hilton, The Rise of Indigenous Economic Power, p. 40",
+      "author": {
+        "@id": "kit:person/carol-anne-hilton"
+      },
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "pageReference": "40",
+      "anchorsTheme": {
+        "@id": "kit:theme/land-transfer"
+      },
+      "layer": "axiological",
+      "context": "Captures the core inequity of Indian Act economics regarding land value extraction",
+      "paraphrase": false
+    },
+    {
+      "@id": "kit:quote/book2-indigenous-legal-1",
+      "@type": "Quote",
+      "text": "The Indian Act is an architectural structure designed specifically for the absence of belonging of Indigenous Peoples and their dis-invitation from having a seat at the economic table",
+      "attribution": "Carol Anne Hilton, The Rise of Indigenous Economic Power, p. 24",
+      "author": {
+        "@id": "kit:person/carol-anne-hilton"
+      },
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "pageReference": "24",
+      "anchorsTheme": {
+        "@id": "kit:theme/indigenous-legal"
+      },
+      "layer": "ontological",
+      "context": "Powerful framing of the Indian Act as deliberately exclusionary architecture",
+      "paraphrase": false
+    },
+    {
+      "@id": "kit:quote/book2-indigenous-legal-2",
+      "@type": "Quote",
+      "text": "The Indian Act establishes the externalization of the position of power.",
+      "attribution": "Carol Anne Hilton, The Rise of Indigenous Economic Power, p. 26, 27",
+      "author": {
+        "@id": "kit:person/carol-anne-hilton"
+      },
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "pageReference": "26, 27",
+      "anchorsTheme": {
+        "@id": "kit:theme/indigenous-legal"
+      },
+      "layer": "ontological",
+      "context": "Foundational statement about how the Indian Act structurally removes Indigenous agency and decision-making power",
+      "paraphrase": false
+    },
+    {
+      "@id": "kit:quote/book2-settlement-values-1",
+      "@type": "Quote",
+      "text": "This is Indigenomics in action—this is values from an Indigenous worldview, steeped in responsibility across time. This is Indigenous futurism. Indigenous economic purchasing power is the narrative shift of Indigenous economic growth.",
+      "attribution": "Carol Anne Hilton, The Rise of Indigenous Economic Power, p. 47",
+      "author": {
+        "@id": "kit:person/carol-anne-hilton"
+      },
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "pageReference": "47",
+      "anchorsTheme": {
+        "@id": "kit:theme/settlement-values"
+      },
+      "layer": "ontological",
+      "context": "Defines Indigenomics as rooted in Indigenous worldview of intergenerational responsibility and futurism",
+      "paraphrase": false
+    },
+    {
+      "@id": "kit:quote/book2-settlement-values-2",
+      "@type": "Quote",
+      "text": "Canada is not giving $1.3 billion to Siksika. Canada is righting a wrong commit- ted over a century ago when Canada illegally took 115,000 acres of lands provided to Siksika along with other illegal acts",
+      "attribution": "Carol Anne Hilton, The Rise of Indigenous Economic Power, p. 184",
+      "author": {
+        "@id": "kit:person/carol-anne-hilton"
+      },
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "pageReference": "184",
+      "anchorsTheme": {
+        "@id": "kit:theme/settlement-values"
+      },
+      "layer": "axiological",
+      "context": "Powerful reframing of settlements as justice rather than gifts - challenges colonial narrative",
+      "paraphrase": false
+    },
+    {
+      "@id": "kit:quote/book2-indigenous-institutions-1",
+      "@type": "Quote",
+      "text": "It's about utilizing one of our best strengths and that's the greatest of our warriors. These are the ones that bring a peaceful attitude to the business and governance meetings and that we understand how to walk in a Western worldview, but our Indigenous worldview is just as important.",
+      "attribution": "Carol Anne Hilton, The Rise of Indigenous Economic Power, p. 59, 60",
+      "author": {
+        "@id": "kit:person/carol-anne-hilton"
+      },
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "pageReference": "59, 60",
+      "anchorsTheme": {
+        "@id": "kit:theme/indigenous-institutions"
+      },
+      "layer": "ontological",
+      "context": "Highlights Indigenous leadership capabilities and dual worldview navigation as core strengths for economic development",
+      "paraphrase": false
+    },
+    {
+      "@id": "kit:quote/book2-indigenous-institutions-2",
+      "@type": "Quote",
+      "text": "Indigenomics is the process of reclaiming Indigenous economic space.",
+      "attribution": "Carol Anne Hilton, The Rise of Indigenous Economic Power, p. 144",
+      "author": {
+        "@id": "kit:person/carol-anne-hilton"
+      },
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "pageReference": "144",
+      "anchorsTheme": {
+        "@id": "kit:theme/indigenous-institutions"
+      },
+      "layer": "ontological",
+      "context": "Core definition of Indigenomics as reclamation of economic space",
+      "paraphrase": false
+    },
+    {
+      "@id": "kit:quote/book2-partnerships-1",
+      "@type": "Quote",
+      "text": "Ensure that financial agreements include provisions for equitable benefit sharing with Indigenous Nations and businesses. This might involve developing profit-sharing, community development funds, or other financial arrangements.",
+      "attribution": "Carol Anne Hilton, The Rise of Indigenous Economic Power, p. 231, 232",
+      "author": {
+        "@id": "kit:person/carol-anne-hilton"
+      },
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "pageReference": "231, 232",
+      "anchorsTheme": {
+        "@id": "kit:theme/partnerships"
+      },
+      "layer": "axiological",
+      "context": "Core equity principle requiring benefit sharing in all Indigenous financial arrangements",
+      "paraphrase": false
+    },
+    {
+      "@id": "kit:quote/book2-partnerships-2",
+      "@type": "Quote",
+      "text": "Indigenous Peoples are not at parity in this country but could be with investment and partnership. That is the opportunity.",
+      "attribution": "Carol Anne Hilton, The Rise of Indigenous Economic Power, p. 65",
+      "author": {
+        "@id": "kit:person/carol-anne-hilton"
+      },
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "pageReference": "65",
+      "anchorsTheme": {
+        "@id": "kit:theme/partnerships"
+      },
+      "layer": "praxis",
+      "context": "Establishes the foundational premise that Indigenous economic parity is achievable through proper investment and partnership approaches",
+      "paraphrase": false
+    },
+    {
+      "@id": "kit:quote/book2-capital-alignment-1",
+      "@type": "Quote",
+      "text": "Investing in the Indigenous economy is an investment into a more sustainable, inclusive, just, and prosperous future for all.",
+      "attribution": "Carol Anne Hilton, The Rise of Indigenous Economic Power, p. 114",
+      "author": {
+        "@id": "kit:person/carol-anne-hilton"
+      },
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "pageReference": "114",
+      "anchorsTheme": {
+        "@id": "kit:theme/capital-alignment"
+      },
+      "layer": "axiological",
+      "context": "Core value proposition for Indigenous economic investment",
+      "paraphrase": false
+    },
+    {
+      "@id": "kit:quote/book2-capital-alignment-2",
+      "@type": "Quote",
+      "text": "This is a significant space for building economic reconciliation outcomes",
+      "attribution": "Carol Anne Hilton, The Rise of Indigenous Economic Power, p. 177",
+      "author": {
+        "@id": "kit:person/carol-anne-hilton"
+      },
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "pageReference": "177",
+      "anchorsTheme": {
+        "@id": "kit:theme/capital-alignment"
+      },
+      "layer": "praxis",
+      "context": "Positions capital alignment as central to economic reconciliation strategy",
+      "paraphrase": false
+    },
+    {
+      "@id": "kit:quote/book2-clean-energy-1",
+      "@type": "Quote",
+      "text": "The principle of \"form follows function\" is foundational to the value creation process in the Indigenous economy.",
+      "attribution": "Carol Anne Hilton, The Rise of Indigenous Economic Power, p. 134",
+      "author": {
+        "@id": "kit:person/carol-anne-hilton"
+      },
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "pageReference": "134",
+      "anchorsTheme": {
+        "@id": "kit:theme/clean-energy"
+      },
+      "layer": "praxis",
+      "context": "Foundational design principle for Indigenous economic development structures",
+      "paraphrase": false
+    },
+    {
+      "@id": "kit:quote/book2-clean-energy-2",
+      "@type": "Quote",
+      "text": "These projects vary in size, but cumulatively, they represent significant economic opportunities for Indigenous communities, helping to drive energy sovereignty, self-determination, and economic growth through sustainable development",
+      "attribution": "Carol Anne Hilton, The Rise of Indigenous Economic Power, p. 127",
+      "author": {
+        "@id": "kit:person/carol-anne-hilton"
+      },
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "pageReference": "127",
+      "anchorsTheme": {
+        "@id": "kit:theme/clean-energy"
+      },
+      "layer": "praxis",
+      "context": "Key claim about the cumulative impact of Indigenous clean energy projects on sovereignty and economic development",
+      "paraphrase": false
+    },
+    {
+      "@id": "kit:quote/book2-entrepreneurship-1",
+      "@type": "Quote",
+      "text": "of isolated islands but a vast interconnected ecosystem. Every decision we make, every partnership we form, and every project we embark upon is evaluated through the lens of this deep interconnectedness.",
+      "attribution": "Carol Anne Hilton, The Rise of Indigenous Economic Power, p. 152, 153",
+      "author": {
+        "@id": "kit:person/carol-anne-hilton"
+      },
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "pageReference": "152, 153",
+      "anchorsTheme": {
+        "@id": "kit:theme/entrepreneurship"
+      },
+      "layer": "ontological",
+      "context": "Fundamental Mi'kmaw worldview principle that guides all economic decision-making",
+      "paraphrase": false
+    },
+    {
+      "@id": "kit:quote/book2-entrepreneurship-2",
+      "@type": "Quote",
+      "text": "We are sitting in seats at tables that we've never been able to sit at before. Now we are major players in the economy. This is happening now",
+      "attribution": "Carol Anne Hilton, The Rise of Indigenous Economic Power, p. 160",
+      "author": {
+        "@id": "kit:person/carol-anne-hilton"
+      },
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "pageReference": "160",
+      "anchorsTheme": {
+        "@id": "kit:theme/entrepreneurship"
+      },
+      "layer": "ontological",
+      "context": "Rose Paul's assessment of current Indigenous economic participation",
+      "paraphrase": false
+    },
+    {
+      "@id": "kit:quote/book2-corporate-reconciliation-1",
+      "@type": "Quote",
+      "text": "Our customs are not simply a set of rules; they are a living testament to the process of sustainability and reconciliation, evolving from shared models of conduct.",
+      "attribution": "Carol Anne Hilton, The Rise of Indigenous Economic Power, p. 164",
+      "author": {
+        "@id": "kit:person/carol-anne-hilton"
+      },
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "pageReference": "164",
+      "anchorsTheme": {
+        "@id": "kit:theme/corporate-reconciliation"
+      },
+      "layer": "ontological",
+      "context": "Rose Paul's description of Indigenous customs as living, evolving systems",
+      "paraphrase": false
+    },
+    {
+      "@id": "kit:quote/book2-corporate-reconciliation-2",
+      "@type": "Quote",
+      "text": "Beyond a $100 billion economic agenda imagines a future national economy that embodies Indigenous worldviews, an economy in which Indigenous Peoples are the drivers of partnerships, investment, and long-term economic growth—by design",
+      "attribution": "Carol Anne Hilton, The Rise of Indigenous Economic Power, p. 145",
+      "author": {
+        "@id": "kit:person/carol-anne-hilton"
+      },
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "pageReference": "145",
+      "anchorsTheme": {
+        "@id": "kit:theme/corporate-reconciliation"
+      },
+      "layer": "ontological",
+      "context": "Vision of transformed national economy centered on Indigenous worldviews",
+      "paraphrase": false
+    },
+    {
+      "@id": "kit:quote/book2-indigenous-funds-1",
+      "@type": "Quote",
+      "text": "every dollar invested is linked explicitly to improved outcomes and well-being for Indigenous Peoples",
+      "attribution": "Carol Anne Hilton, The Rise of Indigenous Economic Power, p. 169, 263",
+      "author": {
+        "@id": "kit:person/carol-anne-hilton"
+      },
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "pageReference": "169, 263",
+      "anchorsTheme": {
+        "@id": "kit:theme/indigenous-funds"
+      },
+      "layer": "axiological",
+      "context": "Powerful statement of Indigenous investment philosophy that connects capital to community well-being",
+      "paraphrase": false
+    },
+    {
+      "@id": "kit:quote/book2-indigenous-funds-2",
+      "@type": "Quote",
+      "text": "Raven Capital excels in a unique value space driving Indigenous system design by inviting asset managers and investors to include Indigenous voices and methods in measuring impact",
+      "attribution": "Carol Anne Hilton, The Rise of Indigenous Economic Power, p. 169",
+      "author": {
+        "@id": "kit:person/carol-anne-hilton"
+      },
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "pageReference": "169",
+      "anchorsTheme": {
+        "@id": "kit:theme/indigenous-funds"
+      },
+      "layer": "praxis",
+      "context": "Demonstrates how Indigenous funds are transforming investment practices through Indigenous methodologies",
+      "paraphrase": false
+    },
+    {
+      "@id": "kit:quote/book2-indigenous-trusts-1",
+      "@type": "Quote",
+      "text": "The pathways for the increasing pace of Indigenous trust developments are based on Nations challenging historical injustices, which is creating new economic space for Nations through financial leverage and increasing influ- ence within the financial sector",
+      "attribution": "Carol Anne Hilton, The Rise of Indigenous Economic Power, p. 186",
+      "author": {
+        "@id": "kit:person/carol-anne-hilton"
+      },
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "pageReference": "186",
+      "anchorsTheme": {
+        "@id": "kit:theme/indigenous-trusts"
+      },
+      "layer": "praxis",
+      "context": "Explains the fundamental mechanism driving Indigenous trust development - challenging historical wrongs creates economic opportunities",
+      "paraphrase": false
+    },
+    {
+      "@id": "kit:quote/book2-esgi-reporting-1",
+      "@type": "Quote",
+      "text": "The formative shift from the use of ESG to ESGI encompasses the growing recognition of the requirement for Indigenous participation and consent and the growing need for accountability in corporate reporting",
+      "attribution": "Carol Anne Hilton, The Rise of Indigenous Economic Power, p. 189, 190",
+      "author": {
+        "@id": "kit:person/carol-anne-hilton"
+      },
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "pageReference": "189, 190",
+      "anchorsTheme": {
+        "@id": "kit:theme/esgi-reporting"
+      },
+      "layer": "axiological",
+      "context": "Articulates the foundational shift requiring Indigenous consent in corporate frameworks",
+      "paraphrase": false
+    },
+    {
+      "@id": "kit:quote/book2-esgi-reporting-2",
+      "@type": "Quote",
+      "text": "A growing area of interest is the emergence of the ESGI narrative, which focuses on Indigenous inclusion as an essential addition to the traditional ESG (Environment, Society, Governance) acronym.",
+      "attribution": "Carol Anne Hilton, The Rise of Indigenous Economic Power, p. 188",
+      "author": {
+        "@id": "kit:person/carol-anne-hilton"
+      },
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "pageReference": "188",
+      "anchorsTheme": {
+        "@id": "kit:theme/esgi-reporting"
+      },
+      "layer": "praxis",
+      "context": "Introduces the concept of ESGI as an evolution of ESG frameworks",
+      "paraphrase": false
+    },
+    {
+      "@id": "kit:quote/book2-financial-architecture-1",
+      "@type": "Quote",
+      "text": "Government-structured responses and leadership in designing tools and programs that advance Indigenous economic inclusion are key trends in the growth of the Indigenous economy.",
+      "attribution": "Carol Anne Hilton, The Rise of Indigenous Economic Power, p. 195",
+      "author": {
+        "@id": "kit:person/carol-anne-hilton"
+      },
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "pageReference": "195",
+      "anchorsTheme": {
+        "@id": "kit:theme/financial-architecture"
+      },
+      "layer": "praxis",
+      "context": "Establishes government leadership as foundational to Indigenous economic growth architecture",
+      "paraphrase": false
+    },
+    {
+      "@id": "kit:quote/book2-financial-architecture-2",
+      "@type": "Quote",
+      "text": "Indigenomics is the process of building the tools, structures, policies, investments, and programs in response to the growth of the Indigenous economy.",
+      "attribution": "Carol Anne Hilton, The Rise of Indigenous Economic Power, p. 76",
+      "author": {
+        "@id": "kit:person/carol-anne-hilton"
+      },
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "pageReference": "76",
+      "anchorsTheme": {
+        "@id": "kit:theme/financial-architecture"
+      },
+      "layer": "praxis",
+      "context": "Clear definition of Indigenomics as a systematic approach to economic development",
+      "paraphrase": false
+    },
+    {
+      "@id": "kit:quote/book2-call-to-action-92-1",
+      "@type": "Quote",
+      "text": "When implementing Call to Action #92 strategies in any organization or company, it is imperative that the change is implemented across the whole spectrum of the organization, from the boardroom to the frontline of working with communities.",
+      "attribution": "Carol Anne Hilton, The Rise of Indigenous Economic Power, p. 198",
+      "author": {
+        "@id": "kit:person/carol-anne-hilton"
+      },
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "pageReference": "198",
+      "anchorsTheme": {
+        "@id": "kit:theme/call-to-action-92"
+      },
+      "layer": "praxis",
+      "context": "Emphasizes the comprehensive organizational transformation required for meaningful reconciliation implementation",
+      "paraphrase": false
+    },
+    {
+      "@id": "kit:quote/book2-call-to-action-92-2",
+      "@type": "Quote",
+      "text": "This Call to Action facilitates a pivotal space for advancing Indigenous economic value creation. It specifically addresses what changes are needed in the corporate sector to achieve steps toward reconciliation with Indigenous communities.",
+      "attribution": "Carol Anne Hilton, The Rise of Indigenous Economic Power, p. 198",
+      "author": {
+        "@id": "kit:person/carol-anne-hilton"
+      },
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "pageReference": "198",
+      "anchorsTheme": {
+        "@id": "kit:theme/call-to-action-92"
+      },
+      "layer": "praxis",
+      "context": "Connects reconciliation implementation directly to Indigenous economic advancement",
+      "paraphrase": false
+    },
+    {
+      "@id": "kit:quote/book2-equity-participation-1",
+      "@type": "Quote",
+      "text": "This agreement underscores significant progress in economic reconciliation and collaboration with Indigenous Nations for long-term growth, ownership, and prosperity.",
+      "attribution": "Carol Anne Hilton, The Rise of Indigenous Economic Power, p. 132",
+      "author": {
+        "@id": "kit:person/carol-anne-hilton"
+      },
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "pageReference": "132",
+      "anchorsTheme": {
+        "@id": "kit:theme/equity-participation"
+      },
+      "layer": "axiological",
+      "context": "Demonstrates how major equity agreements advance economic reconciliation goals",
+      "paraphrase": false
+    },
+    {
+      "@id": "kit:quote/book2-equity-participation-2",
+      "@type": "Quote",
+      "text": "we do not want to just hold the shovels, and we don't want to just have the gas stations on the reserve type of economic development. We want equity participation in everything across all sectors in our territories.",
+      "attribution": "Carol Anne Hilton, The Rise of Indigenous Economic Power, p. 157, 158",
+      "author": {
+        "@id": "kit:person/carol-anne-hilton"
+      },
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "pageReference": "157, 158",
+      "anchorsTheme": {
+        "@id": "kit:theme/equity-participation"
+      },
+      "layer": "axiological",
+      "context": "Articulates the vision for comprehensive Indigenous economic participation beyond basic development",
+      "paraphrase": false
+    },
+    {
+      "@id": "kit:quote/book2-net-zero-1",
+      "@type": "Quote",
+      "text": "the pivotal point that the road to net zero crosses Indigenous Territories and requires consent to access the resources needed to fuel a low-carbon future",
+      "attribution": "Carol Anne Hilton, The Rise of Indigenous Economic Power, p. 201, 202",
+      "author": {
+        "@id": "kit:person/carol-anne-hilton"
+      },
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "pageReference": "201, 202",
+      "anchorsTheme": {
+        "@id": "kit:theme/net-zero"
+      },
+      "layer": "ontological",
+      "context": "Establishes the fundamental geographic and jurisdictional reality that net zero requires Indigenous participation",
+      "paraphrase": false
+    },
+    {
+      "@id": "kit:quote/book2-net-zero-2",
+      "@type": "Quote",
+      "text": "an Indigenous-led approach to the climate transition and economic opportunities toward net zero will be essential to economic reconciliation",
+      "attribution": "Carol Anne Hilton, The Rise of Indigenous Economic Power, p. 202",
+      "author": {
+        "@id": "kit:person/carol-anne-hilton"
+      },
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "pageReference": "202",
+      "anchorsTheme": {
+        "@id": "kit:theme/net-zero"
+      },
+      "layer": "axiological",
+      "context": "Links climate action directly to economic reconciliation through Indigenous leadership",
+      "paraphrase": false
+    },
+    {
+      "@id": "kit:quote/book2-major-projects-1",
+      "@type": "Quote",
+      "text": "This is it. This is what the emerging $100 billion Indigenous economy looks like. A collective series of Indigenous economic development projects connected together in an investment environment that is responding to the growth of the Indigenous economy.",
+      "attribution": "Carol Anne Hilton, The Rise of Indigenous Economic Power, p. 139",
+      "author": {
+        "@id": "kit:person/carol-anne-hilton"
+      },
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "pageReference": "139",
+      "anchorsTheme": {
+        "@id": "kit:theme/major-projects"
+      },
+      "layer": "praxis",
+      "context": "Defining statement about the nature and structure of the emerging Indigenous economy as interconnected projects",
+      "paraphrase": false
+    },
+    {
+      "@id": "kit:quote/book2-major-projects-2",
+      "@type": "Quote",
+      "text": "Nations are building billion-dollar project participation levels through our rightful land ownership and participation mechanisms",
+      "attribution": "Carol Anne Hilton, The Rise of Indigenous Economic Power, p. 148",
+      "author": {
+        "@id": "kit:person/carol-anne-hilton"
+      },
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "pageReference": "148",
+      "anchorsTheme": {
+        "@id": "kit:theme/major-projects"
+      },
+      "layer": "praxis",
+      "context": "Scale of Indigenous economic participation in major projects",
+      "paraphrase": false
+    },
+    {
+      "@id": "kit:quote/book2-procurement-1",
+      "@type": "Quote",
+      "text": "This mandate signals a proactive approach to advancing Indigenous economic participation and build reconciliation outcomes. It is a key trend to watch in the rise of Indigenous economic power.",
+      "attribution": "Carol Anne Hilton, The Rise of Indigenous Economic Power, p. 179, 180",
+      "author": {
+        "@id": "kit:person/carol-anne-hilton"
+      },
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "pageReference": "179, 180",
+      "anchorsTheme": {
+        "@id": "kit:theme/procurement"
+      },
+      "layer": "axiological",
+      "context": "Positions procurement policy as both economic development tool and reconciliation mechanism",
+      "paraphrase": false
+    },
+    {
+      "@id": "kit:quote/book2-assets-under-management-1",
+      "@type": "Quote",
+      "text": "$100 billion economy, 3, 62, 66, 96, 102–103, 115–131, 133–142",
+      "attribution": "Carol Anne Hilton, The Rise of Indigenous Economic Power, p. 259",
+      "author": {
+        "@id": "kit:person/carol-anne-hilton"
+      },
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "pageReference": "259",
+      "anchorsTheme": {
+        "@id": "kit:theme/assets-under-management"
+      },
+      "layer": "praxis",
+      "context": "Key economic milestone representing the scale of Indigenous economic transformation",
+      "paraphrase": false
+    },
+    {
+      "@id": "kit:quote/book2-assets-under-management-2",
+      "@type": "Quote",
+      "text": "The pathway to asset management in the Indigenous economy has had serious setbacks in the context of the impacts and limitations of Indian Act economics. With noted chronic underfunding of the upkeep and the development of core infrastructure such as offices, schools, houses, roads, and other capital assets of Nations, further complications such as difficulty in accessing insurance for assets on reserve have uniquely slowed this development process.",
+      "attribution": "Carol Anne Hilton, The Rise of Indigenous Economic Power, p. 180",
+      "author": {
+        "@id": "kit:person/carol-anne-hilton"
+      },
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "pageReference": "180",
+      "anchorsTheme": {
+        "@id": "kit:theme/assets-under-management"
+      },
+      "layer": "praxis",
+      "context": "Directly links colonial legal structures to contemporary economic barriers in asset management",
+      "paraphrase": false
+    },
+    {
+      "@id": "kit:quote/book2-sovereign-wealth-funds-1",
+      "@type": "Quote",
+      "text": "The development of Indigenous sovereign wealth is a trend to pay attention to.",
+      "attribution": "Carol Anne Hilton, The Rise of Indigenous Economic Power, p. 187",
+      "author": {
+        "@id": "kit:person/carol-anne-hilton"
+      },
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "pageReference": "187",
+      "anchorsTheme": {
+        "@id": "kit:theme/sovereign-wealth-funds"
+      },
+      "layer": "axiological",
+      "context": "Direct call to action for stakeholders to monitor this development",
+      "paraphrase": false
+    },
+    {
+      "@id": "kit:quote/book2-sovereign-wealth-funds-2",
+      "@type": "Quote",
+      "text": "This financial mechanism is being adapted today by Indigenous Nations as an increasing trend in the Indigenous economy.",
+      "attribution": "Carol Anne Hilton, The Rise of Indigenous Economic Power, p. 186",
+      "author": {
+        "@id": "kit:person/carol-anne-hilton"
+      },
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "pageReference": "186",
+      "anchorsTheme": {
+        "@id": "kit:theme/sovereign-wealth-funds"
+      },
+      "layer": "praxis",
+      "context": "Identifies a key emerging trend in Indigenous economic development",
+      "paraphrase": false
+    },
+    {
+      "@id": "kit:quote/book2-fee-simple-land-1",
+      "@type": "Quote",
+      "text": "Real estate purchases are a key value-creation process in the Indigenous economy, posing significant development and financial opportunities in working with Indigenous Nations.",
+      "attribution": "Carol Anne Hilton, The Rise of Indigenous Economic Power, p. 201",
+      "author": {
+        "@id": "kit:person/carol-anne-hilton"
+      },
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "pageReference": "201",
+      "anchorsTheme": {
+        "@id": "kit:theme/fee-simple-land"
+      },
+      "layer": "praxis",
+      "context": "Positions Indigenous real estate purchases as a fundamental value-creation mechanism with partnership implications",
+      "paraphrase": false
+    },
+    {
+      "@id": "kit:quote/book2-urban-reserves-1",
+      "@type": "Quote",
+      "text": "We no longer want to be spectators of economic prosperity in Manitoba.",
+      "attribution": "Carol Anne Hilton, The Rise of Indigenous Economic Power, p. 206",
+      "author": {
+        "@id": "kit:person/carol-anne-hilton"
+      },
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "pageReference": "206",
+      "anchorsTheme": {
+        "@id": "kit:theme/urban-reserves"
+      },
+      "layer": "axiological",
+      "context": "Powerful statement from MKO Chief about Indigenous economic self-determination and moving from passive observation to active participation in economic prosperity",
+      "paraphrase": false
+    },
+    {
+      "@id": "kit:quote/book2-urban-reserves-2",
+      "@type": "Quote",
+      "text": "This collective set of trends is actively creating new economic value in the Indigenous economy, previously unavailable through the structure of Indian Act economics.",
+      "attribution": "Carol Anne Hilton, The Rise of Indigenous Economic Power, p. 206, 207",
+      "author": {
+        "@id": "kit:person/carol-anne-hilton"
+      },
+      "isBasedOn": {
+        "@id": "kit:source/book2"
+      },
+      "pageReference": "206, 207",
+      "anchorsTheme": {
+        "@id": "kit:theme/urban-reserves"
+      },
+      "layer": "praxis",
+      "context": "Key insight about how urban reserves and related trends transcend limitations of Indian Act economic structures",
+      "paraphrase": false
+    },
+    {
+      "@id": "kit:concept/commitment-pool",
+      "@type": "Concept",
+      "name": "Commitment Pool",
+      "description": "Will Ruddick's primitive for shared infrastructure tracking promises and recognition between participants. Defined by the commitment tuple C = (i, j, K, b, q, χ, t, e, r, m).",
+      "source": "Will Ruddick, Commitment-pool route graphs for finance and mutual aid (SSRN 6606438, 2026)"
+    },
+    {
+      "@id": "kit:concept/commitment-tuple",
+      "@type": "Concept",
+      "name": "Commitment Tuple",
+      "description": "C = (i: issuer, j: promisee, K: scope, b: body, q: quantity, χ: temporal orientation (past or future), t: time, e: evidence/witness, r: remedy, m: metadata).",
+      "source": "Ruddick 2026"
+    },
+    {
+      "@id": "kit:concept/temporal-orientation",
+      "@type": "Concept",
+      "name": "Temporal Orientation (χ)",
+      "description": "The χ field of the commitment tuple. Future = promissory ('I will'). Past = certification ('this was done and witnessed'). Distinguishes promises from records of what happened.",
+      "source": "Ruddick 2026"
+    },
+    {
+      "@id": "kit:concept/wise-legibility",
+      "@type": "Concept",
+      "name": "Wise Legibility",
+      "description": "Ruddick's principle: enough visibility for stewardship, enough privacy for dignity, enough accountability for repair, enough local judgment to remain human. Not maximum transparency.",
+      "source": "Will Ruddick, Journal of a Grassroots Economist"
+    },
+    {
+      "@id": "kit:concept/untracked-allocation",
+      "@type": "Concept",
+      "name": "Untracked Allocation",
+      "description": "An explicitly non-graph-legible portion (~15-25%) of every commitment pool reserved for stewardship work that does not compress into assertions: slow relational repair, ceremonial knowledge, care that cannot be rendered.",
+      "source": "Regen AI, Beyond the Claims Engine §6"
+    },
+    {
+      "@id": "kit:concept/dark-matter-legibility",
+      "@type": "Concept",
+      "name": "Dark Matter Legibility",
+      "description": "Johar's principle: the substrate of obligation and coupling through which value actually flows is largely invisible in standard accounting. Governance at scale requires rendering some of this dark matter legible.",
+      "source": "Indy Johar"
+    },
+    {
+      "@id": "kit:concept/composable-stewardship",
+      "@type": "Concept",
+      "name": "Composable Stewardship",
+      "description": "The capacity-name for the compositional field architecture: the enactment of care at scale, across sovereignty boundaries and generations, without enclosure.",
+      "source": "Spore compositional-field synthesis"
+    },
+    {
+      "@id": "kit:concept/four-position-frame",
+      "@type": "Concept",
+      "name": "Four-Position Frame (Johar)",
+      "description": "Conjecture (cheap, AI-abundant), comprehension (scarce, legitimacy-conferring), ground truth (situated, edge-of-legibility), data (gameable, must be cross-correlated). Holding all four in productive tension.",
+      "source": "Indy Johar, The Shifting Cost of Strategy (2026-05-17)"
+    },
+    {
+      "@id": "kit:concept/strategic-epistemic-inflation",
+      "@type": "Concept",
+      "name": "Strategic Epistemic Inflation",
+      "description": "Johar's name for the failure mode the Jam ceremony prevents: an environment saturated with coherent, compelling, plausible AI-generated strategies that reproduce inherited categories rather than discover emergent ones.",
+      "source": "Indy Johar 2026"
+    },
+    {
+      "@id": "kit:concept/divergence-ledger",
+      "@type": "Concept",
+      "name": "Divergence Ledger",
+      "description": "An artifact alongside the composed spec that names what did not merge, what partially overlaps, and what contradicts among contributor inputs. Treats divergence as signal, not noise.",
+      "source": "Jam witness ceremony v0 Johar enhancements"
+    },
+    {
+      "@id": "kit:concept/comprehension-checkpoint",
+      "@type": "Concept",
+      "name": "Comprehension Checkpoint",
+      "description": "A facilitated round between composition and execution where contributors signal still-recognize / no-longer-recognize / actively-object on the composed spec. Three possible outcomes: proceed, brief-repair, pause-and-re-author.",
+      "source": "Jam comprehension-checkpoint-ritual v0"
+    },
+    {
+      "@id": "kit:concept/witness-routing",
+      "@type": "Concept",
+      "name": "Witness Routing by Situated Stake",
+      "description": "Different parts of a spec have different ground-truth holders; witnessing is assigned to the holder of relevant ground truth for each section, not to a uniform crowd.",
+      "source": "Jam witness ceremony v0 enhancements"
+    },
+    {
+      "@id": "kit:concept/dream-to-fulfillment-spectrum",
+      "@type": "Concept",
+      "name": "Dream-to-Fulfillment Spectrum",
+      "description": "dream → vision → care → offer / need → promise → witnessed commitment → fulfilled-and-witnessed. A gradient, not binary; giving-oriented; with past, present, and future as distinct registers.",
+      "source": "Spore compositional-field synthesis §3"
+    },
+    {
+      "@id": "kit:concept/commons-of-care",
+      "@type": "Concept",
+      "name": "Commons of Care",
+      "description": "Ruddick's term: the modal commons; the most foundational, highest-prevalence form of commoning, underwriting trust, coordination, and rule-maintenance for every other commons.",
+      "source": "Will Ruddick"
+    },
+    {
+      "@id": "kit:concept/marker-only-boundary",
+      "@type": "Concept",
+      "name": "Marker-Only Boundary",
+      "description": "A boundary where the system can see that the boundary exists (so it routes around) but cannot see the content beyond. Enables public composition with private contributions.",
+      "source": "Jam offering specs"
+    },
+    {
+      "@id": "kit:concept/witness-discipline",
+      "@type": "Concept",
+      "name": "The Rigour Is Witnessing",
+      "description": "Carol Anne's framing for what makes the Jam serious. Witnessing is the load-bearing act; only witnessing moves graph state forward.",
+      "source": "Carol Anne Hilton (verbal)"
+    },
+    {
+      "@id": "kit:concept/infinite-game",
+      "@type": "Concept",
+      "name": "Infinite Game",
+      "description": "Carse's distinction: a finite game is played for the purpose of winning; an infinite game for the purpose of continuing the play. The Jam optimises for continuing the play.",
+      "source": "James P. Carse, via Ethereum Foundation Infinite Garden framing"
+    },
+    {
+      "@id": "kit:boundary/no-fabricated-carol-anne-voice",
+      "@type": "Boundary",
+      "name": "No Fabricated Carol Anne Voice",
+      "description": "Quote Carol Anne directly from the published worldview JSONs. Do not paraphrase her framings into new wording. If a needed framing is not in the bundle, the answer is to ask her, not to invent one.",
+      "appliesTo": "all agents using this bundle"
+    },
+    {
+      "@id": "kit:boundary/no-indigenous-cultural-content-beyond-books",
+      "@type": "Boundary",
+      "name": "No Indigenous Cultural Content Beyond Published Books",
+      "description": "Indigenous-cultural content is included only as Carol Anne and her team have already published it in the two books. No new synthetic framings; no additional cultural references; no agent extrapolation from published content into adjacent traditions.",
+      "appliesTo": "all agents using this bundle"
+    },
+    {
+      "@id": "kit:boundary/salish-sea-ecology-public-safe",
+      "@type": "Boundary",
+      "name": "Salish Sea Ecology Is Public-Safe",
+      "description": "Salish-Sea ecological framings (kelp, herring, eelgrass, salmon, eelgrass meadows, tidal flats, etc.) may be used freely. They do not carry the same boundary as Indigenous-cultural content.",
+      "appliesTo": "all agents using this bundle"
+    },
+    {
+      "@id": "kit:boundary/no-system-voice-on-questions-of-standing",
+      "@type": "Boundary",
+      "name": "No System Voice on Questions of Standing",
+      "description": "The system does not author judgments about who has authority, what counts as legitimate, or what an Indigenous Nation should do. Those are decisions held by the relevant parties; the system surfaces, renders, and witnesses.",
+      "appliesTo": "all agents using this bundle"
+    },
+    {
+      "@id": "kit:boundary/no-synthetic-economic-totals",
+      "@type": "Boundary",
+      "name": "No Synthetic Economic Totals",
+      "description": "Monte Carlo simulations and synthesised dollar totals were retired from public IndigenomicsAI surfaces in April 2026. StatsCan IPEA ($63.7B for 2023) is a reference point, not a benchmark or target.",
+      "appliesTo": "all agents using this bundle"
+    },
+    {
+      "@id": "kit:boundary/no-overclaim-language-in-witness-records",
+      "@type": "Boundary",
+      "name": "No Overclaim Language in Witness Records",
+      "description": "Witness records are not approvals, certifications, or legitimacy grants. They record what happened. Avoid words like 'certified', 'approved', 'authorized', 'validated' as descriptions of Jam outputs unless authority for that word has been independently established.",
+      "appliesTo": "agents drafting witness records"
+    },
+    {
+      "@id": "kit:boundary/witness-routing-by-situated-stake",
+      "@type": "Boundary",
+      "name": "Witness Routing by Situated Stake",
+      "description": "Different parts of a spec have different ground-truth holders. An agent should not author claims for parts where it has no situated stake; it should name the ground-truth holder and route to them.",
+      "appliesTo": "all agents using this bundle"
+    },
+    {
+      "@id": "kit:discipline/verb",
+      "@type": "Discipline",
+      "name": "Verb Discipline",
+      "description": "The system surfaces, renders, diagnoses, and witnesses. The system does NOT deconstruct, dismantle, or reform. Verbs of authority are reserved for those with situated authority.",
+      "source": "Compositional-field synthesis"
+    },
+    {
+      "@id": "kit:discipline/voice",
+      "@type": "Discipline",
+      "name": "Voice Discipline",
+      "description": "Four directives: (1) no auto optimism balance — don't add cheerful counter-framings to honest harms; (2) no clarity as smoothing — preserve dissonance, don't summarise it away; (3) no auto synthesis across asymmetric registers — Indigenous and settler frames carry different weights of standing; (4) no system voice on questions of standing.",
+      "source": "Andreotti multi-source ledger"
+    },
+    {
+      "@id": "kit:discipline/render-not-deconstruct",
+      "@type": "Discipline",
+      "name": "We Render; We Do Not Deconstruct",
+      "description": "The system makes things visible. It does not author the critique. The critique is held by those with standing to make it.",
+      "source": "Compositional-field synthesis"
+    },
+    {
+      "@id": "kit:discipline/witness-is-load-bearing",
+      "@type": "Discipline",
+      "name": "Witnessing Is the Load-Bearing Act",
+      "description": "Only witnessing moves graph state forward. Conjecture is cheap and dangerous if mistaken for grounded understanding; witnessing is what confers legitimacy.",
+      "source": "Carol Anne Hilton + Johar four-position frame"
+    },
+    {
+      "@id": "kit:discipline/pace-to-comprehension",
+      "@type": "Discipline",
+      "name": "Pace AI to Comprehension",
+      "description": "Cap agent execution at the rate witnesses can absorb. Typically 1-5 minutes per execution unit. The facilitator adjusts live. If witnessing cannot keep up, execution slows.",
+      "source": "Jam witness ceremony v0 §Enhancement 5"
+    },
+    {
+      "@id": "kit:discipline/refusal-as-comprehension",
+      "@type": "Discipline",
+      "name": "Refusal Log as Comprehension, Not Veto",
+      "description": "Facilitate the refusal log from the start of authoring as comprehension-building, not at the end as veto-collection. 'What is the smallest thing we can collectively articulate that we cannot permit?'",
+      "source": "Jam witness ceremony v0 Johar enhancements"
+    }
+  ]
+}

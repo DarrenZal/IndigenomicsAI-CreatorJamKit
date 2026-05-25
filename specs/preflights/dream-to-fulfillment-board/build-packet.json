@@ -1,0 +1,91 @@
+{
+  "packet_version": "v0",
+  "freeze_record": {
+    "frozen": true,
+    "frozen_at": "2026-05-25",
+    "frozen_by": "preflight",
+    "facilitator_confirmed": {
+      "consent_privacy_complete": true,
+      "boundaries_reviewed": true,
+      "public_private_status_confirmed": true,
+      "ai_input_scope_confirmed": true,
+      "build_path_confirmed": true,
+      "witnessed_working_clear": true
+    }
+  },
+  "excluded_inputs": [],
+  "build_instructions": {
+    "path": "build-instructions.md"
+  },
+  "review_checks": [
+    "tool runs cleanly stdlib-only",
+    "passes acceptance tests",
+    "no outputs hardcoded"
+  ],
+  "witness_record_seed": {
+    "team": "preflight",
+    "date": "2026-05-25",
+    "fields": [
+      "what we brought",
+      "what we attempted",
+      "what worked",
+      "what did not work",
+      "what we learned",
+      "boundaries that remain"
+    ],
+    "receipt_statement": "This record states what happened. It does not establish authority, approval, certification, legitimacy, community consent, or readiness for reuse."
+  },
+  "packet_id": "preflight-dream-fulfillment",
+  "team_spec": {
+    "team_name": "Dream Board (preflight sample)",
+    "site": "preflight",
+    "vision": "Track items moving dream -> offer/need -> promise -> witnessed -> fulfilled.",
+    "spec": "Build `python3 tool.py <items_json_path>`. Reads { \"items\": [ {\"id\":\"...\",\"title\":\"...\",\"stage\":\"dream\"|\"offer_or_need\"|\"promise\"|\"witnessed\"|\"fulfilled\"|\"withdrawn\",\"updated_at\":\"YYYY-MM-DD\"}, ... ] }. Valid stages: dream, offer_or_need, promise, witnessed, fulfilled, withdrawn. Drop items with unknown stage or missing id. Print header 'DREAM-TO-FULFILLMENT BOARD (<K> items across <S> stages)' where K=kept items count, S=count of distinct stages present in kept items. Then blank, then in stage order [dream, offer_or_need, promise, witnessed, fulfilled, withdrawn], for stages with at least one item, a block: '## <stage> (<count>)' newline then for each item in that stage sorted by updated_at desc then id asc: '- <id>: <title>' newline, then blank between stage blocks. On invalid JSON: 'error:' line, exit 0. Stdlib only.",
+    "build_target": "single-file CLI"
+  },
+  "allowed_inputs": [
+    {
+      "name": "sample.json",
+      "kind": "json-data",
+      "note": "preflight fixture",
+      "content": {
+        "items": [
+          {
+            "id": "i1",
+            "title": "restore eelgrass beds",
+            "stage": "dream",
+            "updated_at": "2026-05-15"
+          },
+          {
+            "id": "i2",
+            "title": "weekly stewardship circle",
+            "stage": "promise",
+            "updated_at": "2026-05-12"
+          },
+          {
+            "id": "i3",
+            "title": "completed kelp transect",
+            "stage": "fulfilled",
+            "updated_at": "2026-05-10"
+          },
+          {
+            "id": "i4",
+            "title": "abandoned: pH sensor purchase",
+            "stage": "withdrawn",
+            "updated_at": "2026-05-08"
+          }
+        ]
+      }
+    }
+  ],
+  "acceptance_criteria": {
+    "description": [
+      "see build-instructions.md"
+    ],
+    "test_file": {
+      "name": "acceptance-test.py",
+      "language": "python-stdlib",
+      "path": "acceptance-test.py"
+    }
+  }
+}

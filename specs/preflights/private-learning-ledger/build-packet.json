@@ -1,0 +1,81 @@
+{
+  "packet_version": "v0",
+  "freeze_record": {
+    "frozen": true,
+    "frozen_at": "2026-05-25",
+    "frozen_by": "preflight",
+    "facilitator_confirmed": {
+      "consent_privacy_complete": true,
+      "boundaries_reviewed": true,
+      "public_private_status_confirmed": true,
+      "ai_input_scope_confirmed": true,
+      "build_path_confirmed": true,
+      "witnessed_working_clear": true
+    }
+  },
+  "excluded_inputs": [],
+  "build_instructions": {
+    "path": "build-instructions.md"
+  },
+  "review_checks": [
+    "tool runs cleanly stdlib-only",
+    "passes acceptance tests",
+    "no outputs hardcoded"
+  ],
+  "witness_record_seed": {
+    "team": "preflight",
+    "date": "2026-05-25",
+    "fields": [
+      "what we brought",
+      "what we attempted",
+      "what worked",
+      "what did not work",
+      "what we learned",
+      "boundaries that remain"
+    ],
+    "receipt_statement": "This record states what happened. It does not establish authority, approval, certification, legitimacy, community consent, or readiness for reuse."
+  },
+  "packet_id": "preflight-private-learning",
+  "team_spec": {
+    "team_name": "Private Learning (preflight sample)",
+    "site": "preflight",
+    "vision": "Aggregate steward-action records into a public-safe learning summary without exposing protected data.",
+    "spec": "Build `python3 tool.py <ledger_json_path>`. Reads { \"actions\": [ {\"action_id\":\"...\",\"action_type\":\"review\"|\"approval\"|\"refusal\"|\"correction\",\"steward_visibility\":\"public\"|\"private\",\"private_notes\":\"...\",\"outcome_summary\":\"...\"}, ... ] }. Output public summary that NEVER includes private_notes (regardless of visibility). For public steward_visibility actions, include outcome_summary. For private, only count the action. Print header 'PRIVATE LEARNING LEDGER (<P> public / <H> hidden of <N> total)', blank, for each action in input order: if steward_visibility==public: '<action_id> [<action_type>]: <outcome_summary>'; else: '<action_id> [<action_type>]: held by steward', blank, 'BY ACTION TYPE:', for each action_type alphabetical: '  <type>: <count>', blank, 'BOUNDARY: private_notes never appear in this output. Counts do not imply judgment.'. On invalid JSON: 'error:' line, exit 0. Stdlib only.",
+    "build_target": "single-file CLI"
+  },
+  "allowed_inputs": [
+    {
+      "name": "sample.json",
+      "kind": "json-data",
+      "note": "preflight fixture",
+      "content": {
+        "actions": [
+          {
+            "action_id": "a1",
+            "action_type": "review",
+            "steward_visibility": "public",
+            "private_notes": "SECRET NOTES",
+            "outcome_summary": "reviewed and approved"
+          },
+          {
+            "action_id": "a2",
+            "action_type": "refusal",
+            "steward_visibility": "private",
+            "private_notes": "REASONS HELD",
+            "outcome_summary": "will not appear"
+          }
+        ]
+      }
+    }
+  ],
+  "acceptance_criteria": {
+    "description": [
+      "see build-instructions.md"
+    ],
+    "test_file": {
+      "name": "acceptance-test.py",
+      "language": "python-stdlib",
+      "path": "acceptance-test.py"
+    }
+  }
+}

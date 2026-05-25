@@ -1,0 +1,9 @@
+test_t1_basic (__main__.PreflightTest.test_t1_basic) ... ok
+test_t2_unreviewed_warning (__main__.PreflightTest.test_t2_unreviewed_warning) ... ok
+test_t3_uncited_with_evidence (__main__.PreflightTest.test_t3_uncited_with_evidence) ... ok
+test_zz_invalid_json (__main__.PreflightTest.test_zz_invalid_json) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.104s
+
+OK

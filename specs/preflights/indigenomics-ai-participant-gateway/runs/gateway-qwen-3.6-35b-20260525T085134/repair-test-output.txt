@@ -1,0 +1,9 @@
+test_t1_route (__main__.PreflightTest.test_t1_route) ... ok
+test_t2_refuse (__main__.PreflightTest.test_t2_refuse) ... ok
+test_t3_hold_protected (__main__.PreflightTest.test_t3_hold_protected) ... ok
+test_zz_invalid_json (__main__.PreflightTest.test_zz_invalid_json) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.102s
+
+OK

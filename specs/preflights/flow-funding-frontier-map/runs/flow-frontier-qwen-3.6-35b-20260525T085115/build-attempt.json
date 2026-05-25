@@ -1,0 +1,37 @@
+{
+  "packet_id": "preflight-flow-funding",
+  "packet_path": "/Users/darrenzal/projects/IndigenomicsAI-CreatorJamKit/specs/preflights/flow-funding-frontier-map/build-packet.json",
+  "run_id": "flow-frontier-qwen-3.6-35b-20260525T085115",
+  "run_at": "2026-05-25T08:51:15Z",
+  "mode": "TELUS build-attempt lane",
+  "model": {
+    "catalog_id": "qwen-3.6-35b",
+    "provider_config_model": "Qwen/Qwen3.6-35B-A3B"
+  },
+  "team": "Flow Frontier (preflight sample)",
+  "frozen": true,
+  "attempt_1": {
+    "codegen_ok": true,
+    "codegen_elapsed_ms": 6022,
+    "code_extracted": true,
+    "error": null,
+    "test": {
+      "passed": 4,
+      "total": 4,
+      "failing": []
+    }
+  },
+  "repair": null,
+  "final": {
+    "code_source": "attempt-1",
+    "test": {
+      "passed": 4,
+      "total": 4
+    },
+    "all_passed": true
+  },
+  "finding": "built clean",
+  "finding_detail": "attempt 1 passed all acceptance tests; no repair needed",
+  "final_code": "import sys\nimport json\n\ndef main():\n    if len(sys.argv) < 2:\n        print(\"error: no input file specified\")\n        sys.exit(0)\n    \n    input_path = sys.argv[1]\n    \n    try:\n        with open(input_path, 'r') as f:\n            data = json.load(f)\n    except (json.JSONDecodeError, FileNotFoundError, IOError):\n        print(\"error: invalid input\")\n        sys.exit(0)\n    \n    try:\n        nodes = data[\"nodes\"]\n        edges = data[\"edges\"]\n    except (KeyError, TypeError):\n        print(\"error: invalid structure\")\n        sys.exit(0)\n    \n    # Build node lookup\n    node_map = {}\n    for node in nodes:\n        try:\n            node_map[node[\"id\"]] = node\n        except (KeyError, TypeError):\n            continue\n    \n    total_edges = len(edges)\n    fundable_edges = []\n    \n    for edge in edges:\n        try:\n            from_id = edge[\"from\"]\n            to_id = edge[\"to\"]\n            kind = edge[\"kind\"]\n            \n            from_node = node_map.get(from_id)\n            to_node = node_map.get(to_id)\n            \n            if from_node is None or to_node is None:\n                continue\n            \n            from_type = from_node[\"type\"]\n            to_type = to_node[\"type\"]\n            from_status = from_node[\"status\"]\n            to_status = to_node[\"status\"]\n            \n            is_fundable = False\n            \n            # Rule 1: from.type==dream AND to.type==commitment AND from.status==open AND to.status==open\n            if (from_type == \"dream\" and to_type == \"commitment\" and \n                from_status == \"open\" and to_status == \"open\"):\n                is_fundable = True\n            \n            # Rule 2: from.type==commitment AND to.type==pool AND from.status==witnessed AND to.status==open\n            if (from_type == \"commitment\" and to_type == \"pool\" and \n                from_status == \"witnessed\" and to_status == \"open\"):\n                is_fundable = True\n            \n            if is_fundable:\n                fundable_edges.append(edge)\n        except (KeyError, TypeError):\n            continue\n    \n    F = len(fundable_edges)\n    N = len(nodes)\n    E = total_edges\n    \n    print(f\"FLOW FUNDING FRONTIER ({F} fundable / {E} total edges)\")\n    print()\n    \n    for edge in fundable_edges:\n        from_id = edge[\"from\"]\n        to_id = edge[\"to\"]\n        kind = edge[\"kind\"]\n        \n        from_node = node_map.get(from_id, {})\n        to_node = node_map.get(to_id, {})\n        \n        from_type = from_node.get(\"type\", \"unknown\")\n        to_type = to_node.get(\"type\", \"unknown\")\n        \n        print(f\"- {from_id}({from_type}) --[{kind}]--> {to_id}({to_type})\")\n    \n    print()\n    print(f\"SUMMARY: {F} fundable, {N} nodes, {E} edges\")\n\nif __name__ == \"__main__\":\n    main()",
+  "boundary": "This build-attempt record states what happened. It does not establish that the tool is correct, complete, safe, or fit for reuse."
+}

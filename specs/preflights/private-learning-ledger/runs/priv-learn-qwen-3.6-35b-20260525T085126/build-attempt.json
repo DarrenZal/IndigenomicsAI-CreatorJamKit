@@ -1,0 +1,37 @@
+{
+  "packet_id": "preflight-private-learning",
+  "packet_path": "/Users/darrenzal/projects/IndigenomicsAI-CreatorJamKit/specs/preflights/private-learning-ledger/build-packet.json",
+  "run_id": "priv-learn-qwen-3.6-35b-20260525T085126",
+  "run_at": "2026-05-25T08:51:26Z",
+  "mode": "TELUS build-attempt lane",
+  "model": {
+    "catalog_id": "qwen-3.6-35b",
+    "provider_config_model": "Qwen/Qwen3.6-35B-A3B"
+  },
+  "team": "Private Learning (preflight sample)",
+  "frozen": true,
+  "attempt_1": {
+    "codegen_ok": true,
+    "codegen_elapsed_ms": 4913,
+    "code_extracted": true,
+    "error": null,
+    "test": {
+      "passed": 4,
+      "total": 4,
+      "failing": []
+    }
+  },
+  "repair": null,
+  "final": {
+    "code_source": "attempt-1",
+    "test": {
+      "passed": 4,
+      "total": 4
+    },
+    "all_passed": true
+  },
+  "finding": "built clean",
+  "finding_detail": "attempt 1 passed all acceptance tests; no repair needed",
+  "final_code": "import sys\nimport json\n\ndef main():\n    if len(sys.argv) != 2:\n        print(\"error: expected exactly one argument: ledger_json_path\")\n        sys.exit(0)\n\n    json_path = sys.argv[1]\n\n    try:\n        with open(json_path, 'r') as f:\n            data = json.load(f)\n    except (json.JSONDecodeError, FileNotFoundError, IOError, OSError):\n        print(\"error: invalid JSON or file not found\")\n        sys.exit(0)\n\n    if not isinstance(data, dict) or 'actions' not in data:\n        print(\"error: invalid JSON structure\")\n        sys.exit(0)\n\n    actions = data['actions']\n    if not isinstance(actions, list):\n        print(\"error: actions must be a list\")\n        sys.exit(0)\n\n    total = len(actions)\n    public_count = 0\n    hidden_count = 0\n\n    for action in actions:\n        if not isinstance(action, dict):\n            continue\n        visibility = action.get('steward_visibility', '')\n        if visibility == 'public':\n            public_count += 1\n        elif visibility == 'private':\n            hidden_count += 1\n\n    print(f\"PRIVATE LEARNING LEDGER ({public_count} public / {hidden_count} hidden of {total} total)\")\n    print()\n\n    for action in actions:\n        if not isinstance(action, dict):\n            continue\n        action_id = action.get('action_id', '')\n        action_type = action.get('action_type', '')\n        visibility = action.get('steward_visibility', '')\n\n        if visibility == 'public':\n            outcome_summary = action.get('outcome_summary', '')\n            print(f\"{action_id} [{action_type}]: {outcome_summary}\")\n        else:\n            print(f\"{action_id} [{action_type}]: held by steward\")\n\n    print()\n    print(\"BY ACTION TYPE:\")\n\n    type_counts = {}\n    for action in actions:\n        if not isinstance(action, dict):\n            continue\n        action_type = action.get('action_type', '')\n        if action_type:\n            type_counts[action_type] = type_counts.get(action_type, 0) + 1\n\n    for action_type in sorted(type_counts.keys()):\n        print(f\"  {action_type}: {type_counts[action_type]}\")\n\n    print()\n    print(\"BOUNDARY: private_notes never appear in this output. Counts do not imply judgment.\")\n\nif __name__ == '__main__':\n    main()",
+  "boundary": "This build-attempt record states what happened. It does not establish that the tool is correct, complete, safe, or fit for reuse."
+}

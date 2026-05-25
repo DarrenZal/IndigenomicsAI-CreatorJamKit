@@ -1,0 +1,9 @@
+test_t1_basic (__main__.PreflightTest.test_t1_basic) ... ok
+test_t2_filter_closed (__main__.PreflightTest.test_t2_filter_closed) ... ok
+test_t3_witnessed_to_pool (__main__.PreflightTest.test_t3_witnessed_to_pool) ... ok
+test_zz_invalid_json (__main__.PreflightTest.test_zz_invalid_json) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.099s
+
+OK

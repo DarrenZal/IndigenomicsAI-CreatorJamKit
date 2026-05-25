@@ -1,0 +1,37 @@
+{
+  "packet_id": "preflight-living-atlas",
+  "packet_path": "/Users/darrenzal/projects/IndigenomicsAI-CreatorJamKit/specs/preflights/living-atlas-coherence-packet/build-packet.json",
+  "run_id": "atlas-coh-gemma-4-31b-20260525T085125",
+  "run_at": "2026-05-25T08:51:25Z",
+  "mode": "TELUS build-attempt lane",
+  "model": {
+    "catalog_id": "gemma-4-31b",
+    "provider_config_model": "google/gemma-4-31b-it"
+  },
+  "team": "Living Atlas (preflight sample)",
+  "frozen": true,
+  "attempt_1": {
+    "codegen_ok": true,
+    "codegen_elapsed_ms": 12891,
+    "code_extracted": true,
+    "error": null,
+    "test": {
+      "passed": 4,
+      "total": 4,
+      "failing": []
+    }
+  },
+  "repair": null,
+  "final": {
+    "code_source": "attempt-1",
+    "test": {
+      "passed": 4,
+      "total": 4
+    },
+    "all_passed": true
+  },
+  "finding": "built clean",
+  "finding_detail": "attempt 1 passed all acceptance tests; no repair needed",
+  "final_code": "import json\nimport sys\n\ndef main():\n    if len(sys.argv) < 2:\n        return\n\n    input_path = sys.argv[1]\n    \n    try:\n        with open(input_path, 'r', encoding='utf-8') as f:\n            data = json.load(f)\n    except (json.JSONDecodeError, OSError):\n        print(\"error:\")\n        sys.exit(0)\n\n    contributions = data.get(\"contributions\", [])\n    total_n = len(contributions)\n    \n    results = []\n    clean_count = 0\n    flagged_count = 0\n\n    for item in contributions:\n        cid = item.get(\"id\", \"unknown\")\n        layer = item.get(\"layer\", \"unknown\")\n        consent = item.get(\"consent\")\n        sources = item.get(\"cited_sources\", [])\n        \n        findings = []\n        \n        # (1) missing_consent\n        if consent not in {\"public\", \"steward-review\", \"private\"}:\n            findings.append(\"missing_consent\")\n            \n        # (2) needs_steward_review\n        if consent == \"steward-review\":\n            findings.append(\"needs_steward_review\")\n            \n        # (3) uncited_public\n        if consent == \"public\" and not sources:\n            findings.append(\"uncited_public\")\n            \n        if not findings:\n            status = \"clean\"\n            clean_count += 1\n        else:\n            # Alphabetical comma-joined\n            findings.sort()\n            status = \", \".join(findings)\n            flagged_count += 1\n            \n        results.append(f\"{cid} [{layer}]: {status}\")\n\n    # Header\n    print(f\"ATLAS COHERENCE PACKET ({clean_count} clean / {flagged_count} flagged of {total_n} contributions)\")\n    print()\n\n    # Body\n    for res in results:\n        print(res)\n        print()\n\n    # Footer\n    print(\"BOUNDARY: this packet flags coherence; it does not force fit, replace steward review, or grant any visibility upgrade.\")\n\nif __name__ == \"__main__\":\n    main()",
+  "boundary": "This build-attempt record states what happened. It does not establish that the tool is correct, complete, safe, or fit for reuse."
+}

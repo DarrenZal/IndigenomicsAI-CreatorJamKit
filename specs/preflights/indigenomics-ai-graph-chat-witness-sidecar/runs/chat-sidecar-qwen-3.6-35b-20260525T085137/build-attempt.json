@@ -1,0 +1,37 @@
+{
+  "packet_id": "preflight-graph-chat-sidecar",
+  "packet_path": "/Users/darrenzal/projects/IndigenomicsAI-CreatorJamKit/specs/preflights/indigenomics-ai-graph-chat-witness-sidecar/build-packet.json",
+  "run_id": "chat-sidecar-qwen-3.6-35b-20260525T085137",
+  "run_at": "2026-05-25T08:51:37Z",
+  "mode": "TELUS build-attempt lane",
+  "model": {
+    "catalog_id": "qwen-3.6-35b",
+    "provider_config_model": "Qwen/Qwen3.6-35B-A3B"
+  },
+  "team": "Sidecar (preflight sample)",
+  "frozen": true,
+  "attempt_1": {
+    "codegen_ok": true,
+    "codegen_elapsed_ms": 5298,
+    "code_extracted": true,
+    "error": null,
+    "test": {
+      "passed": 4,
+      "total": 4,
+      "failing": []
+    }
+  },
+  "repair": null,
+  "final": {
+    "code_source": "attempt-1",
+    "test": {
+      "passed": 4,
+      "total": 4
+    },
+    "all_passed": true
+  },
+  "finding": "built clean",
+  "finding_detail": "attempt 1 passed all acceptance tests; no repair needed",
+  "final_code": "import sys\nimport json\n\ndef main():\n    if len(sys.argv) < 2:\n        print(\"error: no input file specified\")\n        sys.exit(0)\n    \n    input_path = sys.argv[1]\n    \n    try:\n        with open(input_path, 'r') as f:\n            data = json.load(f)\n    except (json.JSONDecodeError, FileNotFoundError, IOError):\n        print(\"error: invalid input\")\n        sys.exit(0)\n    \n    try:\n        response_text = data[\"response_text\"]\n        cited_claim_ids = data[\"cited_claim_ids\"]\n        available_claims = data[\"available_claims\"]\n    except KeyError:\n        print(\"error: missing required fields\")\n        sys.exit(0)\n    \n    # Compute metrics\n    cited_count = len(cited_claim_ids)\n    \n    # Create a set of available claim IDs for quick lookup\n    available_claim_ids = set()\n    for claim in available_claims:\n        available_claim_ids.add(claim[\"claim_id\"])\n    \n    # valid_cited: number of cited_claim_ids present in available_claims\n    valid_cited = sum(1 for cid in cited_claim_ids if cid in available_claim_ids)\n    \n    # uncited_with_evidence: number of available_claims whose claim_id NOT in cited_claim_ids\n    cited_set = set(cited_claim_ids)\n    uncited_with_evidence = sum(1 for claim in available_claims if claim[\"claim_id\"] not in cited_set)\n    \n    # unreviewed_cited: number of cited claims whose reviewer is null\n    # We need to find cited claims that are in available_claims and have reviewer null\n    unreviewed_cited = 0\n    for claim in available_claims:\n        if claim[\"claim_id\"] in cited_set and claim.get(\"reviewer\") is None:\n            unreviewed_cited += 1\n    \n    # Print output\n    print(\"CITATION COVERAGE SIDECAR\")\n    print()\n    print(f\"- cited: {cited_count}\")\n    print(f\"- valid_cited: {valid_cited}\")\n    print(f\"- uncited_with_evidence: {uncited_with_evidence}\")\n    print(f\"- unreviewed_cited: {unreviewed_cited}\")\n    print()\n    \n    if unreviewed_cited > 0:\n        print(f\"WARNING: {unreviewed_cited} cited claims have no named reviewer.\")\n\nif __name__ == \"__main__\":\n    main()",
+  "boundary": "This build-attempt record states what happened. It does not establish that the tool is correct, complete, safe, or fit for reuse."
+}

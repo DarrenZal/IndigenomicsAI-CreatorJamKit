@@ -1,0 +1,37 @@
+{
+  "packet_id": "preflight-graph-chat-sidecar",
+  "packet_path": "/Users/darrenzal/projects/IndigenomicsAI-CreatorJamKit/specs/preflights/indigenomics-ai-graph-chat-witness-sidecar/build-packet.json",
+  "run_id": "chat-sidecar-gemma-4-31b-20260525T085137",
+  "run_at": "2026-05-25T08:51:37Z",
+  "mode": "TELUS build-attempt lane",
+  "model": {
+    "catalog_id": "gemma-4-31b",
+    "provider_config_model": "google/gemma-4-31b-it"
+  },
+  "team": "Sidecar (preflight sample)",
+  "frozen": true,
+  "attempt_1": {
+    "codegen_ok": true,
+    "codegen_elapsed_ms": 13112,
+    "code_extracted": true,
+    "error": null,
+    "test": {
+      "passed": 4,
+      "total": 4,
+      "failing": []
+    }
+  },
+  "repair": null,
+  "final": {
+    "code_source": "attempt-1",
+    "test": {
+      "passed": 4,
+      "total": 4
+    },
+    "all_passed": true
+  },
+  "finding": "built clean",
+  "finding_detail": "attempt 1 passed all acceptance tests; no repair needed",
+  "final_code": "import json\nimport sys\n\ndef main():\n    if len(sys.argv) < 2:\n        return\n\n    input_path = sys.argv[1]\n    \n    try:\n        with open(input_path, 'r', encoding='utf-8') as f:\n            data = json.load(f)\n    except (json.JSONDecodeError, IOError, OSError):\n        print(\"error:\")\n        sys.exit(0)\n\n    # Extract fields with defaults to avoid KeyErrors\n    cited_claim_ids = data.get(\"cited_claim_ids\", [])\n    available_claims = data.get(\"available_claims\", [])\n\n    # Compute metrics\n    cited_count = len(cited_claim_ids)\n    \n    # Create a map of available claims for O(1) lookup\n    available_map = {claim.get(\"claim_id\"): claim for claim in available_claims if \"claim_id\" in claim}\n    \n    valid_cited = 0\n    for cid in cited_claim_ids:\n        if cid in available_map:\n            valid_cited += 1\n            \n    uncited_with_evidence = 0\n    for cid in available_map:\n        if cid not in cited_claim_ids:\n            uncited_with_evidence += 1\n            \n    unreviewed_cited = 0\n    for cid in cited_claim_ids:\n        if cid in available_map:\n            if available_map[cid].get(\"reviewer\") is None:\n                unreviewed_cited += 1\n\n    # Output formatting\n    print(\"CITATION COVERAGE SIDECAR\")\n    print(\"\")\n    print(f\"- cited: {cited_count}\")\n    print(f\"- valid_cited: {valid_cited}\")\n    print(f\"- uncited_with_evidence: {uncited_with_evidence}\")\n    print(f\"- unreviewed_cited: {unreviewed_cited}\")\n    print(\"\")\n    \n    if unreviewed_cited > 0:\n        print(f\"WARNING: {unreviewed_cited} cited claims have no named reviewer.\")\n\nif __name__ == \"__main__\":\n    main()",
+  "boundary": "This build-attempt record states what happened. It does not establish that the tool is correct, complete, safe, or fit for reuse."
+}

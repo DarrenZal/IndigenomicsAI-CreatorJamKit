@@ -1,0 +1,5 @@
+# Build instructions — Gateway Decision (preflight)
+
+Build `python3 tool.py <submission_json_path>`. Reads { "name":"...","email":"...","requested_spec":"...","consent_team_visibility":<boolean>,"consent_ai_use":"none"|"public"|"all","consent_display_tuesday":<boolean>,"flag_protected":<boolean> }. Decision rule: REFUSE if name is empty OR email is empty; HOLD if flag_protected==true OR consent_ai_use=='none' AND requested_spec is given; ROUTE if consent_team_visibility==true AND email AND name AND consent_ai_use in {public,all}. Otherwise HOLD. Print: 'DECISION: <ROUTE|HOLD|REFUSE>', blank, 'reason: <one-line>', blank, 'next_action: <one-line>'. Reasons: ROUTE='all required consents present'; HOLD/protected='protected flag — needs steward review'; HOLD/ai-none='AI use refused but spec requested — clarify'; HOLD/other='missing required field'; REFUSE='no name or no email'. next_action: ROUTE='forward submission to selected spec'; HOLD='hold for steward review and follow-up'; REFUSE='ask for completed contact info'. On invalid JSON: 'error:' line, exit 0. Stdlib only.
+
+Stdlib only; no network; no credentials.

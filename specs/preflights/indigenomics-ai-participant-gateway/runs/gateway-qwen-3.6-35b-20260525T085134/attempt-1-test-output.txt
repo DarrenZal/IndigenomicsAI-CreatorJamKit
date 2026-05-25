@@ -1,0 +1,17 @@
+test_t1_route (__main__.PreflightTest.test_t1_route) ... ok
+test_t2_refuse (__main__.PreflightTest.test_t2_refuse) ... ok
+test_t3_hold_protected (__main__.PreflightTest.test_t3_hold_protected) ... FAIL
+test_zz_invalid_json (__main__.PreflightTest.test_zz_invalid_json) ... ok
+
+======================================================================
+FAIL: test_t3_hold_protected (__main__.PreflightTest.test_t3_hold_protected)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/3c/6p_c61tj3y5ccqzmvfxmdg080000gn/T/m2-lite-test-30zv1_lq/test_tool.py", line 36, in test_t3_hold_protected
+    self.assertIn('DECISION: HOLD', proc.stdout)
+AssertionError: 'DECISION: HOLD' not found in 'DECISION: ROUTE\n\nreason: all required consents present\n\nnext_action: forward submission to selected spec\n'
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.123s
+
+FAILED (failures=1)

@@ -1,0 +1,9 @@
+test_t1_clean (__main__.PreflightTest.test_t1_clean) ... ok
+test_t2_uncited_public (__main__.PreflightTest.test_t2_uncited_public) ... ok
+test_t3_steward_review (__main__.PreflightTest.test_t3_steward_review) ... ok
+test_zz_invalid_json (__main__.PreflightTest.test_zz_invalid_json) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.121s
+
+OK

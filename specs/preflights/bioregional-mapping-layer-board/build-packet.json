@@ -1,0 +1,85 @@
+{
+  "packet_version": "v0",
+  "freeze_record": {
+    "frozen": true,
+    "frozen_at": "2026-05-25",
+    "frozen_by": "preflight",
+    "facilitator_confirmed": {
+      "consent_privacy_complete": true,
+      "boundaries_reviewed": true,
+      "public_private_status_confirmed": true,
+      "ai_input_scope_confirmed": true,
+      "build_path_confirmed": true,
+      "witnessed_working_clear": true
+    }
+  },
+  "excluded_inputs": [],
+  "build_instructions": {
+    "path": "build-instructions.md"
+  },
+  "review_checks": [
+    "tool runs cleanly stdlib-only",
+    "passes acceptance tests",
+    "no outputs hardcoded"
+  ],
+  "witness_record_seed": {
+    "team": "preflight",
+    "date": "2026-05-25",
+    "fields": [
+      "what we brought",
+      "what we attempted",
+      "what worked",
+      "what did not work",
+      "what we learned",
+      "boundaries that remain"
+    ],
+    "receipt_statement": "This record states what happened. It does not establish authority, approval, certification, legitimacy, community consent, or readiness for reuse."
+  },
+  "packet_id": "preflight-bioregion-layers",
+  "team_spec": {
+    "team_name": "Layer Board (preflight sample)",
+    "site": "preflight",
+    "vision": "Filter a multi-layer place-map manifest by consent and produce a layer board.",
+    "spec": "Build `python3 tool.py <layers_json_path>`. Reads { \"layers\": [ {\"layer_id\":\"...\",\"category\":\"ecological\"|\"cultural\"|\"economic\"|\"governance\",\"consent_tier\":\"public\"|\"steward-review\"|\"private\",\"feature_count\":<int>}, ... ] }. Print header 'LAYER BOARD (<P> public / <S> steward-review / <X> private of <N> total layers)', blank, then a section 'PUBLIC LAYERS:' followed by per public layer in input order: '- <layer_id> [<category>]: <feature_count> features', then blank, then a section 'WITHHELD: <S> steward-review + <X> private layers \u2014 content not displayed.'. On invalid JSON: 'error:' line, exit 0. Stdlib only.",
+    "build_target": "single-file CLI"
+  },
+  "allowed_inputs": [
+    {
+      "name": "sample.json",
+      "kind": "json-data",
+      "note": "preflight fixture",
+      "content": {
+        "layers": [
+          {
+            "layer_id": "eco-1",
+            "category": "ecological",
+            "consent_tier": "public",
+            "feature_count": 124
+          },
+          {
+            "layer_id": "cul-1",
+            "category": "cultural",
+            "consent_tier": "steward-review",
+            "feature_count": 12
+          },
+          {
+            "layer_id": "gov-1",
+            "category": "governance",
+            "consent_tier": "private",
+            "feature_count": 5
+          }
+        ]
+      }
+    }
+  ],
+  "acceptance_criteria": {
+    "description": [
+      "see build-instructions.md"
+    ],
+    "test_file": {
+      "name": "acceptance-test.py",
+      "language": "python-stdlib",
+      "path": "acceptance-test.py"
+    }
+  }
+}

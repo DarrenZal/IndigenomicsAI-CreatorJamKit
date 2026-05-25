@@ -1,0 +1,101 @@
+{
+  "packet_version": "v0",
+  "freeze_record": {
+    "frozen": true,
+    "frozen_at": "2026-05-25",
+    "frozen_by": "preflight",
+    "facilitator_confirmed": {
+      "consent_privacy_complete": true,
+      "boundaries_reviewed": true,
+      "public_private_status_confirmed": true,
+      "ai_input_scope_confirmed": true,
+      "build_path_confirmed": true,
+      "witnessed_working_clear": true
+    }
+  },
+  "excluded_inputs": [],
+  "build_instructions": {
+    "path": "build-instructions.md"
+  },
+  "review_checks": [
+    "tool runs cleanly stdlib-only",
+    "passes acceptance tests",
+    "no outputs hardcoded"
+  ],
+  "witness_record_seed": {
+    "team": "preflight",
+    "date": "2026-05-25",
+    "fields": [
+      "what we brought",
+      "what we attempted",
+      "what worked",
+      "what did not work",
+      "what we learned",
+      "boundaries that remain"
+    ],
+    "receipt_statement": "This record states what happened. It does not establish authority, approval, certification, legitimacy, community consent, or readiness for reuse."
+  },
+  "packet_id": "preflight-spec-composer",
+  "team_spec": {
+    "team_name": "Spec Composer (preflight sample)",
+    "site": "preflight",
+    "vision": "Propose candidate bundles from spec fragments based on shared interfaces.",
+    "spec": "Build `python3 tool.py <fragments_json_path>`. Reads { \"fragments\": [ {\"id\":\"...\",\"produces\":[\"...\"],\"consumes\":[\"...\"]}, ... ] }. A pair (A, B) FORMS A CANDIDATE BUNDLE if A.produces shares at least one item with B.consumes. Print: header 'BUNDLE BOARD (<P> candidate pairs of <N> fragments)', blank, for each candidate pair sorted by (A.id, B.id) ascending: '<A.id> -> <B.id> via <shared comma-separated alphabetical>', blank, 'SUMMARY: <P> candidate pairs, <N> fragments, <S> distinct interfaces'. Distinct interfaces = union of all produces and consumes lists (deduplicated). Skip fragments missing 'id' or with non-list produces/consumes. On invalid JSON: 'error:' line, exit 0. Stdlib only.",
+    "build_target": "single-file CLI"
+  },
+  "allowed_inputs": [
+    {
+      "name": "sample.json",
+      "kind": "json-data",
+      "note": "preflight fixture",
+      "content": {
+        "fragments": [
+          {
+            "id": "claims",
+            "produces": [
+              "claim_record"
+            ],
+            "consumes": [
+              "evidence_pointer"
+            ]
+          },
+          {
+            "id": "evidence",
+            "produces": [
+              "evidence_pointer"
+            ],
+            "consumes": [
+              "observation"
+            ]
+          },
+          {
+            "id": "sensors",
+            "produces": [
+              "observation"
+            ],
+            "consumes": []
+          },
+          {
+            "id": "witness",
+            "produces": [
+              "witness_record"
+            ],
+            "consumes": [
+              "claim_record"
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "acceptance_criteria": {
+    "description": [
+      "see build-instructions.md"
+    ],
+    "test_file": {
+      "name": "acceptance-test.py",
+      "language": "python-stdlib",
+      "path": "acceptance-test.py"
+    }
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "packet_version": "v0",
+  "freeze_record": {
+    "frozen": true,
+    "frozen_at": "2026-05-25",
+    "frozen_by": "preflight",
+    "facilitator_confirmed": {
+      "consent_privacy_complete": true,
+      "boundaries_reviewed": true,
+      "public_private_status_confirmed": true,
+      "ai_input_scope_confirmed": true,
+      "build_path_confirmed": true,
+      "witnessed_working_clear": true
+    }
+  },
+  "excluded_inputs": [],
+  "build_instructions": {
+    "path": "build-instructions.md"
+  },
+  "review_checks": [
+    "tool runs cleanly stdlib-only",
+    "passes acceptance tests",
+    "no outputs hardcoded"
+  ],
+  "witness_record_seed": {
+    "team": "preflight",
+    "date": "2026-05-25",
+    "fields": [
+      "what we brought",
+      "what we attempted",
+      "what worked",
+      "what did not work",
+      "what we learned",
+      "boundaries that remain"
+    ],
+    "receipt_statement": "This record states what happened. It does not establish authority, approval, certification, legitimacy, community consent, or readiness for reuse."
+  },
+  "packet_id": "preflight-participant-gateway",
+  "team_spec": {
+    "team_name": "Gateway Decision (preflight sample)",
+    "site": "preflight",
+    "vision": "Decide whether a consent intake submission can be routed to a spec, held for review, or refused.",
+    "spec": "Build `python3 tool.py <submission_json_path>`. Reads { \"name\":\"...\",\"email\":\"...\",\"requested_spec\":\"...\",\"consent_team_visibility\":<boolean>,\"consent_ai_use\":\"none\"|\"public\"|\"all\",\"consent_display_tuesday\":<boolean>,\"flag_protected\":<boolean> }. Decision rule: REFUSE if name is empty OR email is empty; HOLD if flag_protected==true OR consent_ai_use=='none' AND requested_spec is given; ROUTE if consent_team_visibility==true AND email AND name AND consent_ai_use in {public,all}. Otherwise HOLD. Print: 'DECISION: <ROUTE|HOLD|REFUSE>', blank, 'reason: <one-line>', blank, 'next_action: <one-line>'. Reasons: ROUTE='all required consents present'; HOLD/protected='protected flag \u2014 needs steward review'; HOLD/ai-none='AI use refused but spec requested \u2014 clarify'; HOLD/other='missing required field'; REFUSE='no name or no email'. next_action: ROUTE='forward submission to selected spec'; HOLD='hold for steward review and follow-up'; REFUSE='ask for completed contact info'. On invalid JSON: 'error:' line, exit 0. Stdlib only.",
+    "build_target": "single-file CLI"
+  },
+  "allowed_inputs": [
+    {
+      "name": "sample.json",
+      "kind": "json-data",
+      "note": "preflight fixture",
+      "content": {
+        "name": "A. Cedar",
+        "email": "a@example.org",
+        "requested_spec": "witness-record",
+        "consent_team_visibility": true,
+        "consent_ai_use": "public",
+        "consent_display_tuesday": true,
+        "flag_protected": false
+      }
+    }
+  ],
+  "acceptance_criteria": {
+    "description": [
+      "see build-instructions.md"
+    ],
+    "test_file": {
+      "name": "acceptance-test.py",
+      "language": "python-stdlib",
+      "path": "acceptance-test.py"
+    }
+  }
+}

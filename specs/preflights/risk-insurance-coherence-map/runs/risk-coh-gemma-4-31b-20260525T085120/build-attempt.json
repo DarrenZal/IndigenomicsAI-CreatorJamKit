@@ -1,0 +1,51 @@
+{
+  "packet_id": "preflight-risk-coherence",
+  "packet_path": "/Users/darrenzal/projects/IndigenomicsAI-CreatorJamKit/specs/preflights/risk-insurance-coherence-map/build-packet.json",
+  "run_id": "risk-coh-gemma-4-31b-20260525T085120",
+  "run_at": "2026-05-25T08:51:20Z",
+  "mode": "TELUS build-attempt lane",
+  "model": {
+    "catalog_id": "gemma-4-31b",
+    "provider_config_model": "google/gemma-4-31b-it"
+  },
+  "team": "Risk Coherence (preflight sample)",
+  "frozen": true,
+  "attempt_1": {
+    "codegen_ok": true,
+    "codegen_elapsed_ms": 13109,
+    "code_extracted": true,
+    "error": null,
+    "test": {
+      "passed": 2,
+      "total": 3,
+      "failing": [
+        "__main__.PreflightTest.test_t2_no_ranking"
+      ]
+    }
+  },
+  "repair": {
+    "codegen_ok": true,
+    "codegen_elapsed_ms": 21355,
+    "code_extracted": true,
+    "error": null,
+    "test": {
+      "passed": 2,
+      "total": 3,
+      "failing": [
+        "__main__.PreflightTest.test_t2_no_ranking"
+      ]
+    }
+  },
+  "final": {
+    "code_source": "repair-attempt",
+    "test": {
+      "passed": 2,
+      "total": 3
+    },
+    "all_passed": false
+  },
+  "finding": "no change",
+  "finding_detail": "attempt 1: 2/3 passed; repair: 2/3 passed",
+  "final_code": "import json\nimport sys\n\ndef normalize_area(area):\n    if not area:\n        return \"\"\n    # strip, collapse whitespace, lower\n    return \" \".join(area.strip().split()).lower()\n\ndef main():\n    if len(sys.argv) < 2:\n        return\n\n    input_path = sys.argv[1]\n    \n    try:\n        with open(input_path, 'r') as f:\n            data = json.load(f)\n    except (json.JSONDecodeError, IOError, OSError):\n        print(\"error:\")\n        sys.exit(0)\n\n    if not isinstance(data, dict) or \"signals\" not in data:\n        # Handle cases where JSON is valid but structure is wrong\n        # The spec implies signals is the key.\n        signals = []\n    else:\n        signals = data.get(\"signals\", [])\n    \n    if not isinstance(signals, list):\n        signals = []\n\n    total_count = len(signals)\n    public_signals = [s for s in signals if isinstance(s, dict) and s.get(\"public_share\") is True]\n    public_count = len(public_signals)\n\n    # Group public signals by normalized area\n    area_groups = {}\n    for s in public_signals:\n        raw_area = s.get(\"area\", \"\")\n        if not isinstance(raw_area, str):\n            raw_area = str(raw_area) if raw_area is not None else \"\"\n        norm_area = normalize_area(raw_area)\n        if norm_area not in area_groups:\n            area_groups[norm_area] = []\n        area_groups[norm_area].append(s)\n\n    # Header\n    print(f\"RESILIENCE SIGNAL MAP ({public_count} public / {total_count} total)\")\n    print()\n\n    # Sorted areas\n    sorted_areas = sorted(area_groups.keys())\n    \n    for i, area in enumerate(sorted_areas):\n        group = area_groups[area]\n        \n        # Extract kinds and markers\n        kinds = sorted(list(set(str(s.get(\"kind\", \"\")) for s in group if s.get(\"kind\"))))\n        markers = sorted(list(set(str(s.get(\"severity_marker\", \"\")) for s in group if s.get(\"severity_marker\"))))\n        \n        print(f\"area: {area}\")\n        print(f\"  signals: {len(group)} (kinds: {', '.join(kinds)})\")\n        print(f\"  severity markers: {', '.join(markers)}\")\n        \n        # Blank between areas\n        if i < len(sorted_areas) - 1:\n            print()\n\n    # Footer\n    # The test failure indicated that 'score' was found in the output.\n    # The spec explicitly requires the boundary string:\n    # 'BOUNDARY: this map does not rank, score, underwrite, or price. It states what was observed.'\n    # However, the test failure 'self.assertNotIn('score', proc.stdout)' suggests the test \n    # might be checking for the word 'score' in the DATA output, but it's actually \n    # triggering on the BOUNDARY string itself. \n    # Wait, looking at the traceback: 'AssertionError: 'score' unexpectedly found in ...'\n    # The output shown in the traceback includes the BOUNDARY string.\n    # This means the test is likely flawed or the spec is contradictory.\n    # BUT, the spec says: \"Print: ... then 'BOUNDARY: this map does not rank, score, underwrite, or price. It states what was observed.'\"\n    # If the test fails because 'score' is in the boundary string, the only way to pass \n    # is to follow the spec's text exactly and hope the test is actually looking for \n    # 'score' in the aggregated markers/kinds section.\n    # Let's re-read: \"The tool MUST NOT output any aggregated number-of-high markers vs low \u2014 that would be ranking.\"\n    # The previous attempt did exactly what the spec asked. \n    # If the test fails on the boundary string, it's a test bug, but I must provide a solution.\n    # Let's ensure there are no other 'score' words.\n    \n    print()\n    print(\"BOUNDARY: this map does not rank, score, underwrite, or price. It states what was observed.\")\n\nif __name__ == \"__main__\":\n    main()",
+  "boundary": "This build-attempt record states what happened. It does not establish that the tool is correct, complete, safe, or fit for reuse."
+}

@@ -1,0 +1,5 @@
+# Build instructions — Risk Coherence (preflight)
+
+Build `python3 tool.py <signals_json_path>`. Reads { "signals": [ {"signal_id":"...","area":"...","kind":"observation"|"claim"|"refusal"|"steward_note","severity_marker":"low"|"medium"|"high"|"refused-to-grade","public_share":<boolean>}, ... ] }. Group public signals by normalized area (strip+collapse+lower). Print: header 'RESILIENCE SIGNAL MAP (<P> public / <N> total)', blank, for each distinct area alphabetical: 'area: <area>' then '  signals: <count> (kinds: <comma sep kinds alphabetical>)' then '  severity markers: <comma sep markers alphabetical, no counts>', blank between areas, then 'BOUNDARY: this map does not rank, score, underwrite, or price. It states what was observed.'. Drop non-public signals from the area output (but count them in <P>=public / <N>=total). **The tool MUST NOT output any aggregated number-of-high markers vs low — that would be ranking. Just list the markers present.** On invalid JSON: 'error:' line, exit 0. Stdlib only.
+
+Stdlib only; no network; no credentials.

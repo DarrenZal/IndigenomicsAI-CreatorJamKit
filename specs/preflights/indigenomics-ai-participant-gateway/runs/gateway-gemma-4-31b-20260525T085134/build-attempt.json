@@ -1,0 +1,37 @@
+{
+  "packet_id": "preflight-participant-gateway",
+  "packet_path": "/Users/darrenzal/projects/IndigenomicsAI-CreatorJamKit/specs/preflights/indigenomics-ai-participant-gateway/build-packet.json",
+  "run_id": "gateway-gemma-4-31b-20260525T085134",
+  "run_at": "2026-05-25T08:51:34Z",
+  "mode": "TELUS build-attempt lane",
+  "model": {
+    "catalog_id": "gemma-4-31b",
+    "provider_config_model": "google/gemma-4-31b-it"
+  },
+  "team": "Gateway Decision (preflight sample)",
+  "frozen": true,
+  "attempt_1": {
+    "codegen_ok": true,
+    "codegen_elapsed_ms": 15005,
+    "code_extracted": true,
+    "error": null,
+    "test": {
+      "passed": 4,
+      "total": 4,
+      "failing": []
+    }
+  },
+  "repair": null,
+  "final": {
+    "code_source": "attempt-1",
+    "test": {
+      "passed": 4,
+      "total": 4
+    },
+    "all_passed": true
+  },
+  "finding": "built clean",
+  "finding_detail": "attempt 1 passed all acceptance tests; no repair needed",
+  "final_code": "import json\nimport sys\n\ndef main():\n    if len(sys.argv) < 2:\n        return\n\n    input_path = sys.argv[1]\n    \n    try:\n        with open(input_path, 'r') as f:\n            data = json.load(f)\n    except (json.JSONDecodeError, IOError):\n        print(\"error: invalid JSON\")\n        sys.exit(0)\n\n    # Extract fields with defaults to avoid KeyErrors\n    name = data.get(\"name\", \"\")\n    email = data.get(\"email\", \"\")\n    requested_spec = data.get(\"requested_spec\", \"\")\n    consent_team_visibility = data.get(\"consent_team_visibility\", False)\n    consent_ai_use = data.get(\"consent_ai_use\", \"\")\n    flag_protected = data.get(\"flag_protected\", False)\n\n    # Decision Logic\n    # 1. REFUSE if name is empty OR email is empty\n    if not name or not email:\n        decision = \"REFUSE\"\n        reason = \"no name or no email\"\n        next_action = \"ask for completed contact info\"\n    \n    # 2. HOLD if flag_protected==true OR (consent_ai_use=='none' AND requested_spec is given)\n    elif flag_protected is True:\n        decision = \"HOLD\"\n        reason = \"protected flag \u2014 needs steward review\"\n        next_action = \"hold for steward review and follow-up\"\n    elif consent_ai_use == 'none' and requested_spec:\n        decision = \"HOLD\"\n        reason = \"AI use refused but spec requested \u2014 clarify\"\n        next_action = \"hold for steward review and follow-up\"\n    \n    # 3. ROUTE if consent_team_visibility==true AND email AND name AND consent_ai_use in {public,all}\n    elif (consent_team_visibility is True and \n          email and \n          name and \n          consent_ai_use in {\"public\", \"all\"}):\n        decision = \"ROUTE\"\n        reason = \"all required consents present\"\n        next_action = \"forward submission to selected spec\"\n    \n    # 4. Otherwise HOLD\n    else:\n        decision = \"HOLD\"\n        reason = \"missing required field\"\n        next_action = \"hold for steward review and follow-up\"\n\n    # Output format\n    print(f\"DECISION: {decision}\")\n    print(\"\")\n    print(f\"reason: {reason}\")\n    print(\"\")\n    print(f\"next_action: {next_action}\")\n\nif __name__ == \"__main__\":\n    main()",
+  "boundary": "This build-attempt record states what happened. It does not establish that the tool is correct, complete, safe, or fit for reuse."
+}

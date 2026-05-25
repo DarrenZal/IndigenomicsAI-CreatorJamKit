@@ -1,0 +1,37 @@
+{
+  "packet_id": "preflight-living-atlas",
+  "packet_path": "/Users/darrenzal/projects/IndigenomicsAI-CreatorJamKit/specs/preflights/living-atlas-coherence-packet/build-packet.json",
+  "run_id": "atlas-coh-qwen-3.6-35b-20260525T085125",
+  "run_at": "2026-05-25T08:51:25Z",
+  "mode": "TELUS build-attempt lane",
+  "model": {
+    "catalog_id": "qwen-3.6-35b",
+    "provider_config_model": "Qwen/Qwen3.6-35B-A3B"
+  },
+  "team": "Living Atlas (preflight sample)",
+  "frozen": true,
+  "attempt_1": {
+    "codegen_ok": true,
+    "codegen_elapsed_ms": 7894,
+    "code_extracted": true,
+    "error": null,
+    "test": {
+      "passed": 4,
+      "total": 4,
+      "failing": []
+    }
+  },
+  "repair": null,
+  "final": {
+    "code_source": "attempt-1",
+    "test": {
+      "passed": 4,
+      "total": 4
+    },
+    "all_passed": true
+  },
+  "finding": "built clean",
+  "finding_detail": "attempt 1 passed all acceptance tests; no repair needed",
+  "final_code": "import sys\nimport json\n\ndef main():\n    if len(sys.argv) < 2:\n        print(\"error: no input file specified\")\n        sys.exit(0)\n    \n    input_path = sys.argv[1]\n    \n    try:\n        with open(input_path, 'r') as f:\n            data = json.load(f)\n    except (json.JSONDecodeError, FileNotFoundError, IOError):\n        print(\"error: invalid JSON or file not found\")\n        sys.exit(0)\n    \n    if not isinstance(data, dict) or \"contributions\" not in data:\n        print(\"error: invalid JSON structure\")\n        sys.exit(0)\n    \n    contributions = data[\"contributions\"]\n    if not isinstance(contributions, list):\n        print(\"error: contributions must be a list\")\n        sys.exit(0)\n    \n    valid_consent_values = {\"public\", \"steward-review\", \"private\"}\n    n = len(contributions)\n    flagged_count = 0\n    findings_list = []\n    \n    for contrib in contributions:\n        if not isinstance(contrib, dict):\n            continue\n        \n        contrib_id = contrib.get(\"id\", \"unknown\")\n        layer = contrib.get(\"layer\", \"unknown\")\n        consent = contrib.get(\"consent\", \"\")\n        cited_sources = contrib.get(\"cited_sources\", [])\n        \n        findings = []\n        \n        # Check 1: missing_consent\n        if consent not in valid_consent_values:\n            findings.append(\"missing_consent\")\n        \n        # Check 2: needs_steward_review\n        if consent == \"steward-review\":\n            findings.append(\"needs_steward_review\")\n        \n        # Check 3: uncited_public\n        if consent == \"public\" and (not cited_sources or not isinstance(cited_sources, list) or len(cited_sources) == 0):\n            findings.append(\"uncited_public\")\n        \n        # Sort findings alphabetically\n        findings.sort()\n        \n        if findings:\n            flagged_count += 1\n            findings_str = \", \".join(findings)\n        else:\n            findings_str = \"clean\"\n        \n        findings_list.append((contrib_id, layer, findings_str))\n    \n    # Determine header counts\n    clean_count = n - flagged_count\n    flagged_count_actual = flagged_count\n    \n    # Print header\n    print(f\"ATLAS COHERENCE PACKET ({clean_count} clean / {flagged_count_actual} flagged of {n} contributions)\")\n    print()\n    \n    # Print each contribution\n    for contrib_id, layer, findings_str in findings_list:\n        print(f\"{contrib_id} [{layer}]: {findings_str}\")\n        print()\n    \n    # Print boundary statement\n    print(\"BOUNDARY: this packet flags coherence; it does not force fit, replace steward review, or grant any visibility upgrade.\")\n\nif __name__ == \"__main__\":\n    main()",
+  "boundary": "This build-attempt record states what happened. It does not establish that the tool is correct, complete, safe, or fit for reuse."
+}

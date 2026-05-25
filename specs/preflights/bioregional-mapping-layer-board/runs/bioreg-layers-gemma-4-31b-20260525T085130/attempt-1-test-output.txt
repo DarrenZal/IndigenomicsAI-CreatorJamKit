@@ -1,0 +1,8 @@
+test_t1_basic (__main__.PreflightTest.test_t1_basic) ... ok
+test_t2_withhold (__main__.PreflightTest.test_t2_withhold) ... ok
+test_zz_invalid_json (__main__.PreflightTest.test_zz_invalid_json) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.305s
+
+OK

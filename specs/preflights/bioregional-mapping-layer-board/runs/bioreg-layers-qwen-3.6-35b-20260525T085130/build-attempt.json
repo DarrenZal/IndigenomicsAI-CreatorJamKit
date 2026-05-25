@@ -1,0 +1,37 @@
+{
+  "packet_id": "preflight-bioregion-layers",
+  "packet_path": "/Users/darrenzal/projects/IndigenomicsAI-CreatorJamKit/specs/preflights/bioregional-mapping-layer-board/build-packet.json",
+  "run_id": "bioreg-layers-qwen-3.6-35b-20260525T085130",
+  "run_at": "2026-05-25T08:51:30Z",
+  "mode": "TELUS build-attempt lane",
+  "model": {
+    "catalog_id": "qwen-3.6-35b",
+    "provider_config_model": "Qwen/Qwen3.6-35B-A3B"
+  },
+  "team": "Layer Board (preflight sample)",
+  "frozen": true,
+  "attempt_1": {
+    "codegen_ok": true,
+    "codegen_elapsed_ms": 4950,
+    "code_extracted": true,
+    "error": null,
+    "test": {
+      "passed": 3,
+      "total": 3,
+      "failing": []
+    }
+  },
+  "repair": null,
+  "final": {
+    "code_source": "attempt-1",
+    "test": {
+      "passed": 3,
+      "total": 3
+    },
+    "all_passed": true
+  },
+  "finding": "built clean",
+  "finding_detail": "attempt 1 passed all acceptance tests; no repair needed",
+  "final_code": "import sys\nimport json\n\ndef main():\n    if len(sys.argv) < 2:\n        print(\"error: no input file specified\")\n        sys.exit(0)\n    \n    input_path = sys.argv[1]\n    \n    try:\n        with open(input_path, 'r') as f:\n            data = json.load(f)\n    except (json.JSONDecodeError, FileNotFoundError, IOError):\n        print(\"error: invalid input\")\n        sys.exit(0)\n    \n    if not isinstance(data, dict) or 'layers' not in data:\n        print(\"error: invalid input\")\n        sys.exit(0)\n    \n    layers = data['layers']\n    \n    if not isinstance(layers, list):\n        print(\"error: invalid input\")\n        sys.exit(0)\n    \n    # Count tiers\n    public_count = 0\n    steward_count = 0\n    private_count = 0\n    \n    for layer in layers:\n        if not isinstance(layer, dict):\n            continue\n        tier = layer.get('consent_tier', '')\n        if tier == 'public':\n            public_count += 1\n        elif tier == 'steward-review':\n            steward_count += 1\n        elif tier == 'private':\n            private_count += 1\n    \n    total = len(layers)\n    \n    # Print header\n    print(f\"LAYER BOARD ({public_count} public / {steward_count} steward-review / {private_count} private of {total} total layers)\")\n    print()\n    \n    # Print public layers\n    print(\"PUBLIC LAYERS:\")\n    for layer in layers:\n        if not isinstance(layer, dict):\n            continue\n        if layer.get('consent_tier') == 'public':\n            layer_id = layer.get('layer_id', '')\n            category = layer.get('category', '')\n            feature_count = layer.get('feature_count', 0)\n            print(f\"- {layer_id} [{category}]: {feature_count} features\")\n    \n    print()\n    \n    # Print withheld summary\n    print(f\"WITHHELD: {steward_count} steward-review + {private_count} private layers \u2014 content not displayed.\")\n\nif __name__ == '__main__':\n    main()",
+  "boundary": "This build-attempt record states what happened. It does not establish that the tool is correct, complete, safe, or fit for reuse."
+}

@@ -1,0 +1,114 @@
+{
+  "packet_version": "v0",
+  "freeze_record": {
+    "frozen": true,
+    "frozen_at": "2026-05-25",
+    "frozen_by": "preflight",
+    "facilitator_confirmed": {
+      "consent_privacy_complete": true,
+      "boundaries_reviewed": true,
+      "public_private_status_confirmed": true,
+      "ai_input_scope_confirmed": true,
+      "build_path_confirmed": true,
+      "witnessed_working_clear": true
+    }
+  },
+  "excluded_inputs": [],
+  "build_instructions": {
+    "path": "build-instructions.md"
+  },
+  "review_checks": [
+    "tool runs cleanly stdlib-only",
+    "passes acceptance tests",
+    "no outputs hardcoded"
+  ],
+  "witness_record_seed": {
+    "team": "preflight",
+    "date": "2026-05-25",
+    "fields": [
+      "what we brought",
+      "what we attempted",
+      "what worked",
+      "what did not work",
+      "what we learned",
+      "boundaries that remain"
+    ],
+    "receipt_statement": "This record states what happened. It does not establish authority, approval, certification, legitimacy, community consent, or readiness for reuse."
+  },
+  "packet_id": "preflight-flow-funding",
+  "team_spec": {
+    "team_name": "Flow Frontier (preflight sample)",
+    "site": "preflight",
+    "vision": "Map fundable edges between dreams, commitments, and pools.",
+    "spec": "Build a single-file Python tool, run as `python3 tool.py <graph_json_path>`. Reads { \"nodes\": [{\"id\":\"...\",\"type\":\"dream\"|\"commitment\"|\"pool\"|\"receipt\",\"status\":\"open\"|\"closed\"|\"witnessed\"|\"funded\"}], \"edges\": [{\"from\":\"...\",\"to\":\"...\",\"kind\":\"intends\"|\"fulfills\"|\"routes_to\"|\"witnesses\"}] }. An edge is FUNDABLE if: from.type==dream AND to.type==commitment AND from.status==open AND to.status==open; OR from.type==commitment AND to.type==pool AND from.status==witnessed AND to.status==open. Print: header 'FLOW FUNDING FRONTIER (<F> fundable / <E> total edges)', blank, for each fundable edge in input order: '- <from>(<from.type>) --[<kind>]--> <to>(<to.type>)', blank, 'SUMMARY: <F> fundable, <N> nodes, <E> edges'. On invalid JSON: 'error:' line, exit 0. Stdlib only.",
+    "build_target": "single-file CLI"
+  },
+  "allowed_inputs": [
+    {
+      "name": "sample.json",
+      "kind": "json-data",
+      "note": "preflight fixture",
+      "content": {
+        "nodes": [
+          {
+            "id": "d1",
+            "type": "dream",
+            "status": "open"
+          },
+          {
+            "id": "c1",
+            "type": "commitment",
+            "status": "open"
+          },
+          {
+            "id": "c2",
+            "type": "commitment",
+            "status": "witnessed"
+          },
+          {
+            "id": "p1",
+            "type": "pool",
+            "status": "open"
+          },
+          {
+            "id": "p2",
+            "type": "pool",
+            "status": "closed"
+          }
+        ],
+        "edges": [
+          {
+            "from": "d1",
+            "to": "c1",
+            "kind": "intends"
+          },
+          {
+            "from": "c1",
+            "to": "p1",
+            "kind": "routes_to"
+          },
+          {
+            "from": "c2",
+            "to": "p1",
+            "kind": "routes_to"
+          },
+          {
+            "from": "c2",
+            "to": "p2",
+            "kind": "routes_to"
+          }
+        ]
+      }
+    }
+  ],
+  "acceptance_criteria": {
+    "description": [
+      "see build-instructions.md"
+    ],
+    "test_file": {
+      "name": "acceptance-test.py",
+      "language": "python-stdlib",
+      "path": "acceptance-test.py"
+    }
+  }
+}
