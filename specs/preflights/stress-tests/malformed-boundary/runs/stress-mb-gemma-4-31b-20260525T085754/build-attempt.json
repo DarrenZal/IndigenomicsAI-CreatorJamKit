@@ -1,0 +1,37 @@
+{
+  "packet_id": "stress-malformed-boundary",
+  "packet_path": "/Users/darrenzal/projects/IndigenomicsAI-CreatorJamKit/specs/preflights/stress-tests/malformed-boundary/build-packet.json",
+  "run_id": "stress-mb-gemma-4-31b-20260525T085754",
+  "run_at": "2026-05-25T08:57:54Z",
+  "mode": "TELUS build-attempt lane",
+  "model": {
+    "catalog_id": "gemma-4-31b",
+    "provider_config_model": "google/gemma-4-31b-it"
+  },
+  "team": "Stress Test",
+  "frozen": true,
+  "attempt_1": {
+    "codegen_ok": true,
+    "codegen_elapsed_ms": 3798,
+    "code_extracted": true,
+    "error": null,
+    "test": {
+      "passed": 1,
+      "total": 1,
+      "failing": []
+    }
+  },
+  "repair": null,
+  "final": {
+    "code_source": "attempt-1",
+    "test": {
+      "passed": 1,
+      "total": 1
+    },
+    "all_passed": true
+  },
+  "finding": "built clean",
+  "finding_detail": "attempt 1 passed all acceptance tests; no repair needed",
+  "final_code": "import sys\n\ndef main():\n    # The spec requires printing 'OK' on a single line and exiting 0.\n    # It also specifies reading input from the first command-line argument,\n    # although the logic does not depend on the content of that input.\n    print(\"OK\")\n    sys.exit(0)\n\nif __name__ == \"__main__\":\n    main()",
+  "boundary": "This build-attempt record states what happened. It does not establish that the tool is correct, complete, safe, or fit for reuse."
+}

@@ -1,0 +1,20 @@
+{
+  "packet_id": "stress-empty-allowed-inputs",
+  "run_id": "stress-empty-gemma-4-31b-20260525T085759",
+  "model": "gemma-4-31b",
+  "finding": "built clean",
+  "checks": [
+    {
+      "check": "tool prints OK",
+      "status": "needs-human-review",
+      "method": "no automatic check for this item"
+    }
+  ],
+  "excluded_inputs_leak_check": {
+    "excluded_count": 0,
+    "leaked": false,
+    "hits": [],
+    "method": "exact-substring over the generated code and the test output; marker-only records carry no content in this packet, so a clean result also confirms none was fabricated"
+  },
+  "boundary": "reviewer-findings record what the automated checks saw. Items marked needs-human-review are not yet judged. This does not certify or approve the build."
+}

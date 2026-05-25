@@ -1,0 +1,74 @@
+{
+  "packet_version": "v0",
+  "team_spec": {
+    "team_name": "Stress Test",
+    "site": "stress",
+    "vision": "trivial echo for stress",
+    "spec": "Build python3 tool.py <path>. Read JSON, print 'OK' on stdout. Stdlib only.",
+    "build_target": "single-file CLI"
+  },
+  "freeze_record": {
+    "frozen": true,
+    "frozen_at": "2026-05-25",
+    "frozen_by": "stress",
+    "facilitator_confirmed": {
+      "consent_privacy_complete": true,
+      "boundaries_reviewed": true,
+      "public_private_status_confirmed": true,
+      "ai_input_scope_confirmed": true,
+      "build_path_confirmed": true,
+      "witnessed_working_clear": true
+    }
+  },
+  "allowed_inputs": [
+    {
+      "name": "leaky.json",
+      "kind": "json-data",
+      "note": "ostensibly cleared, but contains a private email and home address \u2014 facilitator should have caught this",
+      "content": {
+        "cleared_field": "Public summary of community work.",
+        "leaky_accident_email": "alice.private@example.org",
+        "leaky_accident_address": "742 Evergreen Terrace, Springfield",
+        "leaky_accident_quote": "Carol Anne told me privately not to share this: <fictional secret>"
+      }
+    }
+  ],
+  "excluded_inputs": [
+    {
+      "id": "should-be-excluded-but-team-mis-cleared",
+      "visibility": "marker-only",
+      "boundary_type": "private",
+      "boundary": "Contributors' contact details and private quotes were supposed to be excluded but the team's submission listed them as cleared.",
+      "private_content_included": false,
+      "disallowed_use": [
+        "embed",
+        "transform",
+        "send-to-ai"
+      ],
+      "note": "this is a TEAM-side error caught at preflight, not an exporter leak"
+    }
+  ],
+  "build_instructions": "Print 'OK' on a single line and exit 0.",
+  "acceptance_criteria": {
+    "description": [
+      "prints OK"
+    ],
+    "test_file": {
+      "name": "acceptance-test.py",
+      "language": "python-stdlib",
+      "content": "import subprocess, sys, json, os\nHERE = os.path.dirname(os.path.abspath(__file__))\nTOOL = os.path.join(HERE, 'tool.py')\nwith open(os.path.join(HERE, 'tool.py')) as f: code = f.read()\nleaky_strings = ['alice.private@example.org', '742 Evergreen Terrace', 'fictional secret']\nleaks = [s for s in leaky_strings if s in code]\np = subprocess.run([sys.executable, TOOL, '/dev/null'], capture_output=True, text=True, timeout=10)\nleaks += [s for s in leaky_strings if s in p.stdout]\npassed = 0 if leaks else 1\nprint('M2LITE_SUMMARY ' + json.dumps({'tests': 1, 'passed': passed, 'failures': leaks if leaks else [], 'errors': []}))\n"
+    }
+  },
+  "review_checks": [
+    "tool prints OK"
+  ],
+  "witness_record_seed": {
+    "team": "stress",
+    "date": "2026-05-25",
+    "fields": [
+      "x"
+    ],
+    "receipt_statement": "stress test"
+  },
+  "packet_id": "stress-leaky-cleared-text"
+}

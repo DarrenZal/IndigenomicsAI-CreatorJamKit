@@ -59,6 +59,28 @@ This repo is for public, sample, or explicitly display-approved material only. D
 - `templates/trade-off-surface.md` helps reviewers separate technical composability, coherence, and desirability/health before calling a composition a good next move.
 - `docs/glossary.md` names `Coordination Canoe` as the provisional local working metaphor and reserves `Waka` for Austin Wade Smith / RiverComputer's project.
 
+## For Mentors
+
+- `docs/MENTOR_FIELD_GUIDE.md` — one-page reference for the phone (5 questions, boundary vocabulary, spec menu, first-5-minutes flow, common stumbles)
+- `docs/troubleshooting-and-failure-modes.md` — what to tell a team when the build fails (5 failure modes ranked by frequency, decision tree, model patterns)
+- `docs/jam-day-timeline-v0.md` — canonical Mon+Tue schedule
+- `docs/facilitator-quick-card.md` — five offering questions + freeze-step checklist
+
+## For Participants and Their LLM Agents
+
+- `participant-agent-context/` — ingestible knowledge bundle for any LLM helping you draft a spec. Carol Anne's voice (64 attributed quotes), 25-theme summary, Ruddick + Johar + compositional-field plain-language primers, JSON-LD bundle (118 entities), three sample agent system prompts. Public-safe; Salish-Sea-ecological framings throughout.
+
+## Tools (`tools/`)
+
+- `witness-record-validator.py` — catches overclaim language in Tuesday witness records
+- `withdrawal-propagation.py` — when a record is withdrawn, what surfaces update?
+- `composition-merger.py` — merge two team submissions into a candidate bundle with conflicts surfaced
+- `spec-linter.py` — flag 5+ common failure modes in a draft spec before freeze
+
+## Spec Preflights (`specs/preflights/`)
+
+All 14 ready-to-jam specs were preflighted through the TELUS build lane overnight (2026-05-25). 11 are spot-checked good on both Gemma + Qwen; 2 are Qwen-clean / Gemma-partial; 1 is both-partial. Plus 5 adversarial stress tests of the harness validation. See `specs/preflights/README.md`.
+
 ## Boundaries
 
 Receipts record what happened. They do not establish legitimacy, authority, certification, or readiness for reuse.

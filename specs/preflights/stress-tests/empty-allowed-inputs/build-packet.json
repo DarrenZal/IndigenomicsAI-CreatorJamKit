@@ -1,0 +1,48 @@
+{
+  "packet_version": "v0",
+  "team_spec": {
+    "team_name": "Stress Test",
+    "site": "stress",
+    "vision": "trivial echo for stress",
+    "spec": "Build python3 tool.py <path>. Read JSON, print 'OK' on stdout. Stdlib only.",
+    "build_target": "single-file CLI"
+  },
+  "freeze_record": {
+    "frozen": true,
+    "frozen_at": "2026-05-25",
+    "frozen_by": "stress",
+    "facilitator_confirmed": {
+      "consent_privacy_complete": true,
+      "boundaries_reviewed": true,
+      "public_private_status_confirmed": true,
+      "ai_input_scope_confirmed": true,
+      "build_path_confirmed": true,
+      "witnessed_working_clear": true
+    }
+  },
+  "allowed_inputs": [],
+  "excluded_inputs": [],
+  "build_instructions": "Print 'OK' on a single line and exit 0.",
+  "acceptance_criteria": {
+    "description": [
+      "prints OK"
+    ],
+    "test_file": {
+      "name": "acceptance-test.py",
+      "language": "python-stdlib",
+      "content": "import subprocess, sys, json, os\nHERE = os.path.dirname(os.path.abspath(__file__))\nTOOL = os.path.join(HERE, 'tool.py')\np = subprocess.run([sys.executable, TOOL, '/dev/null'], capture_output=True, text=True, timeout=10)\npassed = 1 if 'OK' in p.stdout else 0\nprint('M2LITE_SUMMARY ' + json.dumps({'tests': 1, 'passed': passed, 'failures': [] if passed else ['print_ok'], 'errors': []}))\n"
+    }
+  },
+  "review_checks": [
+    "tool prints OK"
+  ],
+  "witness_record_seed": {
+    "team": "stress",
+    "date": "2026-05-25",
+    "fields": [
+      "x"
+    ],
+    "receipt_statement": "stress test"
+  },
+  "packet_id": "stress-empty-allowed-inputs"
+}
