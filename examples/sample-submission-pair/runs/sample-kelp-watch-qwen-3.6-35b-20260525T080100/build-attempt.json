@@ -1,0 +1,37 @@
+{
+  "packet_id": "sample-kelp-watch",
+  "packet_path": "/Users/darrenzal/projects/IndigenomicsAI-CreatorJamKit/examples/sample-submission-pair/sample-agentic-build-packet-v0.json",
+  "run_id": "sample-kelp-watch-qwen-3.6-35b-20260525T080100",
+  "run_at": "2026-05-25T08:01:00Z",
+  "mode": "TELUS build-attempt lane",
+  "model": {
+    "catalog_id": "qwen-3.6-35b",
+    "provider_config_model": "Qwen/Qwen3.6-35B-A3B"
+  },
+  "team": "Kelp Watch",
+  "frozen": true,
+  "attempt_1": {
+    "codegen_ok": true,
+    "codegen_elapsed_ms": 8498,
+    "code_extracted": true,
+    "error": null,
+    "test": {
+      "passed": 6,
+      "total": 6,
+      "failing": []
+    }
+  },
+  "repair": null,
+  "final": {
+    "code_source": "attempt-1",
+    "test": {
+      "passed": 6,
+      "total": 6
+    },
+    "all_passed": true
+  },
+  "finding": "built clean",
+  "finding_detail": "attempt 1 passed all acceptance tests; no repair needed",
+  "final_code": "import sys\nimport json\nimport re\n\ndef main():\n    # Read input file\n    if len(sys.argv) < 2:\n        print(\"error: no input file specified\")\n        sys.exit(0)\n    \n    input_path = sys.argv[1]\n    \n    try:\n        with open(input_path, 'r') as f:\n            data = json.load(f)\n    except (IOError, OSError):\n        print(\"error: cannot read input file\")\n        sys.exit(0)\n    except json.JSONDecodeError:\n        print(\"error: invalid JSON\")\n        sys.exit(0)\n    \n    # Validate structure\n    if not isinstance(data, dict) or 'observations' not in data:\n        print(\"error: invalid JSON structure\")\n        sys.exit(0)\n    \n    observations = data.get('observations', [])\n    if not isinstance(observations, list):\n        print(\"error: observations must be a list\")\n        sys.exit(0)\n    \n    # Date pattern\n    date_pattern = re.compile(r'^\\d{4}-\\d{2}-\\d{2}$')\n    \n    # Normalize function\n    def normalize(s):\n        if not isinstance(s, str):\n            return \"\"\n        s = s.strip()\n        s = re.sub(r'\\s+', ' ', s)\n        s = s.lower()\n        return s\n    \n    # Process observations\n    kept = []\n    for obs in observations:\n        if not isinstance(obs, dict):\n            continue\n        \n        # Check value is a JSON number (not string, null, boolean)\n        value = obs.get('value')\n        if value is None or isinstance(value, bool) or isinstance(value, str):\n            continue\n        if not isinstance(value, (int, float)):\n            continue\n        \n        # Normalize site and indicator\n        site = normalize(obs.get('site', ''))\n        indicator = normalize(obs.get('indicator', ''))\n        \n        # Drop if empty site or indicator\n        if not site or not indicator:\n            continue\n        \n        # Get date\n        date = obs.get('date', '')\n        valid_date = None\n        if isinstance(date, str) and date_pattern.match(date):\n            valid_date = date\n        \n        kept.append({\n            'site': site,\n            'indicator': indicator,\n            'value': value,\n            'date': valid_date\n        })\n    \n    # Count kept observations and distinct sites\n    N = len(kept)\n    sites = set(obs['site'] for obs in kept)\n    S = len(sites)\n    \n    # Print header\n    print(f\"KELP BED WATCH ({N} observations across {S} sites)\")\n    \n    if N == 0:\n        # Empty case: skip site blocks and blank lines\n        print(\"SUMMARY: 0 observations, 0 sites, no dates\")\n        sys.exit(0)\n    \n    # Group by site and indicator\n    site_data = {}\n    for obs in kept:\n        site = obs['site']\n        indicator = obs['indicator']\n        if site not in site_data:\n            site_data[site] = {}\n        if indicator not in site_data[site]:\n            site_data[site][indicator] = []\n        site_data[site][indicator].append(obs['value'])\n    \n    # Collect all valid dates\n    all_dates = [obs['date'] for obs in kept if obs['date'] is not None]\n    \n    # Print site blocks\n    for site in sorted(site_data.keys()):\n        print(f\"== {site} ==\"\n              )\n        indicators = sorted(site_data[site].keys())\n        for indicator in indicators:\n            values = site_data[site][indicator]\n            mean = sum(values) / len(values)\n            mean_rounded = round(mean, 2)\n            # Format mean to 2 decimal places\n            mean_str = f\"{mean_rounded:.2f}\"\n            print(f\"{indicator}: mean {mean_str}, n={len(values)}\")\n        print()  # Blank line after each site block\n    \n    # Print summary\n    if all_dates:\n        from_date = min(all_dates)\n        to_date = max(all_dates)\n        print(f\"SUMMARY: {N} observations, {S} sites, {from_date} .. {to_date}\")\n    else:\n        print(f\"SUMMARY: {N} observations, {S} sites, no dates\")\n\nif __name__ == '__main__':\n    main()",
+  "boundary": "This build-attempt record states what happened. It does not establish that the tool is correct, complete, safe, or fit for reuse."
+}

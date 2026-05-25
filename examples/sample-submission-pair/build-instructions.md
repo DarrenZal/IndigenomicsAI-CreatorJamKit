@@ -25,10 +25,12 @@ Print to stdout, in this order:
 2. For each site, ordered alphabetically by site name, a block consisting of:
    - A line: `== <site> ==`
    - For each distinct indicator at that site, ordered alphabetically: `<indicator>: mean <mean>, n=<count>` — `<mean>` rounded to 2 decimals.
-3. Exactly one blank line between sites.
+3. Exactly one blank line after each site block, including after the last site block. (Equivalently: every site block is followed by one blank line; the SUMMARY line is then printed.)
 4. A final summary line:
    `SUMMARY: <N> observations, <S> sites, <FROM> .. <TO>`
    where `<FROM>` and `<TO>` are the earliest and latest dates in `YYYY-MM-DD` form. If no observation kept has a parseable date, print `no dates` in place of `<FROM> .. <TO>`.
+
+If there are zero kept observations, skip step 2 and step 3 entirely: print the header line, then the SUMMARY line directly (with `0 observations, 0 sites, no dates`). Do not print any blank line in the empty case.
 
 ## Normalization rules
 

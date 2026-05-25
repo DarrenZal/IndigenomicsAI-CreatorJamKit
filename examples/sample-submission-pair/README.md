@@ -6,7 +6,9 @@ A complete, end-to-end worked example pair for facilitators and mentors to show 
 - **`sample-agentic-build-packet-v0.json`** — what the runtime build packet looks like after facilitator freeze + exporter. The lean JSON the TELUS build lane consumes.
 - **`build-instructions.md`** — the frozen build spec the build attempt works from (referenced by the packet).
 - **`acceptance-test.py`** — the smoke test the build attempt runs against (referenced by the packet).
-- **`sample-witness-record.md`** — what the Tuesday canoe-landing record looks like for this attempt.
+- **`sample-witness-record.md`** — a team-authored, storytelling-shaped version of what the Tuesday canoe-landing record might look like (the kind of thing a team would write).
+- **`preflight-findings.md`** — the actual results of running this packet through the TELUS lane on both Gemma and Qwen, 2026-05-25 overnight prep.
+- **`runs/`** — the actual artifacts from those runs (build-attempt.json, reviewer-findings.json, the generated code, harness-filled canoe-landing/witness-record.md).
 
 ## When to show this
 

@@ -1,0 +1,37 @@
+{
+  "packet_id": "sample-kelp-watch",
+  "packet_path": "/Users/darrenzal/projects/IndigenomicsAI-CreatorJamKit/examples/sample-submission-pair/sample-agentic-build-packet-v0.json",
+  "run_id": "sample-kelp-watch-gemma-4-31b-20260525T080017",
+  "run_at": "2026-05-25T08:00:17Z",
+  "mode": "TELUS build-attempt lane",
+  "model": {
+    "catalog_id": "gemma-4-31b",
+    "provider_config_model": "google/gemma-4-31b-it"
+  },
+  "team": "Kelp Watch",
+  "frozen": true,
+  "attempt_1": {
+    "codegen_ok": true,
+    "codegen_elapsed_ms": 23115,
+    "code_extracted": true,
+    "error": null,
+    "test": {
+      "passed": 6,
+      "total": 6,
+      "failing": []
+    }
+  },
+  "repair": null,
+  "final": {
+    "code_source": "attempt-1",
+    "test": {
+      "passed": 6,
+      "total": 6
+    },
+    "all_passed": true
+  },
+  "finding": "built clean",
+  "finding_detail": "attempt 1 passed all acceptance tests; no repair needed",
+  "final_code": "import sys\nimport json\nimport re\n\ndef normalize(text):\n    if not isinstance(text, str):\n        return \"\"\n    # Strip whitespace from both ends\n    text = text.strip()\n    # Collapse internal runs of whitespace to a single space\n    text = re.sub(r'\\s+', ' ', text)\n    # Lowercase\n    return text.lower()\n\ndef is_valid_date(date_str):\n    if not isinstance(date_str, str):\n        return False\n    # Simple YYYY-MM-DD check: 4 digits, dash, 2 digits, dash, 2 digits\n    if len(date_str) != 10:\n        return False\n    if date_str[4] != '-' or date_str[7] != '-':\n        return False\n    parts = date_str.split('-')\n    if len(parts) != 3:\n        return False\n    for p in parts:\n        if not p.isdigit():\n            return False\n    return True\n\ndef main():\n    if len(sys.argv) < 2:\n        return\n\n    input_path = sys.argv[1]\n    try:\n        with open(input_path, 'r', encoding='utf-8') as f:\n            data = json.load(f)\n    except Exception:\n        print(\"error: could not read or parse JSON file\")\n        sys.exit(0)\n\n    if not isinstance(data, dict) or \"observations\" not in data:\n        # Technically valid JSON but not the expected shape\n        # The spec says \"If the input cannot be read, or is not valid JSON\"\n        # We treat missing 'observations' key as a failure to read the expected data\n        print(\"error: invalid input format\")\n        sys.exit(0)\n\n    observations = data[\"observations\"]\n    if not isinstance(observations, list):\n        print(\"error: observations must be a list\")\n        sys.exit(0)\n\n    kept = []\n    valid_dates = []\n\n    for obs in observations:\n        if not isinstance(obs, dict):\n            continue\n        \n        # Drop rule: value must be a JSON number\n        val = obs.get(\"value\")\n        if not isinstance(val, (int, float)) or isinstance(val, bool):\n            continue\n        \n        # Normalization and Drop rules for site and indicator\n        site_raw = obs.get(\"site\")\n        indicator_raw = obs.get(\"indicator\")\n        \n        site_norm = normalize(site_raw)\n        indicator_norm = normalize(indicator_raw)\n        \n        if site_norm == \"\" or indicator_norm == \"\":\n            continue\n        \n        # Keep the observation\n        kept.append({\n            \"site\": site_norm,\n            \"indicator\": indicator_norm,\n            \"value\": float(val)\n        })\n        \n        # Date handling for summary\n        date_val = obs.get(\"date\")\n        if is_valid_date(date_val):\n            valid_dates.append(date_val)\n\n    n_kept = len(kept)\n    sites_set = sorted(list(set(o[\"site\"] for o in kept)))\n    s_count = len(sites_set)\n\n    # 1. Header\n    print(f\"KELP BED WATCH ({n_kept} observations across {s_count} sites)\")\n\n    if n_kept > 0:\n        # 2. Site blocks\n        for site in sites_set:\n            print(f\"== {site} ==\")\n            \n            # Group by indicator for this site\n            site_obs = [o for o in kept if o[\"site\"] == site]\n            indicators_at_site = sorted(list(set(o[\"indicator\"] for o in site_obs)))\n            \n            for ind in indicators_at_site:\n                vals = [o[\"value\"] for o in site_obs if o[\"indicator\"] == ind]\n                mean_val = sum(vals) / len(vals)\n                print(f\"{ind}: mean {mean_val:.2f}, n={len(vals)}\")\n            \n            # 3. Blank line after each site block\n            print()\n\n    # 4. Summary line\n    date_range = \"no dates\"\n    if valid_dates:\n        date_range = f\"{min(valid_dates)} .. {max(valid_dates)}\"\n    \n    print(f\"SUMMARY: {n_kept} observations, {s_count} sites, {date_range}\")\n\nif __name__ == \"__main__\":\n    main()",
+  "boundary": "This build-attempt record states what happened. It does not establish that the tool is correct, complete, safe, or fit for reuse."
+}
