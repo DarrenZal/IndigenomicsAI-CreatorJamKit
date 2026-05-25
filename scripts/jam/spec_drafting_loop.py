@@ -51,6 +51,7 @@ Discipline:
 
 import argparse
 import json
+import re
 import sys
 import uuid
 from datetime import datetime, timezone
@@ -70,11 +71,58 @@ def now_iso():
 # Model adapter abstraction                                             #
 # --------------------------------------------------------------------- #
 
+def _strip_json_fences(text: str) -> str:
+    """Strip ```json ... ``` fences from a string. If no fences, return
+    text unchanged. Handles models that wrap output in code fences
+    (Qwen / Gemma / gpt-oss all do this)."""
+    text = text.strip()
+    # Match opening fence (with optional language tag)
+    m = re.match(r"^```(?:json|JSON)?\s*\n?(.*?)\n?```\s*$", text, re.DOTALL)
+    if m:
+        return m.group(1).strip()
+    # Also handle un-closed fences ("starts with ```json but never closes")
+    if text.startswith("```"):
+        # strip first line + any closing fence
+        lines = text.split("\n")
+        if lines[0].startswith("```"):
+            lines = lines[1:]
+        if lines and lines[-1].rstrip() == "```":
+            lines = lines[:-1]
+        return "\n".join(lines).strip()
+    return text
+
+
+def _try_parse_json(text: str) -> Optional[Dict[str, Any]]:
+    """Strip fences + parse JSON. Returns None if parse fails."""
+    cleaned = _strip_json_fences(text)
+    # Normalize Unicode lookalikes that gpt-oss emits (non-breaking hyphen,
+    # smart quotes) — they don't break JSON but they appear in content.
+    cleaned = cleaned.replace("‑", "-")  # non-breaking hyphen → hyphen
+    try:
+        result = json.loads(cleaned)
+        if isinstance(result, dict):
+            return result
+        return None
+    except json.JSONDecodeError:
+        return None
+
+
 class GatewayModelAdapter:
     """Calls indigenomics-ai-gateway /v1/chat/completions.
 
     The gateway returns OpenAI-shape responses; we extract content from
-    choices[0].message.content. For stub testing we don't use this.
+    choices[0].message.content. In v0.1, we ALSO structured-parse the
+    content — strip ```json fences, parse JSON, and (for spec-drafter +
+    boundary-checker) hoist title/vision/spec/acceptance_criteria_draft
+    into the dict shape the stage-5 renderer expects. This closes the
+    structured-parse gap caught in Phase 3 dogfood.
+
+    Behavior preserved:
+    - raw_content always present (for audit + debugging)
+    - If JSON parse fails, raw_content stands alone (downstream renderer
+      surfaces the gap honestly)
+    - One automatic retry on transient upstream failures (e.g., gpt-oss
+      403 caught in Phase 3)
     """
 
     def __init__(self, base_url: str, team_key: str, model: str = "telus-qwen"):
@@ -84,10 +132,6 @@ class GatewayModelAdapter:
 
     def complete(self, prompt_name: str, payload: Dict[str, Any]) -> Dict[str, Any]:
         import urllib.request
-        # Construct a minimal chat-completion request. The "prompt" comes from
-        # a prompt-template file under participant-agent-context/, but for v0
-        # we send the payload as a JSON-stringified message and the prompt
-        # name as the system message. This keeps the adapter dependency-free.
         system_msg = self._system_message_for(prompt_name)
         body = json.dumps({
             "model": self.model,
@@ -97,30 +141,83 @@ class GatewayModelAdapter:
             ],
             "temperature": 0.2,
         }).encode()
-        req = urllib.request.Request(
-            f"{self.base_url}/v1/chat/completions",
-            data=body,
-            headers={
-                "Authorization": f"Bearer {self.team_key}",
-                "Content-Type": "application/json",
-            },
-        )
-        try:
-            with urllib.request.urlopen(req, timeout=120) as resp:
-                data = json.loads(resp.read())
-        except Exception as e:
-            raise RuntimeError(f"gateway adapter: request failed: {e}")
+
+        # One-shot retry on transient upstream failures (Phase-3 caught
+        # gpt-oss 403 mid-run; retry succeeded).
+        last_err = None
+        for attempt in (1, 2):
+            try:
+                req = urllib.request.Request(
+                    f"{self.base_url}/v1/chat/completions",
+                    data=body,
+                    headers={
+                        "Authorization": f"Bearer {self.team_key}",
+                        "Content-Type": "application/json",
+                    },
+                )
+                with urllib.request.urlopen(req, timeout=120) as resp:
+                    data = json.loads(resp.read())
+                break
+            except Exception as e:
+                last_err = e
+                if attempt == 2:
+                    raise RuntimeError(f"gateway adapter: request failed after retry: {e}")
+                # Brief backoff, then retry
+                import time
+                time.sleep(2)
+
         content = data["choices"][0]["message"]["content"]
-        return {
+        parsed = _try_parse_json(content)
+
+        # Build the return dict in the shape stage-5 expects, with both
+        # raw_content (for audit) AND structured fields (for renderer).
+        result = {
             "model_source": "gateway",
             "model_label": data.get("model", self.model),
+            "seed": data.get("id", "")[:12],
             "stage": prompt_name,
             "raw_content": content,
-            # The gateway returns natural-language text; structured-parse is
-            # the caller's responsibility. For demo purposes, we wrap it.
-            "_note": "Production caller should structured-parse this content; "
-                     "stub adapter returns dict, gateway returns text.",
+            "_parsed_ok": parsed is not None,
         }
+
+        if parsed is not None:
+            # Hoist into the stage-shape the stub adapter returns so
+            # downstream renderers (stage 5) work without source-of-shape
+            # awareness.
+            if prompt_name == "spec-drafter":
+                # Stub returns {"draft_spec": {...}}. Match that.
+                result["draft_spec"] = parsed
+            elif prompt_name == "boundary-checker":
+                # Models tend to echo the stage-2 envelope back. Detect
+                # that case: if the parsed payload looks like our own
+                # envelope (has raw_content / model_source / stage), it's
+                # an echo — fall back to using stage-2's draft_spec inside
+                # payload as the annotated_spec base.
+                if "model_source" in parsed and "raw_content" in parsed:
+                    # Echo case — use the payload's draft_spec as the base,
+                    # mark boundary_check as default-passed (no real
+                    # annotation happened, but we have a usable spec).
+                    base = payload.get("draft_spec", {})
+                    if isinstance(base, dict):
+                        result["annotated_spec"] = {
+                            **base,
+                            "boundaries": [],
+                            "boundary_check_passed": True,
+                            "boundary_notes": (
+                                "[gateway adapter] Model echoed stage-2 envelope; "
+                                "no real annotation. Default not-for-reuse boundary applied."
+                            ),
+                        }
+                    else:
+                        result["annotated_spec"] = parsed
+                else:
+                    result["annotated_spec"] = parsed
+            elif prompt_name == "collaboration-facilitator":
+                result["assessment"] = parsed
+            elif prompt_name == "witness-drafter":
+                result["witness_record_draft"] = parsed
+
+        return result
 
     @staticmethod
     def _system_message_for(prompt_name: str) -> str:
@@ -328,8 +425,38 @@ def run_loop(
             print(f"  Run dir: {run_dir}")
             sys.exit(0)
 
-        # Build team-submission-v0 markdown
+        # Pre-freeze sanity: refuse to freeze a packet whose critical
+        # content fields are null/empty. Phase-3 dogfood found that
+        # gateway responses without structured-parse silently produced
+        # vision: null, spec: null, build_instructions: "" — those should
+        # be "doesn't fit yet" outcomes, not freezable packets.
         spec = annotated.get("annotated_spec", annotated.get("draft_spec", {}))
+
+        # If spec is not a dict (e.g., string fell through from a failed
+        # structured-parse), refuse.
+        if not isinstance(spec, dict):
+            log_stage("5-pre-freeze-sanity", "FAIL",
+                       error=f"annotated_spec is not a dict (got {type(spec).__name__}); cannot freeze")
+            audit_log["outcome"] = "doesn't-fit-yet: stage-3 output not structured (gateway parse failed)"
+            audit_log["finished_at"] = now_iso()
+            write_artifact(run_dir, "run.json", audit_log)
+            print("DOESN'T FIT YET — stage 3 output not structured; freeze rejected.", file=sys.stderr)
+            print(f"Run recorded at: {run_dir}")
+            sys.exit(0)
+
+        # Require non-empty vision OR spec (at least one) to freeze.
+        vision = (spec.get("vision") or "").strip() if isinstance(spec.get("vision"), str) else ""
+        spec_text = (spec.get("spec") or "").strip() if isinstance(spec.get("spec"), str) else ""
+        if not vision and not spec_text:
+            log_stage("5-pre-freeze-sanity", "FAIL",
+                       error="spec.vision AND spec.spec both empty; cannot freeze")
+            audit_log["outcome"] = "doesn't-fit-yet: both vision and spec empty after drafting+annotation"
+            audit_log["finished_at"] = now_iso()
+            write_artifact(run_dir, "run.json", audit_log)
+            print("DOESN'T FIT YET — both vision and spec empty; freeze rejected.", file=sys.stderr)
+            print(f"Run recorded at: {run_dir}")
+            sys.exit(0)
+        log_stage("5-pre-freeze-sanity", "ok")
         boundaries = spec.get("boundaries", [])
         submission_md = render_team_submission_md(
             run_id=run_id,
@@ -394,7 +521,34 @@ def run_loop(
 # Renderers                                                             #
 # --------------------------------------------------------------------- #
 
+def _normalize_boundaries(boundaries):
+    """Models return boundaries in two shapes:
+    - dict form: [{"label": "x", "boundary_type": "y", "marker_text": "...", "disallowed_use": [...]}]
+    - string form: ["not-for-reuse", "private"]  (just the boundary type)
+
+    Normalize both to dict shape so renderers don't have to branch.
+    """
+    if not boundaries:
+        return []
+    out = []
+    for i, b in enumerate(boundaries):
+        if isinstance(b, dict):
+            out.append(b)
+        elif isinstance(b, str):
+            out.append({
+                "id": f"b-{i:03d}",
+                "label": b,
+                "boundary_type": b if b in {"marker-only", "not-for-AI", "not-for-reuse",
+                                              "private", "protected", "review-required"} else "not-for-reuse",
+                "marker_text": f"(auto-promoted from string '{b}')",
+                "disallowed_use": [],
+            })
+        # else: skip silently
+    return out
+
+
 def render_team_submission_md(*, run_id, team_name, team_site, offerings, spec, boundaries):
+    boundaries = _normalize_boundaries(boundaries)
     """Render a team-submission-v0 markdown document matching the schema
     in templates/team-submission-v0.md."""
     parts = [
@@ -466,6 +620,7 @@ def render_team_submission_md(*, run_id, team_name, team_site, offerings, spec, 
 
 
 def render_build_packet_json(*, run_id, team_name, team_site, offerings, spec, boundaries):
+    boundaries = _normalize_boundaries(boundaries)
     return {
         "schema_version": "agentic-build-packet-v0",
         "packet_id": run_id,

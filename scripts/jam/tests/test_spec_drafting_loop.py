@@ -173,5 +173,130 @@ class LoopEndToEndTests(unittest.TestCase):
         self.assertIn("authority", fr["note"].lower())
 
 
+class GatewayAdapterParsingTests(unittest.TestCase):
+    """Phase-3.5 additions: structured-parse of gateway responses."""
+
+    def test_strip_json_fences_with_language_tag(self):
+        text = '```json\n{"key": "value"}\n```'
+        self.assertEqual(loop._strip_json_fences(text), '{"key": "value"}')
+
+    def test_strip_json_fences_without_language_tag(self):
+        text = '```\n{"key": "value"}\n```'
+        self.assertEqual(loop._strip_json_fences(text), '{"key": "value"}')
+
+    def test_strip_json_fences_no_fences(self):
+        text = '{"key": "value"}'
+        self.assertEqual(loop._strip_json_fences(text), '{"key": "value"}')
+
+    def test_try_parse_json_ok(self):
+        text = '```json\n{"vision": "v", "spec": "s"}\n```'
+        parsed = loop._try_parse_json(text)
+        self.assertIsNotNone(parsed)
+        self.assertEqual(parsed["vision"], "v")
+
+    def test_try_parse_json_returns_none_on_garbage(self):
+        text = "just random text, no json"
+        self.assertIsNone(loop._try_parse_json(text))
+
+    def test_try_parse_json_normalizes_non_breaking_hyphen(self):
+        # gpt-oss emits U+2011 (non-breaking hyphen) — must not break parse
+        text = '```json\n{"vision": "team‑kelp‑observers"}\n```'
+        parsed = loop._try_parse_json(text)
+        self.assertIsNotNone(parsed)
+        self.assertEqual(parsed["vision"], "team-kelp-observers")
+
+
+class FreezeSanityRefusalTests(unittest.TestCase):
+    """Phase-3.5 additions: refuse-to-freeze on null/empty content."""
+
+    def setUp(self):
+        self.tmp = tempfile.mkdtemp()
+        self.out_dir = Path(self.tmp) / "runs"
+
+    def test_freeze_refuses_when_annotated_spec_not_dict(self):
+        """When the gateway adapter fails to parse, annotated_spec falls
+        back to a string. The loop must refuse to freeze."""
+
+        class FailingAdapter:
+            """Returns gateway-shape responses where annotated_spec is missing
+            (string fall-through case)."""
+            def complete(self, prompt_name, payload):
+                if prompt_name == "spec-drafter":
+                    return {
+                        "model_source": "gateway",
+                        "model_label": "test",
+                        "stage": prompt_name,
+                        "raw_content": "not json",
+                        "_parsed_ok": False,
+                        # NOTE: no draft_spec field — fall-through
+                    }
+                if prompt_name == "boundary-checker":
+                    return {
+                        "model_source": "gateway",
+                        "model_label": "test",
+                        "stage": prompt_name,
+                        "raw_content": "not json either",
+                        "_parsed_ok": False,
+                        # NOTE: no annotated_spec field
+                    }
+                return {}
+
+        offering = Path(self.tmp) / "o.md"
+        offering.write_text("---\ntitle: T\n---\nbody\n")
+        try:
+            loop.run_loop(
+                offering_files=[offering],
+                out_dir=self.out_dir,
+                adapter=FailingAdapter(),
+                confirm_freeze=True,
+                team_name="Test", team_site="other",
+            )
+        except SystemExit:
+            pass
+        run_dirs = list(self.out_dir.iterdir())
+        run = json.loads((run_dirs[0] / "run.json").read_text())
+        # Must NOT have a frozen-build-packet-ready outcome
+        self.assertNotEqual(run["outcome"], "frozen-build-packet-ready")
+        self.assertIn("doesn't-fit-yet", run["outcome"])
+
+    def test_freeze_refuses_when_vision_and_spec_both_empty(self):
+        """Parsed dict but both fields empty — refuse."""
+
+        class EmptyAdapter:
+            def complete(self, prompt_name, payload):
+                if prompt_name == "spec-drafter":
+                    return {
+                        "model_source": "gateway",
+                        "stage": prompt_name,
+                        "raw_content": "{}",
+                        "draft_spec": {"vision": "", "spec": ""},
+                    }
+                if prompt_name == "boundary-checker":
+                    return {
+                        "model_source": "gateway",
+                        "stage": prompt_name,
+                        "raw_content": "{}",
+                        "annotated_spec": {"vision": "", "spec": "", "boundaries": []},
+                    }
+                return {}
+
+        offering = Path(self.tmp) / "o.md"
+        offering.write_text("---\ntitle: T\n---\nbody\n")
+        try:
+            loop.run_loop(
+                offering_files=[offering],
+                out_dir=self.out_dir,
+                adapter=EmptyAdapter(),
+                confirm_freeze=True,
+                team_name="Test", team_site="other",
+            )
+        except SystemExit:
+            pass
+        run_dirs = list(self.out_dir.iterdir())
+        run = json.loads((run_dirs[0] / "run.json").read_text())
+        self.assertNotEqual(run["outcome"], "frozen-build-packet-ready")
+        self.assertIn("doesn't-fit-yet", run["outcome"])
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)
