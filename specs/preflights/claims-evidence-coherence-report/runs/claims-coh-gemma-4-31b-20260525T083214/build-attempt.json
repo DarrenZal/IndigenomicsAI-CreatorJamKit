@@ -1,0 +1,51 @@
+{
+  "packet_id": "preflight-claims-evidence-coherence",
+  "packet_path": "/Users/darrenzal/projects/IndigenomicsAI-CreatorJamKit/specs/preflights/claims-evidence-coherence-report/build-packet.json",
+  "run_id": "claims-coh-gemma-4-31b-20260525T083214",
+  "run_at": "2026-05-25T08:32:14Z",
+  "mode": "TELUS build-attempt lane",
+  "model": {
+    "catalog_id": "gemma-4-31b",
+    "provider_config_model": "google/gemma-4-31b-it"
+  },
+  "team": "Claims Coherence (preflight sample)",
+  "frozen": true,
+  "attempt_1": {
+    "codegen_ok": true,
+    "codegen_elapsed_ms": 27468,
+    "code_extracted": true,
+    "error": null,
+    "test": {
+      "passed": 7,
+      "total": 8,
+      "failing": [
+        "__main__.ClaimsCoherenceTest.test_4_stale"
+      ]
+    }
+  },
+  "repair": {
+    "codegen_ok": true,
+    "codegen_elapsed_ms": 32614,
+    "code_extracted": true,
+    "error": null,
+    "test": {
+      "passed": 7,
+      "total": 8,
+      "failing": [
+        "__main__.ClaimsCoherenceTest.test_4_stale"
+      ]
+    }
+  },
+  "final": {
+    "code_source": "repair-attempt",
+    "test": {
+      "passed": 7,
+      "total": 8
+    },
+    "all_passed": false
+  },
+  "finding": "no change",
+  "finding_detail": "attempt 1: 7/8 passed; repair: 7/8 passed",
+  "final_code": "import json\nimport sys\nfrom datetime import datetime, timedelta\n\ndef main():\n    if len(sys.argv) < 2:\n        return\n\n    input_path = sys.argv[1]\n    as_of_arg = None\n    if len(sys.argv) >= 4 and sys.argv[2] == \"as_of\":\n        as_of_arg = sys.argv[3]\n\n    try:\n        with open(input_path, 'r') as f:\n            data = json.load(f)\n    except Exception:\n        print(\"error: invalid input file\")\n        sys.exit(0)\n\n    if not isinstance(data, dict) or \"claims\" not in data:\n        print(\"error: invalid input format\")\n        sys.exit(0)\n\n    claims = data[\"claims\"]\n    \n    # Determine as_of date\n    all_dates = []\n    for c in claims:\n        if not isinstance(c, dict): continue\n        eps = c.get(\"evidence_pointers\", [])\n        if not isinstance(eps, list): continue\n        for ep in eps:\n            if not isinstance(ep, dict): continue\n            date_str = ep.get(\"created_at\")\n            if date_str:\n                try:\n                    all_dates.append(datetime.strptime(date_str, \"%Y-%m-%d\"))\n                except ValueError:\n                    pass\n    \n    if as_of_arg:\n        try:\n            as_of_date = datetime.strptime(as_of_arg, \"%Y-%m-%d\")\n        except ValueError:\n            print(\"error: invalid as_of date format\")\n            sys.exit(0)\n    elif all_dates:\n        as_of_date = max(all_dates)\n    else:\n        as_of_date = datetime.strptime(\"2026-05-26\", \"%Y-%m-%d\")\n\n    as_of_str = as_of_date.strftime(\"%Y-%m-%d\")\n\n    freshness_windows = {\n        \"descriptive\": 730,\n        \"commitment_status\": 180,\n        \"outcome\": 365,\n        \"impact\": 365,\n        \"risk\": 180,\n        \"eligibility\": 180\n    }\n\n    repair_paths = {\n        \"do_not_compute\": \"preserve as marker-only; do not compute\",\n        \"visibility_blocked\": \"choose: lower intended_use, or raise visibility (requires consent)\",\n        \"missing_evidence\": \"attach evidence and named reviewer\",\n        \"contested\": \"invite contesting party to review\",\n        \"stale_evidence\": \"refresh evidence within freshness window for {type}\",\n        \"needs_review\": \"assign a named reviewer\",\n        \"ready_for_use\": None\n    }\n\n    results = []\n    ready_count = 0\n\n    for c in claims:\n        cid = c.get(\"claim_id\", \"unknown\")\n        ctype = c.get(\"claim_type\", \"unknown\")\n        iuse = c.get(\"intended_use\")\n        vtier = c.get(\"visibility_tier\")\n        eps = c.get(\"evidence_pointers\", [])\n        rev = c.get(\"reviewer\")\n        contested = c.get(\"contested\", False)\n\n        status = \"ready_for_use\"\n\n        # 1. do_not_compute\n        if vtier == \"not-for-computation\":\n            status = \"do_not_compute\"\n        # 2. visibility_blocked\n        elif vtier in [\"private\", \"local-only\"] and iuse == \"public_share\":\n            status = \"visibility_blocked\"\n        # 3. missing_evidence\n        elif not eps or (iuse == \"public_share\" and rev is None and vtier == \"public\"):\n            status = \"missing_evidence\"\n        # 4. contested\n        elif contested is True:\n            status = \"contested\"\n        # 5. stale_evidence\n        else:\n            window_days = freshness_windows.get(ctype, 0)\n            all_stale = True\n            if not eps:\n                all_stale = True\n            else:\n                for ep in eps:\n                    date_str = ep.get(\"created_at\")\n                    if date_str:\n                        try:\n                            ep_date = datetime.strptime(date_str, \"%Y-%m-%d\")\n                            # Freshness: (as_of - ep_date).days <= window_days\n                            # If any evidence is within window, it is NOT stale.\n                            if (as_of_date - ep_date).days <= window_days:\n                                all_stale = False\n                                break\n                        except ValueError:\n                            pass\n            \n            if all_stale:\n                status = \"stale_evidence\"\n            # 6. needs_review\n            else:\n                needs_rev = False\n                for ep in eps:\n                    if ep.get(\"reviewer\") is None and vtier == \"public\":\n                        needs_rev = True\n                        break\n                if needs_rev:\n                    status = \"needs_review\"\n                else:\n                    status = \"ready_for_use\"\n\n        if status == \"ready_for_use\":\n            ready_count += 1\n\n        results.append((cid, ctype, status))\n\n    # Output\n    print(f\"CLAIMS COHERENCE REPORT (as_of {as_of_str})\")\n    print()\n    for cid, ctype, status in results:\n        print(f\"{cid} [{ctype}]: {status}\")\n        if status != \"ready_for_use\":\n            path = repair_paths[status]\n            if status == \"stale_evidence\":\n                path = path.format(type=ctype)\n            print(f\"repair_path: {path}\")\n\n    print()\n    print(f\"SUMMARY: {ready_count} ready / {len(claims) - ready_count} needing work of {len(claims)} total\")\n\nif __name__ == \"__main__\":\n    main()",
+  "boundary": "This build-attempt record states what happened. It does not establish that the tool is correct, complete, safe, or fit for reuse."
+}

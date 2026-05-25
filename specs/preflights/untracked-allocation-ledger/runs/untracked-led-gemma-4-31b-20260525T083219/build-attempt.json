@@ -1,0 +1,37 @@
+{
+  "packet_id": "preflight-untracked-allocation",
+  "packet_path": "/Users/darrenzal/projects/IndigenomicsAI-CreatorJamKit/specs/preflights/untracked-allocation-ledger/build-packet.json",
+  "run_id": "untracked-led-gemma-4-31b-20260525T083219",
+  "run_at": "2026-05-25T08:32:19Z",
+  "mode": "TELUS build-attempt lane",
+  "model": {
+    "catalog_id": "gemma-4-31b",
+    "provider_config_model": "google/gemma-4-31b-it"
+  },
+  "team": "Untracked Ledger (preflight sample)",
+  "frozen": true,
+  "attempt_1": {
+    "codegen_ok": true,
+    "codegen_elapsed_ms": 34553,
+    "code_extracted": true,
+    "error": null,
+    "test": {
+      "passed": 6,
+      "total": 6,
+      "failing": []
+    }
+  },
+  "repair": null,
+  "final": {
+    "code_source": "attempt-1",
+    "test": {
+      "passed": 6,
+      "total": 6
+    },
+    "all_passed": true
+  },
+  "finding": "built clean",
+  "finding_detail": "attempt 1 passed all acceptance tests; no repair needed",
+  "final_code": "import json\nimport sys\n\ndef main():\n    if len(sys.argv) < 2:\n        return\n\n    input_path = sys.argv[1]\n    try:\n        with open(input_path, 'r', encoding='utf-8') as f:\n            data = json.load(f)\n    except Exception:\n        print(\"error:\")\n        sys.exit(0)\n\n    if not isinstance(data, dict) or \"allocations\" not in data:\n        print(\"error:\")\n        sys.exit(0)\n\n    allocations = data[\"allocations\"]\n    if not isinstance(allocations, list):\n        print(\"error:\")\n        sys.exit(0)\n\n    n_total = len(allocations)\n    p_count = 0\n    t_count = 0\n    w_count = 0\n    \n    # For aggregate counts: non-withdrawn, non-not-tracked\n    type_counts = {}\n\n    # First pass: calculate header counts\n    for entry in allocations:\n        withdrawn = entry.get(\"withdrawn\", False)\n        not_tracked = entry.get(\"not_tracked_reason\")\n        \n        if withdrawn:\n            w_count += 1\n        elif not_tracked is not None:\n            t_count += 1\n        else:\n            p_count += 1\n\n    print(f\"UNTRACKED ALLOCATION LEDGER ({p_count} public / {t_count} not-tracked / {w_count} withdrawn of {n_total} total)\")\n    print()\n\n    # Second pass: render entries and calculate aggregates\n    for entry in allocations:\n        withdrawn = entry.get(\"withdrawn\", False)\n        if withdrawn:\n            continue\n            \n        not_tracked = entry.get(\"not_tracked_reason\")\n        alloc_id = entry.get(\"allocation_id\", \"unknown\")\n        alloc_type = entry.get(\"allocation_type\", \"unknown\")\n        summary = entry.get(\"public_summary\", \"\")\n\n        print(f\"- {alloc_id} [{alloc_type}]:\")\n        print(f\"    summary: {summary}\")\n\n        if not_tracked is not None:\n            print(f\"    not-tracked-by-design: {not_tracked}\")\n        else:\n            # Track for aggregate\n            type_counts[alloc_type] = type_counts.get(alloc_type, 0) + 1\n            \n            if entry.get(\"recipient_visibility\") == \"public\":\n                print(f\"    recipient: {entry.get('recipient', '')}\")\n            if entry.get(\"funder_visibility\") == \"public\":\n                print(f\"    funder: {entry.get('funder', '')}\")\n            if entry.get(\"amount_visibility\") == \"public\" and entry.get(\"amount\") is not None:\n                amount = entry.get(\"amount\")\n                unit = entry.get(\"unit\", \"\")\n                print(f\"    amount: {amount} {unit}\".strip())\n        \n        print()\n\n    print(\"AGGREGATE BY TYPE:\")\n    for t in sorted(type_counts.keys()):\n        print(f\"  {t}: {type_counts[t]} entries\")\n\nif __name__ == \"__main__\":\n    main()",
+  "boundary": "This build-attempt record states what happened. It does not establish that the tool is correct, complete, safe, or fit for reuse."
+}

@@ -1,0 +1,21 @@
+test_1_ready_for_use (__main__.ClaimsCoherenceTest.test_1_ready_for_use) ... ok
+test_2_do_not_compute (__main__.ClaimsCoherenceTest.test_2_do_not_compute) ... ok
+test_3_visibility_blocked (__main__.ClaimsCoherenceTest.test_3_visibility_blocked) ... ok
+test_4_stale (__main__.ClaimsCoherenceTest.test_4_stale) ... FAIL
+test_5_missing_evidence (__main__.ClaimsCoherenceTest.test_5_missing_evidence) ... ok
+test_6_contested (__main__.ClaimsCoherenceTest.test_6_contested) ... ok
+test_7_summary_counts (__main__.ClaimsCoherenceTest.test_7_summary_counts) ... ok
+test_8_invalid_json (__main__.ClaimsCoherenceTest.test_8_invalid_json) ... ok
+
+======================================================================
+FAIL: test_4_stale (__main__.ClaimsCoherenceTest.test_4_stale)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/3c/6p_c61tj3y5ccqzmvfxmdg080000gn/T/m2-lite-test-mvbyhni3/test_tool.py", line 68, in test_4_stale
+    self.assertIn("stale_evidence", proc.stdout)
+AssertionError: 'stale_evidence' not found in 'CLAIMS COHERENCE REPORT (as_of 2024-01-01)\n\nc1 [outcome]: ready_for_use\n\nSUMMARY: 1 ready / 0 needing work of 1 total\n'
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.713s
+
+FAILED (failures=1)

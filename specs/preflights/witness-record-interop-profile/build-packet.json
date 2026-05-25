@@ -1,0 +1,61 @@
+{
+  "packet_version": "v0",
+  "packet_id": "preflight-witness-record-validator",
+  "team_spec": {
+    "team_name": "Witness Validator (preflight sample)",
+    "site": "preflight",
+    "vision": "A small validator for portable witness records — catches missing consent, stale evidence, overbroad public claims, and unsupported authority language.",
+    "spec": "Build a single-file Python tool, run as `python3 tool.py <records_json_path>`, that reads a JSON object shaped { \"records\": [ { \"record_id\": \"...\", \"statement\": \"...\", \"record_type\": \"claim\"|\"witness\"|\"attestation\"|\"promise\"|\"refusal\"|\"review\"|\"receipt\", \"actor_or_issuer\": \"...\", \"witnesses\": [\"...\"], \"evidence_pointers\": [{\"id\":\"...\",\"created_at\":\"YYYY-MM-DD\"}], \"visibility_tier\": \"public\"|\"local-only\"|\"private\"|\"not-for-computation\", \"permission_state\": \"granted\"|\"pending\"|\"refused\"|\"not-applicable\", \"review_state\": \"reviewed\"|\"contested\"|\"withdrawn\"|\"pending\"|\"not-applicable\", \"created_at\": \"YYYY-MM-DD\" }, ... ] } and an optional second argument 'as_of' in YYYY-MM-DD form (defaults to the latest created_at in the file, or 2026-05-26 if none). For each record, evaluate four checks and assign a list of findings: (1) missing_consent — if visibility_tier == 'public' AND permission_state != 'granted', add finding 'missing_consent'; (2) stale_evidence — if any evidence_pointer's created_at is more than 365 days before as_of, add finding 'stale_evidence'; (3) overbroad_public_claim — if record_type in {'claim','attestation','promise'} AND visibility_tier == 'public' AND len(statement) > 240, add finding 'overbroad_public_claim'; (4) unsupported_authority_language — if statement contains any of the case-insensitive substrings 'certified', 'authorized', 'legitimate', 'official', AND review_state != 'reviewed', add finding 'unsupported_authority_language'. Print to stdout, in order: (1) header 'WITNESS RECORD VALIDATION (as_of <as_of>)'; (2) one blank line; (3) for each record in input order, a block: '<record_id>: <findings>' where <findings> is either 'OK' (no findings) or the findings joined by ', ' alphabetically; (4) one blank line; (5) 'SUMMARY: <OK> ok, <FAIL> with findings of <N> total'. On unreadable or invalid JSON, print a single 'error:' line and exit 0. Standard library only; no network; no credentials.",
+    "build_target": "one single-file command-line validator, standard library only"
+  },
+  "freeze_record": {
+    "frozen": true,
+    "frozen_at": "2026-05-25",
+    "frozen_by": "preflight (overnight)",
+    "facilitator_confirmed": {
+      "consent_privacy_complete": true,
+      "boundaries_reviewed": true,
+      "public_private_status_confirmed": true,
+      "ai_input_scope_confirmed": true,
+      "build_path_confirmed": true,
+      "witnessed_working_clear": true
+    }
+  },
+  "allowed_inputs": [
+    {
+      "name": "sample-records.json",
+      "kind": "json-data",
+      "note": "small fictional records showing each finding type",
+      "content": {
+        "records": [
+          {"record_id": "r1", "statement": "We observed eelgrass growth at Boundary Bay across April-May 2026.", "record_type": "claim", "actor_or_issuer": "A", "witnesses": [], "evidence_pointers": [{"id": "e1", "created_at": "2026-05-10"}], "visibility_tier": "public", "permission_state": "granted", "review_state": "reviewed", "created_at": "2026-05-15"},
+          {"record_id": "r2", "statement": "This is a public claim with no consent recorded.", "record_type": "claim", "actor_or_issuer": "B", "witnesses": [], "evidence_pointers": [{"id": "e2", "created_at": "2026-05-10"}], "visibility_tier": "public", "permission_state": "pending", "review_state": "pending", "created_at": "2026-05-12"},
+          {"record_id": "r3", "statement": "An older claim based on outdated evidence.", "record_type": "claim", "actor_or_issuer": "C", "witnesses": [], "evidence_pointers": [{"id": "e3", "created_at": "2024-01-01"}], "visibility_tier": "public", "permission_state": "granted", "review_state": "reviewed", "created_at": "2026-05-10"}
+        ]
+      }
+    }
+  ],
+  "excluded_inputs": [],
+  "build_instructions": {"path": "build-instructions.md"},
+  "acceptance_criteria": {
+    "description": [
+      "prints WITNESS RECORD VALIDATION header with as_of",
+      "evaluates four findings per record: missing_consent, stale_evidence, overbroad_public_claim, unsupported_authority_language",
+      "outputs OK or alphabetical comma-joined findings per record",
+      "SUMMARY line with ok/fail/total counts",
+      "error: prefix on invalid input, exits 0"
+    ],
+    "test_file": {"name": "acceptance-test.py", "language": "python-stdlib", "path": "acceptance-test.py"}
+  },
+  "review_checks": [
+    "tool runs cleanly with no network, credential, or database access",
+    "passes every acceptance-criteria smoke test",
+    "no outputs hardcoded for specific inputs"
+  ],
+  "witness_record_seed": {
+    "team": "Witness Validator preflight",
+    "date": "2026-05-25",
+    "fields": ["what we brought","what we attempted","what worked","what did not work","what we learned","boundaries that remain"],
+    "receipt_statement": "This record states what happened. It does not establish authority, approval, certification, legitimacy, community consent, or readiness for reuse."
+  }
+}

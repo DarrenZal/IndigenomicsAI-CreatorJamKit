@@ -1,0 +1,26 @@
+{
+  "packet_version": "v0",
+  "packet_id": "preflight-claims-evidence-coherence",
+  "team_spec": {
+    "team_name": "Claims Coherence (preflight sample)",
+    "site": "preflight",
+    "vision": "Help a steward see whether a public claim is supported, stale, contested, or ready for a specific use.",
+    "spec": "Build a single-file Python tool, run as `python3 tool.py <claims_json_path> [as_of YYYY-MM-DD]`. Reads JSON shaped { \"claims\": [ {\"claim_id\":\"...\",\"claim_text\":\"...\",\"claim_type\":\"descriptive\"|\"commitment_status\"|\"outcome\"|\"impact\"|\"risk\"|\"eligibility\",\"intended_use\":\"public_share\"|\"steward_review\"|\"internal\",\"visibility_tier\":\"public\"|\"local-only\"|\"private\"|\"not-for-computation\",\"evidence_pointers\":[{\"id\":\"...\",\"created_at\":\"YYYY-MM-DD\",\"reviewer\":\"...\"|null}],\"reviewer\":\"...\"|null,\"contested\":<boolean>}, ...] }. Default as_of = latest evidence created_at, else 2026-05-26. Per-claim freshness window (days, by claim_type): descriptive=730, commitment_status=180, outcome=365, impact=365, risk=180, eligibility=180. Determine status using these rules in priority order: (1) 'do_not_compute' if visibility_tier == 'not-for-computation'; (2) 'visibility_blocked' if visibility_tier in {'private','local-only'} AND intended_use == 'public_share'; (3) 'missing_evidence' if no evidence_pointers OR if intended_use=='public_share' AND reviewer is null AND visibility_tier=='public'; (4) 'contested' if contested == true; (5) 'stale_evidence' if all evidence pointers are older than freshness window for that claim_type; (6) 'needs_review' if any evidence pointer's reviewer is null AND visibility_tier == 'public'; (7) 'ready_for_use' otherwise. Output to stdout: (1) header 'CLAIMS COHERENCE REPORT (as_of <as_of>)'; (2) blank line; (3) per claim in input order: '<claim_id> [<claim_type>]: <status>' then if status != 'ready_for_use', a 'repair_path:' line listing one suggested next step. Suggested next steps: do_not_compute->'preserve as marker-only; do not compute'; visibility_blocked->'choose: lower intended_use, or raise visibility (requires consent)'; missing_evidence->'attach evidence and named reviewer'; contested->'invite contesting party to review'; stale_evidence->'refresh evidence within freshness window for <claim_type>'; needs_review->'assign a named reviewer'. (4) blank line; (5) 'SUMMARY: <ok> ready / <fail> needing work of <N> total'. On invalid JSON, single 'error:' line, exit 0. Stdlib only.",
+    "build_target": "single-file CLI"
+  },
+  "freeze_record": {"frozen": true, "frozen_at": "2026-05-25", "frozen_by": "preflight", "facilitator_confirmed": {"consent_privacy_complete": true, "boundaries_reviewed": true, "public_private_status_confirmed": true, "ai_input_scope_confirmed": true, "build_path_confirmed": true, "witnessed_working_clear": true}},
+  "allowed_inputs": [{"name": "sample-claims.json", "kind": "json-data", "note": "small claim fixtures", "content": {"claims": [
+    {"claim_id": "c1", "claim_text": "eelgrass canopy at Boundary Bay increased 8% spring 2026", "claim_type": "outcome", "intended_use": "public_share", "visibility_tier": "public", "evidence_pointers": [{"id":"e1","created_at":"2026-05-15","reviewer":"K. Steward"}], "reviewer": "K. Steward", "contested": false},
+    {"claim_id": "c2", "claim_text": "youth program reached 30 participants", "claim_type": "outcome", "intended_use": "public_share", "visibility_tier": "public", "evidence_pointers": [{"id":"e2","created_at":"2024-01-15","reviewer":"A. Reviewer"}], "reviewer": "A. Reviewer", "contested": false},
+    {"claim_id": "c3", "claim_text": "we commit to ongoing stewardship", "claim_type": "commitment_status", "intended_use": "public_share", "visibility_tier": "public", "evidence_pointers": [], "reviewer": null, "contested": false},
+    {"claim_id": "c4", "claim_text": "habitat impact: high", "claim_type": "impact", "intended_use": "public_share", "visibility_tier": "public", "evidence_pointers": [{"id":"e3","created_at":"2026-05-10","reviewer":null}], "reviewer": "S. Steward", "contested": false}
+  ]}}],
+  "excluded_inputs": [],
+  "build_instructions": {"path": "build-instructions.md"},
+  "acceptance_criteria": {
+    "description": ["CLAIMS COHERENCE REPORT header", "per-claim status using freshness windows + priority rules", "repair_path on non-ready claims", "SUMMARY counts", "error: on bad input"],
+    "test_file": {"name": "acceptance-test.py", "language": "python-stdlib", "path": "acceptance-test.py"}
+  },
+  "review_checks": ["tool runs cleanly stdlib-only", "passes acceptance tests", "no outputs hardcoded"],
+  "witness_record_seed": {"team": "Claims Coherence preflight", "date": "2026-05-25", "fields": ["what we brought","what we attempted","what worked","what did not work","what we learned","boundaries that remain"], "receipt_statement": "This record states what happened. It does not establish authority, approval, certification, legitimacy, community consent, or readiness for reuse."}
+}

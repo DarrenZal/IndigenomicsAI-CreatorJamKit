@@ -1,0 +1,30 @@
+{
+  "packet_id": "preflight-witness-record-validator",
+  "run_id": "wit-rec-qwen-3.6-35b-20260525T082932",
+  "model": "qwen-3.6-35b",
+  "finding": "no change",
+  "checks": [
+    {
+      "check": "tool runs cleanly with no network, credential, or database access",
+      "status": "pass",
+      "method": "the acceptance test ran in a temp dir with a scrubbed environment \u2014 no network/credentials were reachable"
+    },
+    {
+      "check": "passes every acceptance-criteria smoke test",
+      "status": "fail",
+      "method": "acceptance test result: 6/7"
+    },
+    {
+      "check": "no outputs hardcoded for specific inputs",
+      "status": "needs-human-review",
+      "method": "an automated check cannot confirm general correctness; a reviewer must read the generated code"
+    }
+  ],
+  "excluded_inputs_leak_check": {
+    "excluded_count": 0,
+    "leaked": false,
+    "hits": [],
+    "method": "exact-substring over the generated code and the test output; marker-only records carry no content in this packet, so a clean result also confirms none was fabricated"
+  },
+  "boundary": "reviewer-findings record what the automated checks saw. Items marked needs-human-review are not yet judged. This does not certify or approve the build."
+}

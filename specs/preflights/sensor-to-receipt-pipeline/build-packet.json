@@ -1,0 +1,26 @@
+{
+  "packet_version": "v0",
+  "packet_id": "preflight-sensor-to-receipt",
+  "team_spec": {
+    "team_name": "Sensor Receipts (preflight sample)",
+    "site": "preflight",
+    "vision": "Turn sensor readings or field observations into reviewable evidence packets with public-safe summaries.",
+    "spec": "Build a single-file Python tool, run as `python3 tool.py <observations_json_path>`. Reads JSON shaped { \"observations\": [ {\"observation_id\":\"...\",\"observation_type\":\"sensor_reading\"|\"field_note\"|\"photo\"|\"audio\"|\"manual_count\"|\"repair_event\",\"source\":\"...\",\"location\":\"...\",\"location_precision\":\"exact\"|\"site\"|\"region\",\"time\":\"YYYY-MM-DD\",\"measurement\":<number>|null,\"unit\":\"...\"|null,\"calibration_state\":\"calibrated\"|\"uncalibrated\"|\"unknown\",\"sensitive_location_flag\":<boolean>,\"review_state\":\"reviewed\"|\"pending\"|\"contested\"|\"not-applicable\"}, ...] }. For each observation, produce an evidence packet with these public-safe transformations: (a) if sensitive_location_flag is true OR location_precision is 'exact' with sensitive flag true, downgrade location to 'region-level only'; (b) attach calibration confidence: calibrated=high, uncalibrated=low, unknown=unknown; (c) if measurement is null, mark 'qualitative observation' instead of a measurement; (d) reject (skip) observations with empty observation_id, missing observation_type, or invalid date format. Print to stdout in this order: (1) header 'SENSOR-TO-RECEIPT EVIDENCE PACKETS (<N> kept / <M> total)'; (2) blank line; (3) for each kept observation in input order: '- id: <observation_id>', '  type: <observation_type>', '  source: <source>', '  location: <location_or_region-level only>', '  time: <time>', '  data: <measurement> <unit> | qualitative observation', '  calibration_confidence: <high|low|unknown>', '  review_state: <state>', then one blank line; (4) 'SUMMARY: <K> kept, <R> rejected, <S> sensitive-location-redacted of <M> total'. On invalid JSON, single 'error:' line, exit 0. Stdlib only.",
+    "build_target": "single-file CLI"
+  },
+  "freeze_record": {"frozen": true, "frozen_at": "2026-05-25", "frozen_by": "preflight", "facilitator_confirmed": {"consent_privacy_complete": true, "boundaries_reviewed": true, "public_private_status_confirmed": true, "ai_input_scope_confirmed": true, "build_path_confirmed": true, "witnessed_working_clear": true}},
+  "allowed_inputs": [{"name": "sample-observations.json", "kind": "json-data", "note": "small observation fixtures", "content": {"observations": [
+    {"observation_id": "obs-1", "observation_type": "sensor_reading", "source": "tide-sensor-7", "location": "Boundary Bay, transect A, point 12", "location_precision": "exact", "time": "2026-05-15", "measurement": 0.42, "unit": "m", "calibration_state": "calibrated", "sensitive_location_flag": false, "review_state": "reviewed"},
+    {"observation_id": "obs-2", "observation_type": "field_note", "source": "K. Tidesmith", "location": "exact GPS 49.2827,-123.1207", "location_precision": "exact", "time": "2026-05-16", "measurement": null, "unit": null, "calibration_state": "unknown", "sensitive_location_flag": true, "review_state": "pending"},
+    {"observation_id": "obs-3", "observation_type": "manual_count", "source": "B. Steward", "location": "Lighthouse Park public shoreline", "location_precision": "site", "time": "2026-05-17", "measurement": 142, "unit": "individuals", "calibration_state": "uncalibrated", "sensitive_location_flag": false, "review_state": "reviewed"},
+    {"observation_id": "", "observation_type": "field_note", "source": "x", "location": "x", "location_precision": "site", "time": "2026-05-17", "measurement": null, "unit": null, "calibration_state": "unknown", "sensitive_location_flag": false, "review_state": "pending"}
+  ]}}],
+  "excluded_inputs": [{"id": "sensitive-coords", "visibility": "marker-only", "boundary_type": "marker-only", "boundary": "Exact GPS coordinates of sensitive monitoring sites are downgraded to region-level in any output.", "private_content_included": false, "disallowed_use": ["embed","route","transform"], "note": "the spec applies this transformation; the marker confirms the discipline"}],
+  "build_instructions": {"path": "build-instructions.md"},
+  "acceptance_criteria": {
+    "description": ["header with kept/total counts","sensitive sites redacted to 'region-level only'","calibration_confidence mapped from calibration_state","null measurement → 'qualitative observation'","reject malformed observations","SUMMARY line with counts","error: on invalid input"],
+    "test_file": {"name": "acceptance-test.py", "language": "python-stdlib", "path": "acceptance-test.py"}
+  },
+  "review_checks": ["tool runs cleanly stdlib-only","passes acceptance tests","no exact coords for sensitive sites in output","no outputs hardcoded"],
+  "witness_record_seed": {"team": "Sensor Receipts preflight", "date": "2026-05-25", "fields": ["what we brought","what we attempted","what worked","what did not work","what we learned","boundaries that remain"], "receipt_statement": "This record states what happened. It does not establish authority, approval, certification, legitimacy, community consent, or readiness for reuse."}
+}

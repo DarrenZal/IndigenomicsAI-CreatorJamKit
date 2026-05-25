@@ -1,0 +1,30 @@
+{
+  "packet_id": "preflight-claims-evidence-coherence",
+  "run_id": "claims-coh-qwen-3.6-35b-20260525T083214",
+  "model": "qwen-3.6-35b",
+  "finding": "built clean",
+  "checks": [
+    {
+      "check": "tool runs cleanly stdlib-only",
+      "status": "needs-human-review",
+      "method": "no automatic check for this item"
+    },
+    {
+      "check": "passes acceptance tests",
+      "status": "pass",
+      "method": "acceptance test result: 8/8"
+    },
+    {
+      "check": "no outputs hardcoded",
+      "status": "needs-human-review",
+      "method": "an automated check cannot confirm general correctness; a reviewer must read the generated code"
+    }
+  ],
+  "excluded_inputs_leak_check": {
+    "excluded_count": 0,
+    "leaked": false,
+    "hits": [],
+    "method": "exact-substring over the generated code and the test output; marker-only records carry no content in this packet, so a clean result also confirms none was fabricated"
+  },
+  "boundary": "reviewer-findings record what the automated checks saw. Items marked needs-human-review are not yet judged. This does not certify or approve the build."
+}

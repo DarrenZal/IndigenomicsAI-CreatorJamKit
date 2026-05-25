@@ -1,0 +1,51 @@
+{
+  "packet_id": "preflight-witness-record-validator",
+  "packet_path": "/Users/darrenzal/projects/IndigenomicsAI-CreatorJamKit/specs/preflights/witness-record-interop-profile/build-packet.json",
+  "run_id": "wit-rec-qwen-3.6-35b-20260525T082932",
+  "run_at": "2026-05-25T08:29:32Z",
+  "mode": "TELUS build-attempt lane",
+  "model": {
+    "catalog_id": "qwen-3.6-35b",
+    "provider_config_model": "Qwen/Qwen3.6-35B-A3B"
+  },
+  "team": "Witness Validator (preflight sample)",
+  "frozen": true,
+  "attempt_1": {
+    "codegen_ok": true,
+    "codegen_elapsed_ms": 11858,
+    "code_extracted": true,
+    "error": null,
+    "test": {
+      "passed": 6,
+      "total": 7,
+      "failing": [
+        "__main__.WitnessValidatorTest.test_1_ok_record"
+      ]
+    }
+  },
+  "repair": {
+    "codegen_ok": true,
+    "codegen_elapsed_ms": 7412,
+    "code_extracted": true,
+    "error": null,
+    "test": {
+      "passed": 6,
+      "total": 7,
+      "failing": [
+        "__main__.WitnessValidatorTest.test_1_ok_record"
+      ]
+    }
+  },
+  "final": {
+    "code_source": "repair-attempt",
+    "test": {
+      "passed": 6,
+      "total": 7
+    },
+    "all_passed": false
+  },
+  "finding": "no change",
+  "finding_detail": "attempt 1: 6/7 passed; repair: 6/7 passed",
+  "final_code": "import sys\nimport json\nfrom datetime import datetime, timedelta\n\ndef main():\n    # Parse arguments\n    if len(sys.argv) < 2:\n        print(\"error: missing input file path\")\n        sys.exit(0)\n    \n    input_path = sys.argv[1]\n    as_of_str = None\n    if len(sys.argv) >= 3:\n        as_of_str = sys.argv[2]\n    \n    # Read and parse JSON\n    try:\n        with open(input_path, 'r') as f:\n            data = json.load(f)\n    except (IOError, OSError):\n        print(\"error: could not read file\")\n        sys.exit(0)\n    except json.JSONDecodeError:\n        print(\"error: invalid JSON\")\n        sys.exit(0)\n    \n    # Validate structure\n    if not isinstance(data, dict) or 'records' not in data:\n        print(\"error: invalid JSON structure\")\n        sys.exit(0)\n    \n    records = data['records']\n    if not isinstance(records, list):\n        print(\"error: invalid JSON structure\")\n        sys.exit(0)\n    \n    # Determine as_of date\n    if as_of_str:\n        try:\n            as_of = datetime.strptime(as_of_str, '%Y-%m-%d').date()\n        except ValueError:\n            print(\"error: invalid as_of date format\")\n            sys.exit(0)\n    else:\n        # Find latest created_at\n        latest_date = None\n        for record in records:\n            if 'created_at' in record:\n                try:\n                    d = datetime.strptime(record['created_at'], '%Y-%m-%d').date()\n                    if latest_date is None or d > latest_date:\n                        latest_date = d\n                except ValueError:\n                    pass\n        if latest_date:\n            as_of = latest_date\n        else:\n            as_of = datetime.strptime('2026-05-26', '%Y-%m-%d').date()\n    \n    # Process each record\n    findings_map = {}\n    for record in records:\n        record_id = record.get('record_id', 'unknown')\n        findings = []\n        \n        # 1. missing_consent\n        visibility_tier = record.get('visibility_tier', '')\n        permission_state = record.get('permission_state', '')\n        if visibility_tier == 'public' and permission_state != 'granted':\n            findings.append('missing_consent')\n        \n        # 2. stale_evidence\n        evidence_pointers = record.get('evidence_pointers', [])\n        if isinstance(evidence_pointers, list):\n            for ep in evidence_pointers:\n                if isinstance(ep, dict) and 'created_at' in ep:\n                    try:\n                        ep_date = datetime.strptime(ep['created_at'], '%Y-%m-%d').date()\n                        if (as_of - ep_date).days > 365:\n                            if 'stale_evidence' not in findings:\n                                findings.append('stale_evidence')\n                    except ValueError:\n                        pass\n        \n        # 3. overbroad_public_claim\n        record_type = record.get('record_type', '')\n        statement = record.get('statement', '')\n        if record_type in ('claim', 'attestation', 'promise') and visibility_tier == 'public' and len(statement) > 240:\n            findings.append('overbroad_public_claim')\n        \n        # 4. unsupported_authority_language\n        review_state = record.get('review_state', '')\n        if review_state != 'reviewed':\n            statement_lower = statement.lower()\n            authority_words = ['certified', 'authorized', 'legitimate', 'official']\n            for word in authority_words:\n                if word in statement_lower:\n                    if 'unsupported_authority_language' not in findings:\n                        findings.append('unsupported_authority_language')\n                    break\n        \n        # Sort findings alphabetically\n        findings.sort()\n        findings_map[record_id] = findings\n    \n    # Output\n    print(f\"WITNESS RECORD VALIDATION (as_of {as_of})\")\n    print()\n    \n    ok_count = 0\n    fail_count = 0\n    total_findings = 0\n    \n    for record in records:\n        record_id = record.get('record_id', 'unknown')\n        findings = findings_map[record_id]\n        if findings:\n            print(f\"{record_id}: {', '.join(findings)}\")\n            fail_count += 1\n            total_findings += len(findings)\n        else:\n            print(f\"{record_id}: OK\")\n            ok_count += 1\n    \n    print()\n    print(f\"SUMMARY: {ok_count} ok, {fail_count} with findings of {total_findings} total\")\n\nif __name__ == '__main__':\n    main()",
+  "boundary": "This build-attempt record states what happened. It does not establish that the tool is correct, complete, safe, or fit for reuse."
+}

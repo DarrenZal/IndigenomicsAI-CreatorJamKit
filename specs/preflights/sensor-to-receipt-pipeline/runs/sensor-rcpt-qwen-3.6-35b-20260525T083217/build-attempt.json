@@ -1,0 +1,37 @@
+{
+  "packet_id": "preflight-sensor-to-receipt",
+  "packet_path": "/Users/darrenzal/projects/IndigenomicsAI-CreatorJamKit/specs/preflights/sensor-to-receipt-pipeline/build-packet.json",
+  "run_id": "sensor-rcpt-qwen-3.6-35b-20260525T083217",
+  "run_at": "2026-05-25T08:32:17Z",
+  "mode": "TELUS build-attempt lane",
+  "model": {
+    "catalog_id": "qwen-3.6-35b",
+    "provider_config_model": "Qwen/Qwen3.6-35B-A3B"
+  },
+  "team": "Sensor Receipts (preflight sample)",
+  "frozen": true,
+  "attempt_1": {
+    "codegen_ok": true,
+    "codegen_elapsed_ms": 15217,
+    "code_extracted": true,
+    "error": null,
+    "test": {
+      "passed": 6,
+      "total": 6,
+      "failing": []
+    }
+  },
+  "repair": null,
+  "final": {
+    "code_source": "attempt-1",
+    "test": {
+      "passed": 6,
+      "total": 6
+    },
+    "all_passed": true
+  },
+  "finding": "built clean",
+  "finding_detail": "attempt 1 passed all acceptance tests; no repair needed",
+  "final_code": "import sys\nimport json\nimport re\n\ndef main():\n    if len(sys.argv) != 2:\n        print(\"error: invalid input\")\n        sys.exit(0)\n    \n    input_path = sys.argv[1]\n    \n    try:\n        with open(input_path, 'r') as f:\n            data = json.load(f)\n    except (json.JSONDecodeError, FileNotFoundError, IOError):\n        print(\"error: invalid input\")\n        sys.exit(0)\n    \n    if not isinstance(data, dict) or 'observations' not in data:\n        print(\"error: invalid input\")\n        sys.exit(0)\n    \n    observations = data['observations']\n    if not isinstance(observations, list):\n        print(\"error: invalid input\")\n        sys.exit(0)\n    \n    total = len(observations)\n    kept = []\n    rejected = 0\n    sensitive_redacted_count = 0\n    \n    time_pattern = re.compile(r'^\\d{4}-\\d{2}-\\d{2}$')\n    \n    for obs in observations:\n        if not isinstance(obs, dict):\n            rejected += 1\n            continue\n        \n        obs_id = obs.get('observation_id', None)\n        obs_type = obs.get('observation_type', None)\n        time_val = obs.get('time', None)\n        \n        # Reject if observation_id is empty\n        if obs_id is None or obs_id == '':\n            rejected += 1\n            continue\n        \n        # Reject if observation_type is missing\n        if obs_type is None:\n            rejected += 1\n            continue\n        \n        # Reject if time does not match YYYY-MM-DD\n        if time_val is None or not isinstance(time_val, str) or not time_pattern.match(time_val):\n            rejected += 1\n            continue\n        \n        # Process kept observation\n        location = obs.get('location', '')\n        sensitive_flag = obs.get('sensitive_location_flag', False)\n        location_precision = obs.get('location_precision', '')\n        \n        # Sensitive location redaction\n        # if sensitive_location_flag == true OR (location_precision == \"exact\" AND sensitive_location_flag == true)\n        # The second condition is redundant since it's a subset of the first.\n        # So effectively: if sensitive_location_flag is true, redact.\n        if sensitive_flag is True:\n            location = \"region-level only\"\n            sensitive_redacted_count += 1\n        \n        # Calibration confidence\n        cal_state = obs.get('calibration_state', 'unknown')\n        if cal_state == 'calibrated':\n            confidence = 'high'\n        elif cal_state == 'uncalibrated':\n            confidence = 'low'\n        else:\n            confidence = 'unknown'\n        \n        # Qualitative observation\n        measurement = obs.get('measurement', None)\n        unit = obs.get('unit', None)\n        \n        if measurement is None:\n            data_str = 'qualitative observation'\n        else:\n            # Format measurement and unit\n            # If unit is None, just show measurement\n            if unit is None:\n                data_str = str(measurement)\n            else:\n                data_str = f\"{measurement} {unit}\"\n        \n        review_state = obs.get('review_state', 'not-applicable')\n        source = obs.get('source', '')\n        \n        kept.append({\n            'id': obs_id,\n            'type': obs_type,\n            'source': source,\n            'location': location,\n            'time': time_val,\n            'data': data_str,\n            'calibration_confidence': confidence,\n            'review_state': review_state\n        })\n    \n    kept_count = len(kept)\n    rejected_count = rejected\n    \n    # Output\n    print(f\"SENSOR-TO-RECEIPT EVIDENCE PACKETS ({kept_count} kept / {total} total)\")\n    print()\n    \n    for i, obs in enumerate(kept):\n        print(f\"- id: {obs['id']}\")\n        print(f\"  type: {obs['type']}\")\n        print(f\"  source: {obs['source']}\")\n        print(f\"  location: {obs['location']}\")\n        print(f\"  time: {obs['time']}\")\n        print(f\"  data: {obs['data']}\")\n        print(f\"  calibration_confidence: {obs['calibration_confidence']}\")\n        print(f\"  review_state: {obs['review_state']}\")\n        \n        # Blank line between observation blocks (including after the last block, before SUMMARY)\n        print()\n    \n    print(f\"SUMMARY: {kept_count} kept, {rejected_count} rejected, {sensitive_redacted_count} sensitive-location-redacted of {total} total\")\n\nif __name__ == '__main__':\n    main()",
+  "boundary": "This build-attempt record states what happened. It does not establish that the tool is correct, complete, safe, or fit for reuse."
+}

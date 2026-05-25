@@ -1,8 +1,8 @@
 ---
 doc_kind: spec-index
-status: draft
+status: v0-1
 visibility: public_sample
-last_updated: 2026-05-17
+last_updated: 2026-05-25
 ---
 
 # Creator Jam Spec Backlog
@@ -15,26 +15,41 @@ This directory is a menu of participant-safe specs for the Creator Jam. Each car
 
 These are sample/public working specs. Do not add protected, Nation-specific, ceremonial, participant-private, credential-bearing, or authority-bound material unless the right authority has explicitly approved that exact use.
 
+## Tag legend
+
+- **Difficulty**: 🟢 good-first-build (single-file CLI, 2–4h) · 🟡 intermediate (single-file CLI but trickier rules) · 🔵 composition-required (works with another spec) · ⚪ doc-shaped (UI / mock / kanban)
+- **Boundary weight**: light · medium · heavy (heavy = many simultaneous consent/visibility/refusal markers)
+- **Preflighted**: ✅ both models clean · ⚠️ one model clean · ❌ both partial · — not yet
+- See `preflights/README.md` for full preflight data; `docs/MENTOR_FIELD_GUIDE.md` for spec-to-team-shape recommendations.
+
 ## Ready-To-Jam Specs
 
-| Area | Spec | Good for |
-| --- | --- | --- |
-| Witnessing and claims | [Witness Record Interop Profile](witness-record-interop-profile.md) | Portable witness records across claims, receipts, attestations, and promises. |
-| Witnessing and claims | [Claims Evidence Coherence Report](claims-evidence-coherence-report.md) | Reviewing whether a public claim has enough evidence, freshness, and permission context. |
-| Commitment pooling | [Commitment Pool Route Diagnostic](commitment-pool-route-diagnostic.md) | Checking whether offers, needs, commitments, and refusals can route into a pool. |
-| Flow funding | [Flow Funding Frontier Map](flow-funding-frontier-map.md) | Mapping the next fundable edges between dreams, commitments, pools, receipts, and retroactive support. |
-| Flow funding | [Untracked Allocation Ledger](untracked-allocation-ledger.md) | Recording allocations without turning every gift into surveillance or performance accounting. |
-| Bioregional mapping | [Bioregional Mapping Layer Board](bioregional-mapping-layer-board.md) | Building a multi-layer place map that can hold ecological, cultural, economic, and governance layers with consent boundaries. |
-| Bioregional insights | [Living Atlas Coherence Packet](living-atlas-coherence-packet.md) | Turning workshop or field contributions into a reviewable atlas packet. |
-| Bioregional insights | [Bioregional Insights Briefing](bioregional-insights-briefing.md) | Producing steward-reviewed briefs from atlas records, evidence, and sensor signals. |
-| Insurance and risk | [Risk and Insurance Coherence Map](risk-insurance-coherence-map.md) | Showing resilience risk signals without becoming a premium, underwriting, or actuarial model. |
-| Indigenomics AI web app | [Participant Gateway](indigenomics-ai-participant-gateway.md) | Improving the invite, token, consent, and entry flow for jam participants. |
-| Indigenomics AI web app | [Graph Chat Witness Sidecar](indigenomics-ai-graph-chat-witness-sidecar.md) | Connecting graph/chat/citation surfaces to claims, evidence, and witness records. |
-| Sensors | [Sensor To Receipt Pipeline](sensor-to-receipt-pipeline.md) | Turning sensor or field observations into reviewable evidence packets and receipts. |
-| Private learning | [Private Learning Ledger](private-learning-ledger.md) | Letting systems learn from reviewed actions without training on raw protected data. |
-| Commitments | [Dream To Fulfillment Board](dream-to-fulfillment-board.md) | Tracking dreams, offers, needs, promises, witnessed commitments, and fulfillment receipts. |
-| Public receipt surfaces | [Receipt Wall Story Gallery](receipt-wall-story-gallery.md) | Publishing sample-safe witness rollups and build stories. |
-| Spec-driven development | [Spec Composer Bundle Board](spec-composer-bundle-board.md) | Composing participant spec fragments into candidate collective builds. |
+| Area | Spec | Difficulty | Boundary | Preflight | Good for |
+| --- | --- | --- | --- | --- | --- |
+| Witnessing and claims | [Witness Record Interop Profile](witness-record-interop-profile.md) | 🟢 | medium | ❌ | Portable witness records across claims, receipts, attestations, and promises. |
+| Witnessing and claims | [Claims Evidence Coherence Report](claims-evidence-coherence-report.md) | 🟡 | medium | ⚠️ Qwen | Reviewing whether a public claim has enough evidence, freshness, and permission context. |
+| Commitment pooling | [Commitment Pool Route Diagnostic](commitment-pool-route-diagnostic.md) | 🔵 | light | (sample at `examples/sample-submission-commitment-pool/`) | Checking whether offers, needs, commitments, and refusals can route into a pool. |
+| Flow funding | [Flow Funding Frontier Map](flow-funding-frontier-map.md) | 🔵 | medium | — | Mapping the next fundable edges between dreams, commitments, pools, receipts, and retroactive support. |
+| Flow funding | [Untracked Allocation Ledger](untracked-allocation-ledger.md) | 🟢 | heavy | ✅ | Recording allocations without turning every gift into surveillance or performance accounting. |
+| Bioregional mapping | [Bioregional Mapping Layer Board](bioregional-mapping-layer-board.md) | 🔵 | heavy | — | Building a multi-layer place map that can hold ecological, cultural, economic, and governance layers with consent boundaries. |
+| Bioregional insights | [Living Atlas Coherence Packet](living-atlas-coherence-packet.md) | 🔵 | heavy | — | Turning workshop or field contributions into a reviewable atlas packet. |
+| Bioregional insights | [Bioregional Insights Briefing](bioregional-insights-briefing.md) | 🔵 | medium | — | Producing steward-reviewed briefs from atlas records, evidence, and sensor signals. |
+| Insurance and risk | [Risk and Insurance Coherence Map](risk-insurance-coherence-map.md) | 🔵 | medium | — | Showing resilience risk signals without becoming a premium, underwriting, or actuarial model. |
+| Indigenomics AI web app | [Participant Gateway](indigenomics-ai-participant-gateway.md) | ⚪ | medium | — | Improving the invite, token, consent, and entry flow for jam participants. |
+| Indigenomics AI web app | [Graph Chat Witness Sidecar](indigenomics-ai-graph-chat-witness-sidecar.md) | ⚪ | medium | — | Connecting graph/chat/citation surfaces to claims, evidence, and witness records. |
+| Sensors | [Sensor To Receipt Pipeline](sensor-to-receipt-pipeline.md) | 🟢 | heavy | ✅ | Turning sensor or field observations into reviewable evidence packets and receipts. |
+| Private learning | [Private Learning Ledger](private-learning-ledger.md) | 🔵 | heavy | — | Letting systems learn from reviewed actions without training on raw protected data. |
+| Commitments | [Dream To Fulfillment Board](dream-to-fulfillment-board.md) | 🔵 | light | — | Tracking dreams, offers, needs, promises, witnessed commitments, and fulfillment receipts. |
+| Public receipt surfaces | [Receipt Wall Story Gallery](receipt-wall-story-gallery.md) | 🟡 | medium | (sample at `examples/sample-submission-receipt-wall/`) | Publishing sample-safe witness rollups and build stories. |
+| Spec-driven development | [Spec Composer Bundle Board](spec-composer-bundle-board.md) | ⚪ | light | — | Composing participant spec fragments into candidate collective builds. |
+
+**Good-first-builds spot-checked by TELUS lane overnight (Mon 2026-05-25)**:
+- ✅ **Sensor To Receipt Pipeline** — both Gemma + Qwen 6/6 clean
+- ✅ **Untracked Allocation Ledger** — both Gemma + Qwen 6/6 clean
+- ⚠️ **Claims Evidence Coherence Report** — Qwen 8/8 clean; Gemma 7/8 partial (recommend specifying Qwen, or sharpen the as_of CLI arg handling)
+- ❌ **Witness Record Interop Profile** — both partial on as_of CLI arg handling (sharpen spec before recommending)
+
+See `preflights/` for the full data.
 
 ## Composition Prompts
 

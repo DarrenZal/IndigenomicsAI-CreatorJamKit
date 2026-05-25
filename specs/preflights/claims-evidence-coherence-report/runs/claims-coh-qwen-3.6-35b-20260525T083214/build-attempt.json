@@ -1,0 +1,37 @@
+{
+  "packet_id": "preflight-claims-evidence-coherence",
+  "packet_path": "/Users/darrenzal/projects/IndigenomicsAI-CreatorJamKit/specs/preflights/claims-evidence-coherence-report/build-packet.json",
+  "run_id": "claims-coh-qwen-3.6-35b-20260525T083214",
+  "run_at": "2026-05-25T08:32:14Z",
+  "mode": "TELUS build-attempt lane",
+  "model": {
+    "catalog_id": "qwen-3.6-35b",
+    "provider_config_model": "Qwen/Qwen3.6-35B-A3B"
+  },
+  "team": "Claims Coherence (preflight sample)",
+  "frozen": true,
+  "attempt_1": {
+    "codegen_ok": true,
+    "codegen_elapsed_ms": 13840,
+    "code_extracted": true,
+    "error": null,
+    "test": {
+      "passed": 8,
+      "total": 8,
+      "failing": []
+    }
+  },
+  "repair": null,
+  "final": {
+    "code_source": "attempt-1",
+    "test": {
+      "passed": 8,
+      "total": 8
+    },
+    "all_passed": true
+  },
+  "finding": "built clean",
+  "finding_detail": "attempt 1 passed all acceptance tests; no repair needed",
+  "final_code": "import sys\nimport json\nfrom datetime import datetime, date\n\ndef main():\n    if len(sys.argv) < 2 or len(sys.argv) > 3:\n        print(\"error: usage: python3 tool.py <claims_json_path> [as_of YYYY-MM-DD]\")\n        sys.exit(0)\n\n    claims_path = sys.argv[1]\n    as_of_str = None\n    if len(sys.argv) == 3:\n        as_of_str = sys.argv[2]\n\n    # Parse as_of\n    as_of_date = None\n    if as_of_str:\n        try:\n            as_of_date = datetime.strptime(as_of_str, \"%Y-%m-%d\").date()\n        except ValueError:\n            print(\"error: invalid as_of date format\")\n            sys.exit(0)\n\n    # Read input\n    try:\n        with open(claims_path, 'r') as f:\n            data = json.load(f)\n    except (FileNotFoundError, json.JSONDecodeError, IOError) as e:\n        print(\"error: failed to read or parse input file\")\n        sys.exit(0)\n\n    if not isinstance(data, dict) or \"claims\" not in data:\n        print(\"error: invalid input structure\")\n        sys.exit(0)\n\n    claims = data[\"claims\"]\n    if not isinstance(claims, list):\n        print(\"error: claims must be a list\")\n        sys.exit(0)\n\n    # Determine as_of date\n    if as_of_date is None:\n        latest_date = None\n        for claim in claims:\n            if \"evidence_pointers\" in claim and isinstance(claim[\"evidence_pointers\"], list):\n                for ep in claim[\"evidence_pointers\"]:\n                    if \"created_at\" in ep:\n                        try:\n                            d = datetime.strptime(ep[\"created_at\"], \"%Y-%m-%d\").date()\n                            if latest_date is None or d > latest_date:\n                                latest_date = d\n                        except ValueError:\n                            pass\n        if latest_date is not None:\n            as_of_date = latest_date\n        else:\n            as_of_date = date(2026, 5, 26)\n\n    # Freshness windows\n    freshness_windows = {\n        \"descriptive\": 730,\n        \"commitment_status\": 180,\n        \"outcome\": 365,\n        \"impact\": 365,\n        \"risk\": 180,\n        \"eligibility\": 180\n    }\n\n    # Process claims\n    results = []\n    for claim in claims:\n        claim_id = claim.get(\"claim_id\", \"unknown\")\n        claim_type = claim.get(\"claim_type\", \"descriptive\")\n        intended_use = claim.get(\"intended_use\", \"internal\")\n        visibility_tier = claim.get(\"visibility_tier\", \"private\")\n        evidence_pointers = claim.get(\"evidence_pointers\", [])\n        reviewer = claim.get(\"reviewer\", None)\n        contested = claim.get(\"contested\", False)\n\n        # Determine status\n        status = None\n        repair_path = None\n\n        # 1. do_not_compute\n        if visibility_tier == \"not-for-computation\":\n            status = \"do_not_compute\"\n            repair_path = \"preserve as marker-only; do not compute\"\n        # 2. visibility_blocked\n        elif visibility_tier in (\"private\", \"local-only\") and intended_use == \"public_share\":\n            status = \"visibility_blocked\"\n            repair_path = \"choose: lower intended_use, or raise visibility (requires consent)\"\n        # 3. missing_evidence\n        elif not evidence_pointers or (intended_use == \"public_share\" and reviewer is None and visibility_tier == \"public\"):\n            status = \"missing_evidence\"\n            repair_path = \"attach evidence and named reviewer\"\n        # 4. contested\n        elif contested:\n            status = \"contested\"\n            repair_path = \"invite contesting party to review\"\n        # 5. stale_evidence\n        else:\n            days = freshness_windows.get(claim_type, 180)\n            all_stale = True\n            if evidence_pointers:\n                for ep in evidence_pointers:\n                    if \"created_at\" in ep:\n                        try:\n                            ep_date = datetime.strptime(ep[\"created_at\"], \"%Y-%m-%d\").date()\n                            if (as_of_date - ep_date).days <= days:\n                                all_stale = False\n                                break\n                        except ValueError:\n                            pass\n            else:\n                # No evidence pointers, but we already checked missing_evidence above\n                # This case should not be reached if missing_evidence is checked first\n                all_stale = True\n            \n            if all_stale:\n                status = \"stale_evidence\"\n                repair_path = f\"refresh evidence within freshness window for {claim_type}\"\n        # 6. needs_review\n        if status is None:\n            needs_review = False\n            if evidence_pointers:\n                for ep in evidence_pointers:\n                    if ep.get(\"reviewer\") is None and visibility_tier == \"public\":\n                        needs_review = True\n                        break\n            if needs_review:\n                status = \"needs_review\"\n                repair_path = \"assign a named reviewer\"\n        \n        # 7. ready_for_use\n        if status is None:\n            status = \"ready_for_use\"\n            repair_path = None\n\n        results.append({\n            \"claim_id\": claim_id,\n            \"claim_type\": claim_type,\n            \"status\": status,\n            \"repair_path\": repair_path\n        })\n\n    # Count summary\n    ok_count = sum(1 for r in results if r[\"status\"] == \"ready_for_use\")\n    fail_count = len(results) - ok_count\n    total_count = len(results)\n\n    # Output\n    print(f\"CLAIMS COHERENCE REPORT (as_of {as_of_date.strftime('%Y-%m-%d')})\")\n    print()\n    for r in results:\n        print(f\"{r['claim_id']} [{r['claim_type']}]: {r['status']}\")\n        if r['repair_path']:\n            print(f\"repair_path: {r['repair_path']}\")\n    print()\n    print(f\"SUMMARY: {ok_count} ready / {fail_count} needing work of {total_count} total\")\n\nif __name__ == \"__main__\":\n    main()",
+  "boundary": "This build-attempt record states what happened. It does not establish that the tool is correct, complete, safe, or fit for reuse."
+}

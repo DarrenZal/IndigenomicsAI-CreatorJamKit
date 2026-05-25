@@ -1,0 +1,37 @@
+{
+  "packet_id": "preflight-untracked-allocation",
+  "packet_path": "/Users/darrenzal/projects/IndigenomicsAI-CreatorJamKit/specs/preflights/untracked-allocation-ledger/build-packet.json",
+  "run_id": "untracked-led-qwen-3.6-35b-20260525T083219",
+  "run_at": "2026-05-25T08:32:19Z",
+  "mode": "TELUS build-attempt lane",
+  "model": {
+    "catalog_id": "qwen-3.6-35b",
+    "provider_config_model": "Qwen/Qwen3.6-35B-A3B"
+  },
+  "team": "Untracked Ledger (preflight sample)",
+  "frozen": true,
+  "attempt_1": {
+    "codegen_ok": true,
+    "codegen_elapsed_ms": 31904,
+    "code_extracted": true,
+    "error": null,
+    "test": {
+      "passed": 6,
+      "total": 6,
+      "failing": []
+    }
+  },
+  "repair": null,
+  "final": {
+    "code_source": "attempt-1",
+    "test": {
+      "passed": 6,
+      "total": 6
+    },
+    "all_passed": true
+  },
+  "finding": "built clean",
+  "finding_detail": "attempt 1 passed all acceptance tests; no repair needed",
+  "final_code": "import sys\nimport json\n\ndef main():\n    if len(sys.argv) != 2:\n        print(\"error: invalid input\")\n        return\n\n    input_path = sys.argv[1]\n\n    try:\n        with open(input_path, 'r') as f:\n            data = json.load(f)\n    except Exception:\n        print(\"error: invalid input\")\n        return\n\n    if not isinstance(data, dict) or 'allocations' not in data:\n        print(\"error: invalid input\")\n        return\n\n    allocations = data['allocations']\n    if not isinstance(allocations, list):\n        print(\"error: invalid input\")\n        return\n\n    # Validate each allocation\n    valid_types = {\"money\", \"time\", \"material\", \"introduction\", \"care\", \"knowledge\", \"infrastructure\"}\n    valid_visibilities = {\"public\", \"private\"}\n\n    for alloc in allocations:\n        if not isinstance(alloc, dict):\n            print(\"error: invalid input\")\n            return\n        \n        required_fields = ['allocation_id', 'allocation_type', 'public_summary', \n                          'recipient_visibility', 'funder_visibility', 'amount_visibility',\n                          'recipient', 'funder', 'amount', 'unit', 'not_tracked_reason', 'withdrawn']\n        \n        for field in required_fields:\n            if field not in alloc:\n                print(\"error: invalid input\")\n                return\n        \n        if alloc['allocation_type'] not in valid_types:\n            print(\"error: invalid input\")\n            return\n        \n        if alloc['recipient_visibility'] not in valid_visibilities:\n            print(\"error: invalid input\")\n            return\n        \n        if alloc['funder_visibility'] not in valid_visibilities:\n            print(\"error: invalid input\")\n            return\n        \n        if alloc['amount_visibility'] not in valid_visibilities:\n            print(\"error: invalid input\")\n            return\n        \n        if not isinstance(alloc['withdrawn'], bool):\n            print(\"error: invalid input\")\n            return\n        \n        # amount can be number or null\n        if alloc['amount'] is not None and not isinstance(alloc['amount'], (int, float)):\n            print(\"error: invalid input\")\n            return\n        \n        # unit can be string or null\n        if alloc['unit'] is not None and not isinstance(alloc['unit'], str):\n            print(\"error: invalid input\")\n            return\n        \n        # not_tracked_reason can be string or null\n        if alloc['not_tracked_reason'] is not None and not isinstance(alloc['not_tracked_reason'], str):\n            print(\"error: invalid input\")\n            return\n\n    total = len(allocations)\n    withdrawn_count = sum(1 for a in allocations if a['withdrawn'])\n    not_tracked_count = sum(1 for a in allocations if not a['withdrawn'] and a['not_tracked_reason'] is not None)\n    public_count = sum(1 for a in allocations if not a['withdrawn'] and a['not_tracked_reason'] is None)\n\n    print(f\"UNTRACKED ALLOCATION LEDGER ({public_count} public / {not_tracked_count} not-tracked / {withdrawn_count} withdrawn of {total} total)\")\n    print()\n\n    # Process entries\n    entries = []\n    for alloc in allocations:\n        if alloc['withdrawn']:\n            continue\n        \n        entry_lines = []\n        entry_lines.append(f\"- {alloc['allocation_id']} [{alloc['allocation_type']}]:\")\n        entry_lines.append(f\"    summary: {alloc['public_summary']}\")\n        \n        if alloc['not_tracked_reason'] is not None:\n            entry_lines.append(f\"    not-tracked-by-design: {alloc['not_tracked_reason']}\")\n        else:\n            # Not tracked by design is null, so show visibility-based fields\n            if alloc['recipient_visibility'] == 'public':\n                entry_lines.append(f\"    recipient: {alloc['recipient']}\")\n            \n            if alloc['funder_visibility'] == 'public':\n                entry_lines.append(f\"    funder: {alloc['funder']}\")\n            \n            if alloc['amount_visibility'] == 'public' and alloc['amount'] is not None:\n                amount_str = str(alloc['amount'])\n                unit_str = alloc['unit'] if alloc['unit'] else ''\n                if unit_str:\n                    entry_lines.append(f\"    amount: {amount_str} {unit_str}\")\n                else:\n                    entry_lines.append(f\"    amount: {amount_str}\")\n        \n        entries.append(entry_lines)\n\n    # Print entries\n    for i, entry_lines in enumerate(entries):\n        for line in entry_lines:\n            print(line)\n        print()\n\n    # Aggregate by type\n    type_counts = {}\n    for alloc in allocations:\n        if alloc['withdrawn'] or alloc['not_tracked_reason'] is not None:\n            continue\n        alloc_type = alloc['allocation_type']\n        type_counts[alloc_type] = type_counts.get(alloc_type, 0) + 1\n\n    print(\"AGGREGATE BY TYPE:\")\n    for alloc_type in sorted(type_counts.keys()):\n        print(f\"  {alloc_type}: {type_counts[alloc_type]} entries\")\n\nif __name__ == \"__main__\":\n    main()",
+  "boundary": "This build-attempt record states what happened. It does not establish that the tool is correct, complete, safe, or fit for reuse."
+}
