@@ -54,6 +54,7 @@ record interop profile.
 | --- | --- | --- | --- |
 | Agent coordination | [Agent Coordination Bus v0](agent-coordination-bus-v0/) | implemented + tested + demoed | File-based JSONL bus implementing the 7 wire types from `coordination-protocol-v0.md`. Per-team append-only logs, per-type validators, audit. |
 | Agentic pipeline | [Agentic Spec Drafting Loop v0](agentic-spec-drafting-loop-v0/) | implemented + tested + demoed | 5-stage orchestrator wiring Prompts 1+2+4 + composition engine to take a loose offering and produce a frozen `agentic-build-packet-v0.json`. Stub + gateway model sources. |
+| Publication surface | [Witness Record Append v0](witness-record-append-v0/) | implemented + tested + demoed | CLI for appending validated witness records to a public wall. `--confirm-publish` gate, receipt-statement check, overclaim validator, refusal-as-record support. |
 
 **Good-first-builds spot-checked by TELUS lane overnight (Mon 2026-05-25)**:
 - ✅ **Sensor To Receipt Pipeline** — both Gemma + Qwen 6/6 clean

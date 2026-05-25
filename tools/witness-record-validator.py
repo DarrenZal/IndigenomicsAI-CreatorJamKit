@@ -67,12 +67,26 @@ DISCLAIMER_CONTEXT_REGEX = re.compile(
 )
 
 
-def _is_in_disclaimer_context(line: str, col: int) -> bool:
-    """Check whether the matched word is part of a disclaimer (e.g., 'does not certify')."""
-    # If the line contains a disclaimer phrase anywhere, treat the whole line as protected.
-    # This is intentionally loose — false-negatives on overclaim are better than false-
-    # positives on the receipt-statement boilerplate that EVERY good record carries.
-    return bool(DISCLAIMER_CONTEXT_REGEX.search(line))
+def _is_in_disclaimer_context(line: str, col: int, prev_lines: list = None) -> bool:
+    """Check whether the matched word is part of a disclaimer (e.g., 'does not certify').
+
+    Multi-line disclaimer statements like:
+
+        This record states what happened. It does not establish authority,
+        approval, certification, legitimacy, community consent, or readiness
+        for reuse.
+
+    span 3 lines. The disclaimer-context regex matches on line 1; the
+    over-claim words appear on line 2. So we look at a 3-line lookback
+    window: the line itself + the two preceding lines.
+    """
+    if DISCLAIMER_CONTEXT_REGEX.search(line):
+        return True
+    if prev_lines:
+        for prev in prev_lines[-2:]:  # check up to 2 lines back
+            if DISCLAIMER_CONTEXT_REGEX.search(prev):
+                return True
+    return False
 
 
 def validate(text: str) -> dict:
@@ -83,7 +97,8 @@ def validate(text: str) -> dict:
         regex = re.compile(pattern, re.IGNORECASE)
         for i, line in enumerate(lines, 1):
             for m in regex.finditer(line):
-                if _is_in_disclaimer_context(line, m.start()):
+                prev_lines = lines[max(0, i - 3):i - 1]  # up to 2 preceding lines
+                if _is_in_disclaimer_context(line, m.start(), prev_lines):
                     continue  # skip — this is the boilerplate disclaimer, not overclaim
                 findings.append({
                     "line": i,
