@@ -2,7 +2,7 @@
 
 **Status:** v0.2 — Draft. Iteration of v0.1 incorporating K's review feedback (`kIndigenomics/AI` issue #21).
 **Sibling artifacts:** `examples/witnessing/sample-receipt-v0.2.json` (worked example), `examples/witnessing/witnessing-receipt-v0.2.schema.json` (JSON Schema).
-**Supersedes:** [`witnessing-receipt-schema-v0.1.md`](./witnessing-receipt-schema-v0.1.md) (kept as historical reference).
+**Supersedes:** `witnessing-receipt-schema-v0.1.md` (v0.1 not in this kit; iteration history preserved in commit log).
 **Composes with:** `docs/specs/multi-witness-inference-v0.md` (S4/S5/S6/S7 outputs bind to AI witnesses), `docs/methodology/ruddick-commitment-pool-bridge.md` (CVLE × RVLFHG × commitment tuple as upstream formalism), `docs/synthesis/gift-obligation-and-return-obligations-v0.1.md` (R1-R5 + N4 + MS + HM rules as witness obligations).
 
 ## Changelog from v0.1
