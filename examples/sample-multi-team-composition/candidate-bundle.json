@@ -1,0 +1,117 @@
+{
+  "bundle_version": "v0",
+  "bundle_id": "composed-team-eelgrass-observers-with-team-kelp-monitors",
+  "composed_from": [
+    "team-spec-eelgrass-observers-01",
+    "team-spec-kelp-monitors-01"
+  ],
+  "teams": [
+    {
+      "id": "team-eelgrass-observers",
+      "name": "Eelgrass Observers",
+      "site": "Vancouver",
+      "members": [
+        {
+          "display": "A. Tidesmith"
+        },
+        {
+          "display": "B. Salal"
+        }
+      ]
+    },
+    {
+      "id": "team-kelp-monitors",
+      "name": "Kelp Monitors",
+      "site": "Vancouver",
+      "members": [
+        {
+          "display": "C. Driftwood"
+        },
+        {
+          "display": "D. Eelgrass"
+        }
+      ]
+    }
+  ],
+  "combined_offerings": [
+    {
+      "id": "o1",
+      "title": "Boundary Bay observations",
+      "contributor_display": "A. Tidesmith",
+      "visibility": "public",
+      "included_in_build": true,
+      "cleared_text": "Public-shoreline observation log.",
+      "_from_team": "team-eelgrass-observers"
+    },
+    {
+      "id": "o1",
+      "title": "Lighthouse Park blade-length log",
+      "contributor_display": "C. Driftwood",
+      "visibility": "public",
+      "included_in_build": true,
+      "cleared_text": "Public-shoreline measurements.",
+      "_from_team": "team-kelp-monitors"
+    },
+    {
+      "id": "o2",
+      "title": "Salish Sea kelp survey 2026 dataset (restricted release)",
+      "contributor_display": null,
+      "visibility": "team-only",
+      "included_in_build": false,
+      "cleared_text": "(not cleared \u2014 held by team pending Nation-side authorization)",
+      "_from_team": "team-kelp-monitors"
+    }
+  ],
+  "combined_boundaries": [
+    {
+      "id": "team-eelgrass-observers::b1",
+      "label": "Observer contact details",
+      "boundary_type": "not-for-AI",
+      "marker_text": "Observer emails held by team",
+      "private_content_included": false,
+      "disallowed_use": [
+        "embed",
+        "send-to-ai"
+      ],
+      "_from_team": "team-eelgrass-observers"
+    },
+    {
+      "id": "team-kelp-monitors::b1",
+      "label": "Restricted-release survey",
+      "boundary_type": "protected",
+      "marker_text": "Subject to ongoing Nation-side review",
+      "private_content_included": false,
+      "disallowed_use": [
+        "summarize",
+        "embed",
+        "transform",
+        "send-to-ai"
+      ],
+      "_from_team": "team-kelp-monitors"
+    }
+  ],
+  "intersected_authorization": {
+    "visible_to_facilitators": true,
+    "display_scope": "partial",
+    "ai_input_scope": "partial",
+    "reuse_scope": "ask-first",
+    "authorization_notes": "composed: both teams must re-confirm before any build attempt or display"
+  },
+  "conflicts_surfaced": [
+    {
+      "kind": "ai_input_scope_mismatch",
+      "team_a_value": "whole",
+      "team_b_value": "partial",
+      "resolution": "intersected to most restrictive: partial"
+    },
+    {
+      "kind": "display_scope_mismatch",
+      "team_a_value": "whole",
+      "team_b_value": "partial",
+      "resolution": "intersected to most restrictive: partial"
+    }
+  ],
+  "bundle_status": "candidate",
+  "freeze_note": "each team must re-confirm their offerings + boundaries in the composed context",
+  "boundary": "This bundle is a CANDIDATE composition. It has not been frozen for build. Both teams must re-confirm before any build attempt runs against this bundle."
+}

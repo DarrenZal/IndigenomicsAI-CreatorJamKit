@@ -1,0 +1,50 @@
+{
+  "schema_version": "team-submission-v0",
+  "submission_id": "team-spec-kelp-monitors-01",
+  "created_at": "2026-05-25T09:15:00-07:00",
+  "updated_at": "2026-05-25T10:45:00-07:00",
+  "surface": "shared-doc",
+  "team": {
+    "id": "team-kelp-monitors",
+    "name": "Kelp Monitors",
+    "site": "Vancouver",
+    "members": [{"display": "C. Driftwood"}, {"display": "D. Eelgrass"}]
+  },
+  "vision": {
+    "text": "Build a simple tool that turns a season of kelp-blade length measurements into a per-site summary.",
+    "prompt": "What should exist?"
+  },
+  "spec": {
+    "text": "Single-file Python CLI; reads JSON of measurements; prints per-site mean blade length.",
+    "prompt": "What does the team want made real?"
+  },
+  "source_offerings": [
+    {"id": "o1", "title": "Lighthouse Park blade-length log", "contributor_display": "C. Driftwood", "visibility": "public", "included_in_build": true, "cleared_text": "Public-shoreline measurements."},
+    {"id": "o2", "title": "Salish Sea kelp survey 2026 dataset (restricted release)", "contributor_display": null, "visibility": "team-only", "included_in_build": false, "cleared_text": "(not cleared — held by team pending Nation-side authorization)"}
+  ],
+  "boundaries": [
+    {"id": "b1", "label": "Restricted-release survey", "boundary_type": "protected", "marker_text": "Subject to ongoing Nation-side review", "private_content_included": false, "disallowed_use": ["summarize", "embed", "transform", "send-to-ai"]}
+  ],
+  "build_request": {"path": "telus-lane", "target": "single-file-cli", "notes": "stdlib only"},
+  "witnessed_working": {
+    "description": "Tuesday: show the tool reading a public-shoreline fixture and printing per-site means.",
+    "acceptance_criteria": ["prints per-site mean", "drops malformed entries", "handles empty input"]
+  },
+  "help_wanted": [],
+  "authorization": {
+    "visible_to_facilitators": true,
+    "display_scope": "partial",
+    "display_allowed_parts": ["public-shoreline results only"],
+    "ai_input_scope": "partial",
+    "ai_allowed_parts": ["public-shoreline measurements"],
+    "reuse_scope": "team-only",
+    "authorization_notes": "Restricted-release survey is named only as a boundary; not cleared for any build."
+  },
+  "freeze": {
+    "status": "frozen",
+    "frozen_by": "team + facilitator",
+    "frozen_at": "2026-05-25T10:45:00-07:00",
+    "facilitator_confirmed": {"consent_privacy_complete": true, "boundaries_reviewed": true, "public_private_status_confirmed": true, "ai_input_scope_confirmed": true, "build_path_confirmed": true, "witnessed_working_clear": true},
+    "change_policy": "new ideas require re-freeze"
+  }
+}

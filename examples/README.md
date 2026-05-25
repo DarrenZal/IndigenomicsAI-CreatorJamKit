@@ -16,8 +16,17 @@ These are end-to-end worked examples: `team-submission-v0` → frozen → `agent
 
 | Example | Purpose | When to show |
 |---|---|---|
+| [`sample-multi-team-composition/`](sample-multi-team-composition/) | Two team submissions → candidate bundle (real `composition-merger.py` output with conflicts surfaced) | Two teams realize mid-Monday their offerings overlap |
 | [`composition-v0/`](composition-v0/) | Simulated participant offerings becoming candidate bundles | Team wants to understand how multiple offerings combine |
 | [`open-kit-collective-demo/`](open-kit-collective-demo/) | End-to-end Open Kit prototype path | Team wants to see the full receipt/witness loop |
+
+## Refusal + withdrawal patterns
+
+| Example | Pattern shown | When to show |
+|---|---|---|
+| [`sample-refusal-only/`](sample-refusal-only/) | A submission that does NOT lead to a build (`ai_input_scope: none`, `build_request.path: note-only`) | Team is considering "we shouldn't build this" as the contribution |
+| [`sample-withdrawal-flow/`](sample-withdrawal-flow/) | Withdrawal propagation across surfaces + downstream summaries | Contributor reconsiders an offering they cleared |
+| [`consent-review-desk/`](consent-review-desk/) | Refusal, review, withdrawal, and display approval workflow | Team needs the full consent lifecycle pattern |
 
 ## Pattern examples
 

@@ -1,0 +1,18 @@
+{
+  "records": [
+    {"record_id": "r1", "kind": "build-attempt", "team": "kelp-watch"},
+    {"record_id": "r2", "kind": "witness-record", "team": "kelp-watch"},
+    {"record_id": "r3", "kind": "offering", "contributor": "A. Tidesmith"},
+    {"record_id": "r4", "kind": "build-attempt", "team": "story-receipts"}
+  ],
+  "surfaces": [
+    {"surface_id": "receipt-wall", "kind": "public-display", "shown_records": ["r1", "r2"]},
+    {"surface_id": "agentic-build-packet-kelp-watch", "kind": "build-packet", "cleared_records": ["r3"]},
+    {"surface_id": "aggregate-jam-summary", "kind": "summary", "uses_records": ["r1", "r2", "r4"]},
+    {"surface_id": "story-receipts-wall", "kind": "public-display", "shown_records": ["r4"]}
+  ],
+  "downstream_summaries": [
+    {"summary_id": "indigenomics-jam-2026-public-rollup", "rolls_up_from": ["receipt-wall", "aggregate-jam-summary"]},
+    {"summary_id": "future-jam-organizers-report", "rolls_up_from": ["aggregate-jam-summary"]}
+  ]
+}

@@ -37,15 +37,21 @@ def merge_two(sub_a: dict, sub_b: dict) -> dict:
     for o in offerings_b:
         all_offerings.append({**o, "_from_team": b_team.get("id") or b_team.get("name")})
 
-    # Boundaries — UNION (boundaries compose by adding constraints, never relaxing)
+    # Boundaries — UNION namespaced by team (boundaries compose by adding constraints, never relaxing)
+    # Two teams can each have a "b1" — they are DIFFERENT boundaries; preserve both.
+    a_team_id = a_team.get("id") or a_team.get("name") or "team-a"
+    b_team_id = b_team.get("id") or b_team.get("name") or "team-b"
     all_boundaries = []
-    seen = set()
-    for b in (sub_a.get("boundaries", []) + sub_b.get("boundaries", [])):
-        key = b.get("id") or (b.get("label"), b.get("boundary_type"))
-        if key not in seen:
-            seen.add(key)
-            all_boundaries.append(b)
-        # If key seen, we keep the first occurrence — boundaries are not relaxed by composition
+    for b in sub_a.get("boundaries", []):
+        b_copy = dict(b)
+        b_copy["_from_team"] = a_team_id
+        b_copy["id"] = f"{a_team_id}::{b.get('id') or b.get('label', 'unnamed')}"
+        all_boundaries.append(b_copy)
+    for b in sub_b.get("boundaries", []):
+        b_copy = dict(b)
+        b_copy["_from_team"] = b_team_id
+        b_copy["id"] = f"{b_team_id}::{b.get('id') or b.get('label', 'unnamed')}"
+        all_boundaries.append(b_copy)
 
     # Authorization — INTERSECT (most restrictive wins)
     a_auth = sub_a.get("authorization", {}) or {}

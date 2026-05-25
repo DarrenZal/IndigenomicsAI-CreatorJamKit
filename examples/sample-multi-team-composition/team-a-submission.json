@@ -1,0 +1,49 @@
+{
+  "schema_version": "team-submission-v0",
+  "submission_id": "team-spec-eelgrass-observers-01",
+  "created_at": "2026-05-25T09:00:00-07:00",
+  "updated_at": "2026-05-25T10:30:00-07:00",
+  "surface": "shared-doc",
+  "team": {
+    "id": "team-eelgrass-observers",
+    "name": "Eelgrass Observers",
+    "site": "Vancouver",
+    "members": [{"display": "A. Tidesmith"}, {"display": "B. Salal"}]
+  },
+  "vision": {
+    "text": "A simple tool that collects citizen observations of eelgrass canopy and produces a public-safe site rollup.",
+    "prompt": "What should exist, and what does it make visible, felt, or possible?"
+  },
+  "spec": {
+    "text": "Single-file Python CLI that reads a JSON of observations and prints a per-site rollup with canopy percent means.",
+    "prompt": "What does the team want made real over the two days?"
+  },
+  "source_offerings": [
+    {"id": "o1", "title": "Boundary Bay observations", "contributor_display": "A. Tidesmith", "visibility": "public", "included_in_build": true, "cleared_text": "Public-shoreline observation log."}
+  ],
+  "boundaries": [
+    {"id": "b1", "label": "Observer contact details", "boundary_type": "not-for-AI", "marker_text": "Observer emails held by team", "private_content_included": false, "disallowed_use": ["embed", "send-to-ai"]}
+  ],
+  "build_request": {"path": "telus-lane", "target": "single-file-cli", "notes": "stdlib only"},
+  "witnessed_working": {
+    "description": "Tuesday: show the tool reading a small fixture and printing the per-site rollup.",
+    "acceptance_criteria": ["prints header", "computes means", "honors drop rules"]
+  },
+  "help_wanted": [],
+  "authorization": {
+    "visible_to_facilitators": true,
+    "display_scope": "whole",
+    "display_allowed_parts": [],
+    "ai_input_scope": "whole",
+    "ai_allowed_parts": [],
+    "reuse_scope": "ask-first",
+    "authorization_notes": "Public ecological framings only."
+  },
+  "freeze": {
+    "status": "frozen",
+    "frozen_by": "team + facilitator",
+    "frozen_at": "2026-05-25T10:30:00-07:00",
+    "facilitator_confirmed": {"consent_privacy_complete": true, "boundaries_reviewed": true, "public_private_status_confirmed": true, "ai_input_scope_confirmed": true, "build_path_confirmed": true, "witnessed_working_clear": true},
+    "change_policy": "new ideas require re-freeze"
+  }
+}
