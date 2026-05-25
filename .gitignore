@@ -19,3 +19,6 @@ coverage/
 *.mp4
 *.mov
 *.pdf
+
+# Ephemeral participant run output (jam meta-spec CLIs)
+runs/
