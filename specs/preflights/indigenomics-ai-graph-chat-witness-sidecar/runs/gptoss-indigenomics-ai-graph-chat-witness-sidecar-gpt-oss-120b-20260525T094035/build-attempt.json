@@ -1,0 +1,37 @@
+{
+  "packet_id": "preflight-graph-chat-sidecar",
+  "packet_path": "/Users/darrenzal/projects/IndigenomicsAI-CreatorJamKit/specs/preflights/indigenomics-ai-graph-chat-witness-sidecar/build-packet.json",
+  "run_id": "gptoss-indigenomics-ai-graph-chat-witness-sidecar-gpt-oss-120b-20260525T094035",
+  "run_at": "2026-05-25T09:40:35Z",
+  "mode": "TELUS build-attempt lane",
+  "model": {
+    "catalog_id": "gpt-oss-120b",
+    "provider_config_model": "gpt-oss:120b"
+  },
+  "team": "Sidecar (preflight sample)",
+  "frozen": true,
+  "attempt_1": {
+    "codegen_ok": true,
+    "codegen_elapsed_ms": 12581,
+    "code_extracted": true,
+    "error": null,
+    "test": {
+      "passed": 4,
+      "total": 4,
+      "failing": []
+    }
+  },
+  "repair": null,
+  "final": {
+    "code_source": "attempt-1",
+    "test": {
+      "passed": 4,
+      "total": 4
+    },
+    "all_passed": true
+  },
+  "finding": "built clean",
+  "finding_detail": "attempt 1 passed all acceptance tests; no repair needed",
+  "final_code": "#!/usr/bin/env python3\nimport sys\nimport json\n\ndef main():\n    if len(sys.argv) < 2:\n        print(\"error: missing input file path\")\n        sys.exit(0)\n\n    input_path = sys.argv[1]\n    try:\n        with open(input_path, 'r', encoding='utf-8') as f:\n            data = json.load(f)\n    except Exception as e:\n        print(f\"error: {e}\")\n        sys.exit(0)\n\n    cited_claim_ids = data.get(\"cited_claim_ids\", [])\n    available_claims = data.get(\"available_claims\", [])\n\n    # Build a mapping from claim_id to reviewer (may be None)\n    claim_to_reviewer = {}\n    for claim in available_claims:\n        cid = claim.get(\"claim_id\")\n        if cid is not None:\n            claim_to_reviewer[cid] = claim.get(\"reviewer\")\n\n    cited_set = set(cited_claim_ids)\n\n    cited_count = len(cited_claim_ids)\n    valid_cited = sum(1 for cid in cited_claim_ids if cid in claim_to_reviewer)\n    uncited_with_evidence = sum(1 for cid in claim_to_reviewer if cid not in cited_set)\n    unreviewed_cited = sum(1 for cid in cited_claim_ids if claim_to_reviewer.get(cid) is None)\n\n    print(\"CITATION COVERAGE SIDECAR\")\n    print()\n    print(f\"- cited: {cited_count}\")\n    print(f\"- valid_cited: {valid_cited}\")\n    print(f\"- uncited_with_evidence: {uncited_with_evidence}\")\n    print(f\"- unreviewed_cited: {unreviewed_cited}\")\n    print()\n    if unreviewed_cited > 0:\n        print(f\"WARNING: {unreviewed_cited} cited claims have no named reviewer.\")\n\nif __name__ == \"__main__\":\n    main()",
+  "boundary": "This build-attempt record states what happened. It does not establish that the tool is correct, complete, safe, or fit for reuse."
+}

@@ -1,0 +1,9 @@
+test_t1_basic (__main__.PreflightTest.test_t1_basic) ... ok
+test_t2_stage_order (__main__.PreflightTest.test_t2_stage_order) ... ok
+test_t3_drop_unknown (__main__.PreflightTest.test_t3_drop_unknown) ... ok
+test_zz_invalid_json (__main__.PreflightTest.test_zz_invalid_json) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.096s
+
+OK

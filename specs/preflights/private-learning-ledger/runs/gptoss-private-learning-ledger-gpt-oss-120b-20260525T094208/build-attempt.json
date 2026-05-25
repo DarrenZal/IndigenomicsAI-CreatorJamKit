@@ -1,0 +1,37 @@
+{
+  "packet_id": "preflight-private-learning",
+  "packet_path": "/Users/darrenzal/projects/IndigenomicsAI-CreatorJamKit/specs/preflights/private-learning-ledger/build-packet.json",
+  "run_id": "gptoss-private-learning-ledger-gpt-oss-120b-20260525T094208",
+  "run_at": "2026-05-25T09:42:08Z",
+  "mode": "TELUS build-attempt lane",
+  "model": {
+    "catalog_id": "gpt-oss-120b",
+    "provider_config_model": "gpt-oss:120b"
+  },
+  "team": "Private Learning (preflight sample)",
+  "frozen": true,
+  "attempt_1": {
+    "codegen_ok": true,
+    "codegen_elapsed_ms": 16066,
+    "code_extracted": true,
+    "error": null,
+    "test": {
+      "passed": 4,
+      "total": 4,
+      "failing": []
+    }
+  },
+  "repair": null,
+  "final": {
+    "code_source": "attempt-1",
+    "test": {
+      "passed": 4,
+      "total": 4
+    },
+    "all_passed": true
+  },
+  "finding": "built clean",
+  "finding_detail": "attempt 1 passed all acceptance tests; no repair needed",
+  "final_code": "#!/usr/bin/env python3\nimport sys\nimport json\nfrom collections import Counter\n\ndef main():\n    if len(sys.argv) < 2:\n        print(\"error: missing input file path\")\n        return\n\n    path = sys.argv[1]\n    try:\n        with open(path, 'r', encoding='utf-8') as f:\n            data = json.load(f)\n    except Exception as e:\n        print(f\"error: {e}\")\n        return\n\n    actions = data.get(\"actions\", [])\n    total = len(actions)\n    public_actions = [a for a in actions if a.get(\"steward_visibility\") == \"public\"]\n    private_actions = [a for a in actions if a.get(\"steward_visibility\") == \"private\"]\n    public_count = len(public_actions)\n    private_count = len(private_actions)\n\n    # Header\n    print(f\"PRIVATE LEARNING LEDGER ({public_count} public / {private_count} hidden of {total} total)\")\n    print()\n\n    # Action lines in input order\n    for act in actions:\n        aid = act.get(\"action_id\", \"\")\n        atype = act.get(\"action_type\", \"\")\n        visibility = act.get(\"steward_visibility\", \"\")\n        if visibility == \"public\":\n            outcome = act.get(\"outcome_summary\", \"\")\n            print(f\"{aid} [{atype}]: {outcome}\")\n        else:\n            print(f\"{aid} [{atype}]: held by steward\")\n    print()\n\n    # Counts by action type\n    type_counter = Counter()\n    for act in actions:\n        atype = act.get(\"action_type\", \"\")\n        type_counter[atype] += 1\n\n    print(\"BY ACTION TYPE:\")\n    for atype in sorted(type_counter):\n        print(f\"  {atype}: {type_counter[atype]}\")\n    print()\n\n    # Boundary statement\n    print(\"BOUNDARY: private_notes never appear in this output. Counts do not imply judgment.\")\n\nif __name__ == \"__main__\":\n    main()",
+  "boundary": "This build-attempt record states what happened. It does not establish that the tool is correct, complete, safe, or fit for reuse."
+}

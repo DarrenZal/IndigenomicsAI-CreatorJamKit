@@ -1,0 +1,11 @@
+test_1_basic_packet (__main__.SensorReceiptTest.test_1_basic_packet) ... ok
+test_2_sensitive_redacted (__main__.SensorReceiptTest.test_2_sensitive_redacted) ... ok
+test_3_qualitative (__main__.SensorReceiptTest.test_3_qualitative) ... ok
+test_4_reject_malformed (__main__.SensorReceiptTest.test_4_reject_malformed) ... ok
+test_5_calibration_mapping (__main__.SensorReceiptTest.test_5_calibration_mapping) ... ok
+test_6_invalid_json (__main__.SensorReceiptTest.test_6_invalid_json) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.360s
+
+OK

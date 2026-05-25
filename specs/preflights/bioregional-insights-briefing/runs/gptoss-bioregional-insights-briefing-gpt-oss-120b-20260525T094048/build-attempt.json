@@ -1,0 +1,37 @@
+{
+  "packet_id": "preflight-bioregion-briefing",
+  "packet_path": "/Users/darrenzal/projects/IndigenomicsAI-CreatorJamKit/specs/preflights/bioregional-insights-briefing/build-packet.json",
+  "run_id": "gptoss-bioregional-insights-briefing-gpt-oss-120b-20260525T094048",
+  "run_at": "2026-05-25T09:40:48Z",
+  "mode": "TELUS build-attempt lane",
+  "model": {
+    "catalog_id": "gpt-oss-120b",
+    "provider_config_model": "gpt-oss:120b"
+  },
+  "team": "Briefing (preflight sample)",
+  "frozen": true,
+  "attempt_1": {
+    "codegen_ok": true,
+    "codegen_elapsed_ms": 11464,
+    "code_extracted": true,
+    "error": null,
+    "test": {
+      "passed": 3,
+      "total": 3,
+      "failing": []
+    }
+  },
+  "repair": null,
+  "final": {
+    "code_source": "attempt-1",
+    "test": {
+      "passed": 3,
+      "total": 3
+    },
+    "all_passed": true
+  },
+  "finding": "built clean",
+  "finding_detail": "attempt 1 passed all acceptance tests; no repair needed",
+  "final_code": "#!/usr/bin/env python3\nimport sys\nimport json\n\ndef main():\n    if len(sys.argv) < 2:\n        # No input path provided; nothing to do per spec\n        return\n\n    input_path = sys.argv[1]\n\n    try:\n        with open(input_path, 'r', encoding='utf-8') as f:\n            data = json.load(f)\n    except (OSError, json.JSONDecodeError):\n        print('error:')\n        sys.exit(0)\n\n    # Extract required fields with defaults to avoid crashes if missing\n    briefing_title = data.get('briefing_title', '')\n    as_of = data.get('as_of', '')\n    claims = data.get('claims', [])\n    evidence_count = data.get('evidence_count', 0)\n    observation_count = data.get('observation_count', 0)\n    reviewer = data.get('reviewer')\n\n    lines = [\n        f\"# {briefing_title}\",\n        \"\",\n        f\"_as of {as_of}_\",\n        \"\",\n        \"## Inputs\",\n        \"\",\n        f\"- claims: {len(claims)}\",\n        \"\",\n        f\"- evidence pointers: {evidence_count}\",\n        \"\",\n        f\"- observations: {observation_count}\",\n        \"\",\n        \"## Reviewer\",\n        \"\",\n        \"NOT YET REVIEWED\" if reviewer is None else str(reviewer),\n        \"\",\n        \"## Boundary\",\n        \"\",\n        \"This briefing summarizes inputs. It does not certify, score, or authorize any action.\"\n    ]\n\n    output = \"\\n\".join(lines)\n    print(output)\n\nif __name__ == \"__main__\":\n    main()",
+  "boundary": "This build-attempt record states what happened. It does not establish that the tool is correct, complete, safe, or fit for reuse."
+}

@@ -1,0 +1,37 @@
+{
+  "packet_id": "preflight-sensor-to-receipt",
+  "packet_path": "/Users/darrenzal/projects/IndigenomicsAI-CreatorJamKit/specs/preflights/sensor-to-receipt-pipeline/build-packet.json",
+  "run_id": "gptoss-sensor-to-receipt-pipeline-gpt-oss-120b-20260525T094100",
+  "run_at": "2026-05-25T09:41:00Z",
+  "mode": "TELUS build-attempt lane",
+  "model": {
+    "catalog_id": "gpt-oss-120b",
+    "provider_config_model": "gpt-oss:120b"
+  },
+  "team": "Sensor Receipts (preflight sample)",
+  "frozen": true,
+  "attempt_1": {
+    "codegen_ok": true,
+    "codegen_elapsed_ms": 21359,
+    "code_extracted": true,
+    "error": null,
+    "test": {
+      "passed": 6,
+      "total": 6,
+      "failing": []
+    }
+  },
+  "repair": null,
+  "final": {
+    "code_source": "attempt-1",
+    "test": {
+      "passed": 6,
+      "total": 6
+    },
+    "all_passed": true
+  },
+  "finding": "built clean",
+  "finding_detail": "attempt 1 passed all acceptance tests; no repair needed",
+  "final_code": "#!/usr/bin/env python3\nimport sys\nimport json\nimport re\n\ndef load_json(path):\n    try:\n        with open(path, 'r', encoding='utf-8') as f:\n            return json.load(f)\n    except Exception as e:\n        print(f\"error: {e}\")\n        sys.exit(0)\n\ndef is_valid_date(date_str):\n    return bool(re.fullmatch(r'\\d{4}-\\d{2}-\\d{2}', date_str))\n\ndef main():\n    if len(sys.argv) < 2:\n        print(\"error: missing input file path\")\n        sys.exit(0)\n\n    data = load_json(sys.argv[1])\n\n    if not isinstance(data, dict) or 'observations' not in data:\n        print(\"error: invalid input structure\")\n        sys.exit(0)\n\n    observations = data['observations']\n    if not isinstance(observations, list):\n        print(\"error: observations should be a list\")\n        sys.exit(0)\n\n    total = len(observations)\n    kept = []\n    rejected = 0\n    redacted_count = 0\n\n    for obs in observations:\n        # Basic validation for required fields\n        obs_id = obs.get('observation_id', '')\n        obs_type = obs.get('observation_type')\n        time_str = obs.get('time', '')\n\n        if not obs_id or obs_type is None or not isinstance(obs_type, str):\n            rejected += 1\n            continue\n        if not isinstance(time_str, str) or not is_valid_date(time_str):\n            rejected += 1\n            continue\n\n        # Passed filters, now transform\n        transformed = {}\n\n        transformed['observation_id'] = obs_id\n        transformed['observation_type'] = obs_type\n        transformed['source'] = obs.get('source', '')\n        location = obs.get('location', '')\n        location_precision = obs.get('location_precision', '')\n        sensitive_flag = obs.get('sensitive_location_flag', False)\n\n        # Sensitive location redaction\n        if sensitive_flag is True:\n            location = \"region-level only\"\n            redacted_count += 1\n        transformed['location'] = location\n\n        transformed['time'] = time_str\n\n        measurement = obs.get('measurement')\n        unit = obs.get('unit')\n        if measurement is None:\n            transformed['data'] = \"qualitative observation\"\n        else:\n            if unit is None:\n                transformed['data'] = f\"{measurement}\"\n            else:\n                transformed['data'] = f\"{measurement} {unit}\"\n\n        cal_state = obs.get('calibration_state', 'unknown')\n        cal_map = {\n            'calibrated': 'high',\n            'uncalibrated': 'low',\n            'unknown': 'unknown'\n        }\n        transformed['calibration_confidence'] = cal_map.get(cal_state, 'unknown')\n        transformed['review_state'] = obs.get('review_state', '')\n\n        kept.append(transformed)\n\n    kept_count = len(kept)\n\n    # Output\n    out_lines = []\n    out_lines.append(f\"SENSOR-TO-RECEIPT EVIDENCE PACKETS ({kept_count} kept / {total} total)\")\n    out_lines.append(\"\")  # blank line\n\n    for obs in kept:\n        out_lines.append(f\"- id: {obs['observation_id']}\")\n        out_lines.append(f\"  type: {obs['observation_type']}\")\n        out_lines.append(f\"  source: {obs['source']}\")\n        out_lines.append(f\"  location: {obs['location']}\")\n        out_lines.append(f\"  time: {obs['time']}\")\n        out_lines.append(f\"  data: {obs['data']}\")\n        out_lines.append(f\"  calibration_confidence: {obs['calibration_confidence']}\")\n        out_lines.append(f\"  review_state: {obs['review_state']}\")\n        out_lines.append(\"\")  # blank line after each block\n\n    out_lines.append(f\"SUMMARY: {kept_count} kept, {rejected} rejected, {redacted_count} sensitive-location-redacted of {total} total\")\n\n    sys.stdout.write(\"\\n\".join(out_lines))\n\nif __name__ == \"__main__\":\n    main()",
+  "boundary": "This build-attempt record states what happened. It does not establish that the tool is correct, complete, safe, or fit for reuse."
+}

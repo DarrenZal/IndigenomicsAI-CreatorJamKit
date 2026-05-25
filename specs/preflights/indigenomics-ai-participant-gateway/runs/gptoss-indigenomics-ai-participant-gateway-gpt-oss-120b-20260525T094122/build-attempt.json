@@ -1,0 +1,37 @@
+{
+  "packet_id": "preflight-participant-gateway",
+  "packet_path": "/Users/darrenzal/projects/IndigenomicsAI-CreatorJamKit/specs/preflights/indigenomics-ai-participant-gateway/build-packet.json",
+  "run_id": "gptoss-indigenomics-ai-participant-gateway-gpt-oss-120b-20260525T094122",
+  "run_at": "2026-05-25T09:41:22Z",
+  "mode": "TELUS build-attempt lane",
+  "model": {
+    "catalog_id": "gpt-oss-120b",
+    "provider_config_model": "gpt-oss:120b"
+  },
+  "team": "Gateway Decision (preflight sample)",
+  "frozen": true,
+  "attempt_1": {
+    "codegen_ok": true,
+    "codegen_elapsed_ms": 15042,
+    "code_extracted": true,
+    "error": null,
+    "test": {
+      "passed": 4,
+      "total": 4,
+      "failing": []
+    }
+  },
+  "repair": null,
+  "final": {
+    "code_source": "attempt-1",
+    "test": {
+      "passed": 4,
+      "total": 4
+    },
+    "all_passed": true
+  },
+  "finding": "built clean",
+  "finding_detail": "attempt 1 passed all acceptance tests; no repair needed",
+  "final_code": "#!/usr/bin/env python3\nimport sys\nimport json\n\ndef main():\n    if len(sys.argv) < 2:\n        print(\"error: missing input path\")\n        return\n\n    path = sys.argv[1]\n    try:\n        with open(path, 'r', encoding='utf-8') as f:\n            data = json.load(f)\n    except Exception:\n        print(\"error: invalid JSON\")\n        return\n\n    # Extract fields with sensible defaults\n    name = data.get('name', '')\n    email = data.get('email', '')\n    requested_spec = data.get('requested_spec', '')\n    consent_team_visibility = data.get('consent_team_visibility', False)\n    consent_ai_use = data.get('consent_ai_use', '')\n    flag_protected = data.get('flag_protected', False)\n\n    # Decision logic\n    if not name or not email:\n        decision = 'REFUSE'\n        reason = 'no name or no email'\n    elif flag_protected:\n        decision = 'HOLD'\n        reason = 'protected flag \u2014 needs steward review'\n    elif consent_ai_use == 'none' and requested_spec:\n        decision = 'HOLD'\n        reason = 'AI use refused but spec requested \u2014 clarify'\n    elif consent_team_visibility and consent_ai_use in ('public', 'all'):\n        decision = 'ROUTE'\n        reason = 'all required consents present'\n    else:\n        decision = 'HOLD'\n        reason = 'missing required field'\n\n    next_action_map = {\n        'ROUTE': 'forward submission to selected spec',\n        'HOLD': 'hold for steward review and follow-up',\n        'REFUSE': 'ask for completed contact info'\n    }\n    next_action = next_action_map[decision]\n\n    # Output\n    print(f'DECISION: {decision}')\n    print()\n    print(f'reason: {reason}')\n    print()\n    print(f'next_action: {next_action}')\n\nif __name__ == '__main__':\n    main()",
+  "boundary": "This build-attempt record states what happened. It does not establish that the tool is correct, complete, safe, or fit for reuse."
+}

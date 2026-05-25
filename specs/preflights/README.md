@@ -7,7 +7,9 @@ date: 2026-05-25
 
 # Spec Preflights — TELUS Lane Build Status
 
-**14 of 14 ready-to-jam specs preflighted overnight** (Mon 2026-05-25). Each spec was given a minimal CLI-subset packet, then run through the TELUS build lane (Gemma 4 31B + Qwen 3.6 35B). This index tells mentors which specs are spot-checked good for Monday.
+**14 of 14 ready-to-jam specs preflighted overnight on 3 models** (Mon 2026-05-25). Each spec was given a minimal CLI-subset packet, then run through the TELUS build lane: Gemma 4 31B + Qwen 3.6 35B + gpt-oss 120B. This index tells mentors which specs are spot-checked good for Monday.
+
+For the **3-model comparison table** (including gpt-oss 120B which sometimes catches edge cases the smaller models miss), see [`3-model-comparison.md`](3-model-comparison.md).
 
 ## Headline result
 

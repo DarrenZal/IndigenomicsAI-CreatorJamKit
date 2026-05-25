@@ -1,0 +1,49 @@
+{
+  "packet_id": "sample-commitment-pool-route",
+  "packet_path": "/Users/darrenzal/projects/IndigenomicsAI-CreatorJamKit/examples/sample-submission-commitment-pool/sample-agentic-build-packet-v0.json",
+  "run_id": "gptoss-pool-route-gpt-oss-120b-20260525T094455",
+  "run_at": "2026-05-25T09:44:55Z",
+  "mode": "TELUS build-attempt lane",
+  "model": {
+    "catalog_id": "gpt-oss-120b",
+    "provider_config_model": "gpt-oss:120b"
+  },
+  "team": "Pool Routing",
+  "frozen": true,
+  "attempt_1": {
+    "codegen_ok": true,
+    "codegen_elapsed_ms": 25775,
+    "code_extracted": true,
+    "error": null,
+    "test": {
+      "passed": 6,
+      "total": 7,
+      "failing": [
+        "__main__.PoolRouteTest.test_6_idle_and_no_supply"
+      ]
+    }
+  },
+  "repair": {
+    "codegen_ok": true,
+    "codegen_elapsed_ms": 15311,
+    "code_extracted": true,
+    "error": null,
+    "test": {
+      "passed": 7,
+      "total": 7,
+      "failing": []
+    }
+  },
+  "final": {
+    "code_source": "repair-attempt",
+    "test": {
+      "passed": 7,
+      "total": 7
+    },
+    "all_passed": true
+  },
+  "finding": "fixed",
+  "finding_detail": "attempt 1: 6/7 passed; repair: 7/7 passed; repair fixed: test_6_idle_and_no_supply",
+  "final_code": "#!/usr/bin/env python3\nimport sys\nimport json\nimport re\n\ndef normalize_kind(kind):\n    if not isinstance(kind, str):\n        return ''\n    kind = kind.strip()\n    kind = re.sub(r'\\s+', ' ', kind)\n    return kind.lower()\n\ndef is_number(value):\n    return isinstance(value, (int, float)) and not isinstance(value, bool)\n\ndef fmt_number(val):\n    if isinstance(val, (int, float)) and val == int(val):\n        return str(int(val))\n    return str(val)\n\ndef main():\n    if len(sys.argv) < 2:\n        print(\"error: missing input path\")\n        return\n    path = sys.argv[1]\n    try:\n        with open(path, 'r', encoding='utf-8') as f:\n            data = json.load(f)\n    except Exception:\n        print(\"error:\")\n        return\n\n    pool_id = data.get(\"pool_id\", \"\")\n    offers = data.get(\"offers\", [])\n    needs = data.get(\"needs\", [])\n\n    per_kind = {}\n    blockers = []  # (contributor, kind, units)\n\n    def ensure_kind(k):\n        if k not in per_kind:\n            per_kind[k] = {\n                \"offered_units\": 0,\n                \"contributors\": set(),\n                \"needed_units\": 0,\n                \"requesters\": set(),\n            }\n\n    # Process offers\n    for offer in offers:\n        kind_raw = offer.get(\"kind\")\n        kind = normalize_kind(kind_raw)\n        units = offer.get(\"units\")\n        if not is_number(units) or kind == \"\":\n            continue  # drop invalid offer\n        consent = offer.get(\"consent_to_route\", False)\n        contributor = offer.get(\"contributor\", \"\")\n        if consent is True:\n            ensure_kind(kind)\n            per_kind[kind][\"offered_units\"] += units\n            per_kind[kind][\"contributors\"].add(contributor)\n        else:\n            # withheld consent, not dropped, appears in blockers\n            blockers.append((contributor, kind, units))\n\n    # Process needs\n    for need in needs:\n        kind_raw = need.get(\"kind\")\n        kind = normalize_kind(kind_raw)\n        units = need.get(\"units\")\n        if not is_number(units) or kind == \"\":\n            continue  # drop invalid need\n        requester = need.get(\"requester\", \"\")\n        ensure_kind(kind)\n        per_kind[kind][\"needed_units\"] += units\n        per_kind[kind][\"requesters\"].add(requester)\n\n    # Output header\n    em_dash = \"\\u2014\"\n    print(f\"POOL ROUTING DIAGNOSTIC {em_dash} {pool_id}\")\n    print()\n\n    # Per-kind blocks\n    for kind in sorted(per_kind.keys()):\n        entry = per_kind[kind]\n        O = entry[\"offered_units\"]\n        C = len(entry[\"contributors\"])\n        D = entry[\"needed_units\"]\n        R = len(entry[\"requesters\"])\n\n        # Determine status according to spec\n        if D > 0:\n            if O == 0:\n                status = \"no supply\"\n            elif O >= D:\n                status = \"fits\"\n            else:\n                diff = D - O\n                status = f\"short by {fmt_number(diff)} units\"\n        else:  # D == 0\n            if O > 0:\n                status = \"no demand\"\n            else:\n                status = \"idle\"\n\n        print(f\"kind: {kind}\")\n        print(f\"offered: {fmt_number(O)} units ({C} contributors consenting)\")\n        print(f\"needed: {fmt_number(D)} units ({R} requesters)\")\n        print(f\"status: {status}\")\n        print()  # blank line after block\n\n    # Blockers footer\n    if not blockers:\n        print(\"BLOCKERS: none\")\n    else:\n        print(\"BLOCKERS:\")\n        blockers.sort(key=lambda x: (x[0], x[1]))\n        for contributor, kind, units in blockers:\n            print(f\"- {contributor} withheld consent on {kind} ({fmt_number(units)} units)\")\n\nif __name__ == \"__main__\":\n    main()",
+  "boundary": "This build-attempt record states what happened. It does not establish that the tool is correct, complete, safe, or fit for reuse."
+}

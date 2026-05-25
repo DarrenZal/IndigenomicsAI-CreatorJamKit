@@ -1,0 +1,20 @@
+test_1_fits_status (__main__.PoolRouteTest.test_1_fits_status) ... ok
+test_2_short_status (__main__.PoolRouteTest.test_2_short_status) ... ok
+test_3_blockers_listed (__main__.PoolRouteTest.test_3_blockers_listed) ... ok
+test_4_normalization (__main__.PoolRouteTest.test_4_normalization) ... ok
+test_5_drop_bad_data (__main__.PoolRouteTest.test_5_drop_bad_data) ... ok
+test_6_idle_and_no_supply (__main__.PoolRouteTest.test_6_idle_and_no_supply) ... FAIL
+test_7_invalid_json (__main__.PoolRouteTest.test_7_invalid_json) ... ok
+
+======================================================================
+FAIL: test_6_idle_and_no_supply (__main__.PoolRouteTest.test_6_idle_and_no_supply)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/3c/6p_c61tj3y5ccqzmvfxmdg080000gn/T/m2-lite-test-dydyofz5/test_tool.py", line 137, in test_6_idle_and_no_supply
+    self.assertIn("status: no supply", proc.stdout, "needs but no offers for 'boats'")
+AssertionError: 'status: no supply' not found in 'POOL ROUTING DIAGNOSTIC — p6\n\nkind: boats\noffered: 0 units (0 contributors consenting)\nneeded: 2 units (1 requesters)\nstatus: short by 2 units\n\nkind: data\noffered: 5 units (1 contributors consenting)\nneeded: 0 units (0 requesters)\nstatus: no demand\n\nBLOCKERS: none\n' : needs but no offers for 'boats'
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.394s
+
+FAILED (failures=1)

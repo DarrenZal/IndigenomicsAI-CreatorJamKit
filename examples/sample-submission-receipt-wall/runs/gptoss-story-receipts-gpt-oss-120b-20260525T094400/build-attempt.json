@@ -1,0 +1,50 @@
+{
+  "packet_id": "sample-story-receipts",
+  "packet_path": "/Users/darrenzal/projects/IndigenomicsAI-CreatorJamKit/examples/sample-submission-receipt-wall/sample-agentic-build-packet-v0.json",
+  "run_id": "gptoss-story-receipts-gpt-oss-120b-20260525T094400",
+  "run_at": "2026-05-25T09:44:00Z",
+  "mode": "TELUS build-attempt lane",
+  "model": {
+    "catalog_id": "gpt-oss-120b",
+    "provider_config_model": "gpt-oss:120b"
+  },
+  "team": "Story Receipts",
+  "frozen": true,
+  "attempt_1": {
+    "codegen_ok": true,
+    "codegen_elapsed_ms": 31433,
+    "code_extracted": true,
+    "error": null,
+    "test": {
+      "passed": 5,
+      "total": 7,
+      "failing": [
+        "__main__.StoryReceiptsTest.test_1_happy_path_two_public_one_withheld",
+        "__main__.StoryReceiptsTest.test_2_multi_line_receipt_each_line_quoted"
+      ]
+    }
+  },
+  "repair": {
+    "codegen_ok": true,
+    "codegen_elapsed_ms": 22496,
+    "code_extracted": true,
+    "error": null,
+    "test": {
+      "passed": 7,
+      "total": 7,
+      "failing": []
+    }
+  },
+  "final": {
+    "code_source": "repair-attempt",
+    "test": {
+      "passed": 7,
+      "total": 7
+    },
+    "all_passed": true
+  },
+  "finding": "fixed",
+  "finding_detail": "attempt 1: 5/7 passed; repair: 7/7 passed; repair fixed: test_1_happy_path_two_public_one_withheld, test_2_multi_line_receipt_each_line_quoted",
+  "final_code": "#!/usr/bin/env python3\nimport sys\nimport json\n\ndef main():\n    if len(sys.argv) < 2:\n        print(\"error:\")\n        return\n\n    path = sys.argv[1]\n    try:\n        with open(path, \"r\", encoding=\"utf-8\") as f:\n            data = json.load(f)\n    except Exception:\n        print(\"error:\")\n        return\n\n    receipts = data.get(\"receipts\")\n    if not isinstance(receipts, list):\n        print(\"error:\")\n        return\n\n    total = len(receipts)\n\n    # Gather public receipts with non\u2011empty stripped text\n    public = []\n    for rec in receipts:\n        if not isinstance(rec, dict):\n            continue\n        if rec.get(\"display_scope\") != \"public\":\n            continue\n        text = rec.get(\"text\", \"\")\n        if not isinstance(text, str):\n            text = str(text)\n        if text.strip() == \"\":\n            continue\n        public.append(rec)\n\n    shown = len(public)\n\n    # Sort by date then id\n    public.sort(key=lambda r: (r.get(\"date\", \"\"), r.get(\"id\", \"\")))\n\n    out = []\n    out.append(f\"# Story Receipts Wall ({shown} shown / {total} total)\")\n    out.append(\"\")  # blank line after header\n\n    for rec in public:\n        contributor = rec.get(\"contributor\", \"\")\n        date = rec.get(\"date\", \"\")\n        out.append(f\"## {contributor} \\u2014 {date}\")\n        out.append(\"\")  # blank line after receipt header\n\n        text = rec.get(\"text\", \"\")\n        for line in text.splitlines():\n            out.append(f\"> {line}\")\n\n        out.append(\"\")  # blank line after quoted text\n\n        tags = rec.get(\"tags\")\n        if isinstance(tags, list) and tags:\n            out.append(\"tags: \" + \", \".join(str(t) for t in tags))\n            out.append(\"\")  # blank line after tags line (end of block)\n\n    out.append(\"---\")\n    out.append(\"\")\n    withheld = total - shown\n    out.append(f\"Receipts withheld from display: {withheld}\")\n\n    sys.stdout.write(\"\\n\".join(out))\n\nif __name__ == \"__main__\":\n    main()",
+  "boundary": "This build-attempt record states what happened. It does not establish that the tool is correct, complete, safe, or fit for reuse."
+}

@@ -1,0 +1,37 @@
+{
+  "packet_id": "preflight-bioregion-layers",
+  "packet_path": "/Users/darrenzal/projects/IndigenomicsAI-CreatorJamKit/specs/preflights/bioregional-mapping-layer-board/build-packet.json",
+  "run_id": "gptoss-bioregional-mapping-layer-board-gpt-oss-120b-20260525T093924",
+  "run_at": "2026-05-25T09:39:24Z",
+  "mode": "TELUS build-attempt lane",
+  "model": {
+    "catalog_id": "gpt-oss-120b",
+    "provider_config_model": "gpt-oss:120b"
+  },
+  "team": "Layer Board (preflight sample)",
+  "frozen": true,
+  "attempt_1": {
+    "codegen_ok": true,
+    "codegen_elapsed_ms": 11466,
+    "code_extracted": true,
+    "error": null,
+    "test": {
+      "passed": 3,
+      "total": 3,
+      "failing": []
+    }
+  },
+  "repair": null,
+  "final": {
+    "code_source": "attempt-1",
+    "test": {
+      "passed": 3,
+      "total": 3
+    },
+    "all_passed": true
+  },
+  "finding": "built clean",
+  "finding_detail": "attempt 1 passed all acceptance tests; no repair needed",
+  "final_code": "#!/usr/bin/env python3\nimport sys\nimport json\n\ndef main():\n    if len(sys.argv) < 2:\n        print('error:')\n        return\n\n    path = sys.argv[1]\n    try:\n        with open(path, 'r', encoding='utf-8') as f:\n            data = json.load(f)\n    except Exception:\n        print('error:')\n        return\n\n    # Validate structure\n    if not isinstance(data, dict) or 'layers' not in data or not isinstance(data['layers'], list):\n        print('error:')\n        return\n\n    layers = data['layers']\n\n    # Counters\n    total = len(layers)\n    public_cnt = sum(1 for l in layers if l.get('consent_tier') == 'public')\n    steward_cnt = sum(1 for l in layers if l.get('consent_tier') == 'steward-review')\n    private_cnt = sum(1 for l in layers if l.get('consent_tier') == 'private')\n\n    # Header\n    print(f'LAYER BOARD ({public_cnt} public / {steward_cnt} steward-review / {private_cnt} private of {total} total layers)')\n    print()\n\n    # Public layers section\n    print('PUBLIC LAYERS:')\n    for layer in layers:\n        if layer.get('consent_tier') == 'public':\n            layer_id = layer.get('layer_id', '')\n            category = layer.get('category', '')\n            feature_count = layer.get('feature_count', 0)\n            print(f'- {layer_id} [{category}]: {feature_count} features')\n    print()\n\n    # Withheld summary\n    print(f'WITHHELD: {steward_cnt} steward-review + {private_cnt} private layers \u2014 content not displayed.')\n\nif __name__ == '__main__':\n    main()",
+  "boundary": "This build-attempt record states what happened. It does not establish that the tool is correct, complete, safe, or fit for reuse."
+}

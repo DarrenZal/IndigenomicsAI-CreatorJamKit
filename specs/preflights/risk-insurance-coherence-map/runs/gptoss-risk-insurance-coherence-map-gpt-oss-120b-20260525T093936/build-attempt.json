@@ -1,0 +1,49 @@
+{
+  "packet_id": "preflight-risk-coherence",
+  "packet_path": "/Users/darrenzal/projects/IndigenomicsAI-CreatorJamKit/specs/preflights/risk-insurance-coherence-map/build-packet.json",
+  "run_id": "gptoss-risk-insurance-coherence-map-gpt-oss-120b-20260525T093936",
+  "run_at": "2026-05-25T09:39:36Z",
+  "mode": "TELUS build-attempt lane",
+  "model": {
+    "catalog_id": "gpt-oss-120b",
+    "provider_config_model": "gpt-oss:120b"
+  },
+  "team": "Risk Coherence (preflight sample)",
+  "frozen": true,
+  "attempt_1": {
+    "codegen_ok": true,
+    "codegen_elapsed_ms": 13790,
+    "code_extracted": true,
+    "error": null,
+    "test": {
+      "passed": 2,
+      "total": 3,
+      "failing": [
+        "__main__.PreflightTest.test_t2_no_ranking"
+      ]
+    }
+  },
+  "repair": {
+    "codegen_ok": true,
+    "codegen_elapsed_ms": 12421,
+    "code_extracted": true,
+    "error": null,
+    "test": {
+      "passed": 3,
+      "total": 3,
+      "failing": []
+    }
+  },
+  "final": {
+    "code_source": "repair-attempt",
+    "test": {
+      "passed": 3,
+      "total": 3
+    },
+    "all_passed": true
+  },
+  "finding": "fixed",
+  "finding_detail": "attempt 1: 2/3 passed; repair: 3/3 passed; repair fixed: test_t2_no_ranking",
+  "final_code": "#!/usr/bin/env python3\nimport sys\nimport json\nimport re\nfrom collections import defaultdict\n\ndef normalize_area(area):\n    \"\"\"Normalize area string: strip, collapse whitespace, lower case.\"\"\"\n    if not isinstance(area, str):\n        return ''\n    return re.sub(r'\\s+', ' ', area.strip()).lower()\n\ndef main():\n    # Expect a path argument\n    if len(sys.argv) < 2:\n        print('error:')\n        return\n\n    path = sys.argv[1]\n    try:\n        with open(path, 'r', encoding='utf-8') as f:\n            data = json.load(f)\n    except Exception:\n        print('error:')\n        return\n\n    # Validate JSON structure\n    if not isinstance(data, dict) or 'signals' not in data or not isinstance(data['signals'], list):\n        print('error:')\n        return\n\n    signals = data['signals']\n    total_signals = len(signals)\n    public_signals = [s for s in signals if s.get('public_share') is True]\n    public_count = len(public_signals)\n\n    # Group public signals by normalized area\n    area_groups = defaultdict(list)\n    for sig in public_signals:\n        norm = normalize_area(sig.get('area', ''))\n        area_groups[norm].append(sig)\n\n    # Sort areas alphabetically\n    sorted_areas = sorted(area_groups.keys())\n\n    # Header\n    print(f'RESILIENCE SIGNAL MAP ({public_count} public / {total_signals} total)')\n    print()\n\n    # Area blocks\n    for idx, area in enumerate(sorted_areas):\n        group = area_groups[area]\n        count = len(group)\n\n        kinds = sorted({sig.get('kind') for sig in group if isinstance(sig.get('kind'), str)})\n        markers = sorted({sig.get('severity_marker') for sig in group if isinstance(sig.get('severity_marker'), str)})\n\n        kinds_str = ', '.join(kinds)\n        markers_str = ', '.join(markers)\n\n        print(f'area: {area}')\n        print(f'  signals: {count} (kinds: {kinds_str})')\n        print(f'  severity markers: {markers_str}')\n\n        # Blank line between areas (not after the last one)\n        if idx != len(sorted_areas) - 1:\n            print()\n\n    # Boundary statement (no ranking keywords like \"score\")\n    print()\n    print('BOUNDARY: this map does not rank, underwrite, or price. It states what was observed.')\n\nif __name__ == '__main__':\n    main()",
+  "boundary": "This build-attempt record states what happened. It does not establish that the tool is correct, complete, safe, or fit for reuse."
+}

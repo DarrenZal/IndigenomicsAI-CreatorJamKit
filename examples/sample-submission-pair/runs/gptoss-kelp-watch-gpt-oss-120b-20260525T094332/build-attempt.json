@@ -1,0 +1,37 @@
+{
+  "packet_id": "sample-kelp-watch",
+  "packet_path": "/Users/darrenzal/projects/IndigenomicsAI-CreatorJamKit/examples/sample-submission-pair/sample-agentic-build-packet-v0.json",
+  "run_id": "gptoss-kelp-watch-gpt-oss-120b-20260525T094332",
+  "run_at": "2026-05-25T09:43:32Z",
+  "mode": "TELUS build-attempt lane",
+  "model": {
+    "catalog_id": "gpt-oss-120b",
+    "provider_config_model": "gpt-oss:120b"
+  },
+  "team": "Kelp Watch",
+  "frozen": true,
+  "attempt_1": {
+    "codegen_ok": true,
+    "codegen_elapsed_ms": 27279,
+    "code_extracted": true,
+    "error": null,
+    "test": {
+      "passed": 6,
+      "total": 6,
+      "failing": []
+    }
+  },
+  "repair": null,
+  "final": {
+    "code_source": "attempt-1",
+    "test": {
+      "passed": 6,
+      "total": 6
+    },
+    "all_passed": true
+  },
+  "finding": "built clean",
+  "finding_detail": "attempt 1 passed all acceptance tests; no repair needed",
+  "final_code": "#!/usr/bin/env python3\nimport sys\nimport json\nimport re\nfrom datetime import date\n\ndef normalize(text):\n    if not isinstance(text, str):\n        return ''\n    # Strip ends, collapse internal whitespace, lowercase\n    return ' '.join(text.strip().split()).lower()\n\ndef parse_date(datestr):\n    if not isinstance(datestr, str):\n        return None\n    # Simple regex check for YYYY-MM-DD\n    if not re.fullmatch(r'\\d{4}-\\d{2}-\\d{2}', datestr):\n        return None\n    try:\n        return date.fromisoformat(datestr)\n    except ValueError:\n        return None\n\ndef main():\n    if len(sys.argv) < 2:\n        print(\"error: missing input path\")\n        return\n\n    path = sys.argv[1]\n    try:\n        with open(path, 'r', encoding='utf-8') as f:\n            data = json.load(f)\n    except Exception as e:\n        print(f\"error: {e}\")\n        return\n\n    if not isinstance(data, dict) or 'observations' not in data:\n        print(\"error: invalid JSON structure\")\n        return\n\n    observations = data['observations']\n    if not isinstance(observations, list):\n        print(\"error: observations is not a list\")\n        return\n\n    total_obs = 0\n    site_set = set()\n    site_indicator_stats = {}  # site -> indicator -> [sum, count]\n    date_list = []\n\n    for obs in observations:\n        # Extract fields\n        site_raw = obs.get('site')\n        indicator_raw = obs.get('indicator')\n        value = obs.get('value')\n        date_raw = obs.get('date')\n\n        # Drop rules\n        if not isinstance(value, (int, float)):\n            continue\n\n        site_norm = normalize(site_raw)\n        indicator_norm = normalize(indicator_raw)\n\n        if site_norm == '' or indicator_norm == '':\n            continue\n\n        # Keep observation\n        total_obs += 1\n        site_set.add(site_norm)\n\n        if site_norm not in site_indicator_stats:\n            site_indicator_stats[site_norm] = {}\n        if indicator_norm not in site_indicator_stats[site_norm]:\n            site_indicator_stats[site_norm][indicator_norm] = [0.0, 0]\n\n        stats = site_indicator_stats[site_norm][indicator_norm]\n        stats[0] += float(value)\n        stats[1] += 1\n\n        # Date handling\n        d = parse_date(date_raw)\n        if d is not None:\n            date_list.append(d)\n\n    site_count = len(site_set)\n\n    # Header\n    print(f\"KELP BED WATCH ({total_obs} observations across {site_count} sites)\")\n\n    if total_obs > 0:\n        # Site blocks\n        for site in sorted(site_indicator_stats.keys()):\n            print(f\"== {site} ==\")\n            indicators = site_indicator_stats[site]\n            for indicator in sorted(indicators.keys()):\n                sum_val, cnt = indicators[indicator]\n                mean_val = sum_val / cnt if cnt else 0.0\n                print(f\"{indicator}: mean {mean_val:.2f}, n={cnt}\")\n            print()  # blank line after each site block\n\n        # Summary line\n        if date_list:\n            from_date = min(date_list).isoformat()\n            to_date = max(date_list).isoformat()\n            date_range = f\"{from_date} .. {to_date}\"\n        else:\n            date_range = \"no dates\"\n        print(f\"SUMMARY: {total_obs} observations, {site_count} sites, {date_range}\")\n    else:\n        # No observations kept\n        print(\"SUMMARY: 0 observations, 0 sites, no dates\")\n\nif __name__ == \"__main__\":\n    main()",
+  "boundary": "This build-attempt record states what happened. It does not establish that the tool is correct, complete, safe, or fit for reuse."
+}

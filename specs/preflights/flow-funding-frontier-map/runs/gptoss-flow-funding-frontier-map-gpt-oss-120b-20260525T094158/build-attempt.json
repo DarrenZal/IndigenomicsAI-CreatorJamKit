@@ -1,0 +1,37 @@
+{
+  "packet_id": "preflight-flow-funding",
+  "packet_path": "/Users/darrenzal/projects/IndigenomicsAI-CreatorJamKit/specs/preflights/flow-funding-frontier-map/build-packet.json",
+  "run_id": "gptoss-flow-funding-frontier-map-gpt-oss-120b-20260525T094158",
+  "run_at": "2026-05-25T09:41:58Z",
+  "mode": "TELUS build-attempt lane",
+  "model": {
+    "catalog_id": "gpt-oss-120b",
+    "provider_config_model": "gpt-oss:120b"
+  },
+  "team": "Flow Frontier (preflight sample)",
+  "frozen": true,
+  "attempt_1": {
+    "codegen_ok": true,
+    "codegen_elapsed_ms": 9606,
+    "code_extracted": true,
+    "error": null,
+    "test": {
+      "passed": 4,
+      "total": 4,
+      "failing": []
+    }
+  },
+  "repair": null,
+  "final": {
+    "code_source": "attempt-1",
+    "test": {
+      "passed": 4,
+      "total": 4
+    },
+    "all_passed": true
+  },
+  "finding": "built clean",
+  "finding_detail": "attempt 1 passed all acceptance tests; no repair needed",
+  "final_code": "#!/usr/bin/env python3\nimport sys\nimport json\n\ndef main():\n    if len(sys.argv) < 2:\n        print(\"error: missing input file path\")\n        return\n\n    path = sys.argv[1]\n    try:\n        with open(path, 'r', encoding='utf-8') as f:\n            data = json.load(f)\n    except Exception as e:\n        print(f\"error: {e}\")\n        return\n\n    nodes = data.get(\"nodes\", [])\n    edges = data.get(\"edges\", [])\n\n    # Build node lookup by id\n    node_by_id = {node.get(\"id\"): node for node in nodes}\n\n    fundable_edges = []\n\n    for edge in edges:\n        from_id = edge.get(\"from\")\n        to_id = edge.get(\"to\")\n        kind = edge.get(\"kind\", \"\")\n\n        from_node = node_by_id.get(from_id)\n        to_node = node_by_id.get(to_id)\n\n        if not from_node or not to_node:\n            continue  # skip edges with missing nodes\n\n        f_type = from_node.get(\"type\")\n        f_status = from_node.get(\"status\")\n        t_type = to_node.get(\"type\")\n        t_status = to_node.get(\"status\")\n\n        # Check fundable conditions\n        if (f_type == \"dream\" and t_type == \"commitment\" and\n                f_status == \"open\" and t_status == \"open\"):\n            fundable_edges.append((from_node, to_node, kind))\n        elif (f_type == \"commitment\" and t_type == \"pool\" and\n                f_status == \"witnessed\" and t_status == \"open\"):\n            fundable_edges.append((from_node, to_node, kind))\n\n    F = len(fundable_edges)\n    E = len(edges)\n    N = len(nodes)\n\n    # Output\n    print(f\"FLOW FUNDING FRONTIER ({F} fundable / {E} total edges)\")\n    print()\n    for from_node, to_node, kind in fundable_edges:\n        print(f\"- {from_node['id']}({from_node['type']}) --[{kind}]--> {to_node['id']}({to_node['type']})\")\n    print()\n    print(f\"SUMMARY: {F} fundable, {N} nodes, {E} edges\")\n\nif __name__ == \"__main__\":\n    main()",
+  "boundary": "This build-attempt record states what happened. It does not establish that the tool is correct, complete, safe, or fit for reuse."
+}

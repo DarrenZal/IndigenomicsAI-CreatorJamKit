@@ -1,0 +1,37 @@
+{
+  "packet_id": "preflight-spec-composer",
+  "packet_path": "/Users/darrenzal/projects/IndigenomicsAI-CreatorJamKit/specs/preflights/spec-composer-bundle-board/build-packet.json",
+  "run_id": "gptoss-spec-composer-bundle-board-gpt-oss-120b-20260525T094137",
+  "run_at": "2026-05-25T09:41:37Z",
+  "mode": "TELUS build-attempt lane",
+  "model": {
+    "catalog_id": "gpt-oss-120b",
+    "provider_config_model": "gpt-oss:120b"
+  },
+  "team": "Spec Composer (preflight sample)",
+  "frozen": true,
+  "attempt_1": {
+    "codegen_ok": true,
+    "codegen_elapsed_ms": 20061,
+    "code_extracted": true,
+    "error": null,
+    "test": {
+      "passed": 4,
+      "total": 4,
+      "failing": []
+    }
+  },
+  "repair": null,
+  "final": {
+    "code_source": "attempt-1",
+    "test": {
+      "passed": 4,
+      "total": 4
+    },
+    "all_passed": true
+  },
+  "finding": "built clean",
+  "finding_detail": "attempt 1 passed all acceptance tests; no repair needed",
+  "final_code": "#!/usr/bin/env python3\nimport sys\nimport json\n\ndef main():\n    if len(sys.argv) < 2:\n        return\n    path = sys.argv[1]\n    try:\n        with open(path, 'r', encoding='utf-8') as f:\n            data = json.load(f)\n    except Exception:\n        print('error:')\n        return\n\n    fragments_raw = data.get('fragments')\n    if not isinstance(fragments_raw, list):\n        fragments_raw = []\n\n    valid = []\n    for frag in fragments_raw:\n        if not isinstance(frag, dict):\n            continue\n        fid = frag.get('id')\n        prod = frag.get('produces')\n        cons = frag.get('consumes')\n        if not isinstance(fid, str):\n            continue\n        if not isinstance(prod, list) or not isinstance(cons, list):\n            continue\n        # ensure all items are strings (optional, but keep as is)\n        prod_set = set(str(x) for x in prod)\n        cons_set = set(str(x) for x in cons)\n        valid.append({\n            'id': fid,\n            'produces': prod_set,\n            'consumes': cons_set\n        })\n\n    N = len(valid)\n\n    # distinct interfaces\n    interfaces = set()\n    for frag in valid:\n        interfaces.update(frag['produces'])\n        interfaces.update(frag['consumes'])\n    S = len(interfaces)\n\n    # candidate pairs\n    candidates = []\n    for a in valid:\n        for b in valid:\n            if a['id'] == b['id']:\n                continue\n            shared = a['produces'].intersection(b['consumes'])\n            if shared:\n                shared_list = sorted(shared)\n                candidates.append((a['id'], b['id'], shared_list))\n\n    candidates.sort(key=lambda x: (x[0], x[1]))\n    P = len(candidates)\n\n    # output\n    print(f'BUNDLE BOARD ({P} candidate pairs of {N} fragments)')\n    print()\n    for a_id, b_id, shared_list in candidates:\n        shared_str = ','.join(shared_list)\n        print(f'{a_id} -> {b_id} via {shared_str}')\n        print()\n    print(f'SUMMARY: {P} candidate pairs, {N} fragments, {S} distinct interfaces')\n\nif __name__ == '__main__':\n    main()",
+  "boundary": "This build-attempt record states what happened. It does not establish that the tool is correct, complete, safe, or fit for reuse."
+}

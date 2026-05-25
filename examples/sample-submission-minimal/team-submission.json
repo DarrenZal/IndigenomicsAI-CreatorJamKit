@@ -1,0 +1,62 @@
+{
+  "schema_version": "team-submission-v0",
+  "submission_id": "team-spec-minimum-viable-01",
+  "surface": "shared-doc",
+  "team": {
+    "id": "minimal-team",
+    "name": "Minimal",
+    "site": "Vancouver",
+    "members": [{"display": "A"}, {"display": "B"}]
+  },
+  "vision": {
+    "text": "A tiny tool that counts how many distinct authors appear in a JSON file of receipts.",
+    "prompt": "What should exist?"
+  },
+  "spec": {
+    "text": "Build a single-file Python tool, run as `python3 tool.py <receipts_json_path>`. Read a JSON shaped {\"receipts\": [{\"author\": \"...\"}, ...]}. Print exactly one line: 'AUTHORS: <N>' where N is the count of distinct (case-sensitive, exact) author strings. On invalid JSON, print 'error:' and exit 0. Standard library only.",
+    "prompt": "What does the team want made real?"
+  },
+  "source_offerings": [
+    {
+      "id": "o1",
+      "title": "Hand-rolled receipt fixture",
+      "visibility": "public",
+      "included_in_build": true,
+      "cleared_text": "A small JSON file with 5 fictional receipts across 3 authors."
+    }
+  ],
+  "boundaries": [],
+  "build_request": {
+    "path": "telus-lane",
+    "target": "single-file-cli",
+    "notes": "stdlib only"
+  },
+  "witnessed_working": {
+    "description": "Tuesday: read a small JSON fixture, see the AUTHORS line, recognize it counts what was expected.",
+    "acceptance_criteria": [
+      "prints exactly 'AUTHORS: <N>' on success",
+      "prints a line starting with 'error:' on invalid input, exits 0",
+      "uses only the standard library"
+    ]
+  },
+  "help_wanted": [],
+  "authorization": {
+    "visible_to_facilitators": true,
+    "display_scope": "whole",
+    "ai_input_scope": "whole",
+    "reuse_scope": "ask-first"
+  },
+  "freeze": {
+    "status": "frozen",
+    "frozen_by": "team + facilitator",
+    "facilitator_confirmed": {
+      "consent_privacy_complete": true,
+      "boundaries_reviewed": true,
+      "public_private_status_confirmed": true,
+      "ai_input_scope_confirmed": true,
+      "build_path_confirmed": true,
+      "witnessed_working_clear": true
+    },
+    "change_policy": "new ideas require re-freeze"
+  }
+}

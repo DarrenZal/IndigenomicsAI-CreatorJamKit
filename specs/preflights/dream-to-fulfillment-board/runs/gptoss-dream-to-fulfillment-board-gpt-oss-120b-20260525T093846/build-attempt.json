@@ -1,0 +1,37 @@
+{
+  "packet_id": "preflight-dream-fulfillment",
+  "packet_path": "/Users/darrenzal/projects/IndigenomicsAI-CreatorJamKit/specs/preflights/dream-to-fulfillment-board/build-packet.json",
+  "run_id": "gptoss-dream-to-fulfillment-board-gpt-oss-120b-20260525T093846",
+  "run_at": "2026-05-25T09:38:46Z",
+  "mode": "TELUS build-attempt lane",
+  "model": {
+    "catalog_id": "gpt-oss-120b",
+    "provider_config_model": "gpt-oss:120b"
+  },
+  "team": "Dream Board (preflight sample)",
+  "frozen": true,
+  "attempt_1": {
+    "codegen_ok": true,
+    "codegen_elapsed_ms": 18914,
+    "code_extracted": true,
+    "error": null,
+    "test": {
+      "passed": 4,
+      "total": 4,
+      "failing": []
+    }
+  },
+  "repair": null,
+  "final": {
+    "code_source": "attempt-1",
+    "test": {
+      "passed": 4,
+      "total": 4
+    },
+    "all_passed": true
+  },
+  "finding": "built clean",
+  "finding_detail": "attempt 1 passed all acceptance tests; no repair needed",
+  "final_code": "#!/usr/bin/env python3\nimport sys\nimport json\nfrom datetime import date\n\ndef main():\n    if len(sys.argv) < 2:\n        print(\"error:\")\n        return\n\n    path = sys.argv[1]\n    try:\n        with open(path, 'r', encoding='utf-8') as f:\n            data = json.load(f)\n    except (FileNotFoundError, json.JSONDecodeError):\n        print(\"error:\")\n        return\n\n    items = data.get(\"items\", [])\n    if not isinstance(items, list):\n        items = []\n\n    valid_stages = [\n        \"dream\",\n        \"offer_or_need\",\n        \"promise\",\n        \"witnessed\",\n        \"fulfilled\",\n        \"withdrawn\",\n    ]\n\n    kept = []\n    for it in items:\n        if not isinstance(it, dict):\n            continue\n        if not it.get(\"id\"):\n            continue\n        stage = it.get(\"stage\")\n        if stage not in valid_stages:\n            continue\n        # Ensure updated_at exists and is a valid date; if not, skip item\n        upd = it.get(\"updated_at\")\n        try:\n            dt = date.fromisoformat(upd)\n        except Exception:\n            continue\n        it[\"_date_obj\"] = dt\n        kept.append(it)\n\n    K = len(kept)\n    distinct_stages = {it[\"stage\"] for it in kept}\n    S = len(distinct_stages)\n\n    print(f\"DREAM-TO-FULFILLMENT BOARD ({K} items across {S} stages)\")\n    print()\n\n    for stage in valid_stages:\n        stage_items = [it for it in kept if it[\"stage\"] == stage]\n        if not stage_items:\n            continue\n\n        # Sort: id ascending, then date descending (stable sorts)\n        stage_items.sort(key=lambda x: x[\"id\"])\n        stage_items.sort(key=lambda x: x[\"_date_obj\"], reverse=True)\n\n        print(f\"## {stage} ({len(stage_items)})\")\n        for it in stage_items:\n            title = it.get(\"title\", \"\")\n            print(f\"- {it['id']}: {title}\")\n        print()\n\nif __name__ == \"__main__\":\n    main()",
+  "boundary": "This build-attempt record states what happened. It does not establish that the tool is correct, complete, safe, or fit for reuse."
+}

@@ -1,0 +1,20 @@
+test_1_ok_record (__main__.WitnessValidatorTest.test_1_ok_record) ... FAIL
+test_2_missing_consent (__main__.WitnessValidatorTest.test_2_missing_consent) ... ok
+test_3_stale_evidence (__main__.WitnessValidatorTest.test_3_stale_evidence) ... ok
+test_4_overbroad (__main__.WitnessValidatorTest.test_4_overbroad) ... ok
+test_5_authority_language (__main__.WitnessValidatorTest.test_5_authority_language) ... ok
+test_6_findings_alphabetical (__main__.WitnessValidatorTest.test_6_findings_alphabetical) ... ok
+test_7_invalid_json (__main__.WitnessValidatorTest.test_7_invalid_json) ... ok
+
+======================================================================
+FAIL: test_1_ok_record (__main__.WitnessValidatorTest.test_1_ok_record)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/3c/6p_c61tj3y5ccqzmvfxmdg080000gn/T/m2-lite-test-e_en1zbe/test_tool.py", line 36, in test_1_ok_record
+    self.assertIn("SUMMARY: 1 ok, 0 with findings of 1 total", proc.stdout)
+AssertionError: 'SUMMARY: 1 ok, 0 with findings of 1 total' not found in 'WITNESS RECORD VALIDATION (as_of 2026-05-20)\n\nr1: OK\n\nSUMMARY: 1 ok, 0 with findings of 0 total\n'
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.187s
+
+FAILED (failures=1)

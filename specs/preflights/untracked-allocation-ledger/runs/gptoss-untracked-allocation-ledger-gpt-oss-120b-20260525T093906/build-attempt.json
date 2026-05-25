@@ -1,0 +1,37 @@
+{
+  "packet_id": "preflight-untracked-allocation",
+  "packet_path": "/Users/darrenzal/projects/IndigenomicsAI-CreatorJamKit/specs/preflights/untracked-allocation-ledger/build-packet.json",
+  "run_id": "gptoss-untracked-allocation-ledger-gpt-oss-120b-20260525T093906",
+  "run_at": "2026-05-25T09:39:06Z",
+  "mode": "TELUS build-attempt lane",
+  "model": {
+    "catalog_id": "gpt-oss-120b",
+    "provider_config_model": "gpt-oss:120b"
+  },
+  "team": "Untracked Ledger (preflight sample)",
+  "frozen": true,
+  "attempt_1": {
+    "codegen_ok": true,
+    "codegen_elapsed_ms": 17888,
+    "code_extracted": true,
+    "error": null,
+    "test": {
+      "passed": 6,
+      "total": 6,
+      "failing": []
+    }
+  },
+  "repair": null,
+  "final": {
+    "code_source": "attempt-1",
+    "test": {
+      "passed": 6,
+      "total": 6
+    },
+    "all_passed": true
+  },
+  "finding": "built clean",
+  "finding_detail": "attempt 1 passed all acceptance tests; no repair needed",
+  "final_code": "#!/usr/bin/env python3\nimport sys\nimport json\n\ndef error():\n    print(\"error:\")\n    sys.exit(0)\n\ndef main():\n    if len(sys.argv) != 2:\n        error()\n    path = sys.argv[1]\n    try:\n        with open(path, 'r', encoding='utf-8') as f:\n            data = json.load(f)\n    except Exception:\n        error()\n\n    if not isinstance(data, dict) or 'allocations' not in data:\n        error()\n    allocations = data['allocations']\n    if not isinstance(allocations, list):\n        error()\n\n    # Validate each allocation has required keys\n    required_keys = {\n        \"allocation_id\", \"allocation_type\", \"public_summary\",\n        \"recipient_visibility\", \"funder_visibility\", \"amount_visibility\",\n        \"recipient\", \"funder\", \"amount\", \"unit\",\n        \"not_tracked_reason\", \"withdrawn\"\n    }\n    for alloc in allocations:\n        if not isinstance(alloc, dict):\n            error()\n        if not required_keys.issubset(alloc.keys()):\n            error()\n\n    total = len(allocations)\n    withdrawn_cnt = sum(1 for a in allocations if a.get('withdrawn') is True)\n    not_tracked_cnt = sum(1 for a in allocations\n                          if not a.get('withdrawn') and a.get('not_tracked_reason') is not None)\n    public_cnt = sum(1 for a in allocations\n                     if not a.get('withdrawn') and a.get('not_tracked_reason') is None)\n\n    out_lines = []\n    header = (f\"UNTRACKED ALLOCATION LEDGER \"\n              f\"({public_cnt} public / {not_tracked_cnt} not-tracked / \"\n              f\"{withdrawn_cnt} withdrawn of {total} total)\")\n    out_lines.append(header)\n    out_lines.append(\"\")  # blank line after header\n\n    # Process entries (skip withdrawn)\n    for alloc in allocations:\n        if alloc.get('withdrawn'):\n            continue  # skip listing\n        aid = alloc['allocation_id']\n        atype = alloc['allocation_type']\n        summary = alloc['public_summary']\n        not_tracked_reason = alloc.get('not_tracked_reason')\n        out_lines.append(f\"- {aid} [{atype}]:\")\n        out_lines.append(f\"    summary: {summary}\")\n\n        if not_tracked_reason is not None:\n            # not-tracked overrides visibility\n            out_lines.append(f\"    not-tracked-by-design: {not_tracked_reason}\")\n        else:\n            # recipient\n            if alloc.get('recipient_visibility') == 'public':\n                out_lines.append(f\"    recipient: {alloc.get('recipient')}\")\n            # funder\n            if alloc.get('funder_visibility') == 'public':\n                out_lines.append(f\"    funder: {alloc.get('funder')}\")\n            # amount\n            if (alloc.get('amount_visibility') == 'public' and\n                alloc.get('amount') is not None):\n                amount = alloc['amount']\n                unit = alloc.get('unit')\n                if unit:\n                    out_lines.append(f\"    amount: {amount} {unit}\")\n                else:\n                    out_lines.append(f\"    amount: {amount}\")\n\n        out_lines.append(\"\")  # blank line after each entry\n\n    # Aggregate by type (only public entries)\n    agg_counts = {}\n    for alloc in allocations:\n        if alloc.get('withdrawn'):\n            continue\n        if alloc.get('not_tracked_reason') is not None:\n            continue\n        atype = alloc['allocation_type']\n        agg_counts[atype] = agg_counts.get(atype, 0) + 1\n\n    out_lines.append(\"AGGREGATE BY TYPE:\")\n    for atype in sorted(agg_counts):\n        count = agg_counts[atype]\n        out_lines.append(f\"  {atype}: {count} entries\")\n\n    sys.stdout.write(\"\\n\".join(out_lines))\n\nif __name__ == \"__main__\":\n    main()",
+  "boundary": "This build-attempt record states what happened. It does not establish that the tool is correct, complete, safe, or fit for reuse."
+}

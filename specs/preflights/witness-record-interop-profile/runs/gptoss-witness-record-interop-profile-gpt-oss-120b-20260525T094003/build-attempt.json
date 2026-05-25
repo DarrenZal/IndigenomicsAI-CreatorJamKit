@@ -1,0 +1,49 @@
+{
+  "packet_id": "preflight-witness-record-validator",
+  "packet_path": "/Users/darrenzal/projects/IndigenomicsAI-CreatorJamKit/specs/preflights/witness-record-interop-profile/build-packet.json",
+  "run_id": "gptoss-witness-record-interop-profile-gpt-oss-120b-20260525T094003",
+  "run_at": "2026-05-25T09:40:03Z",
+  "mode": "TELUS build-attempt lane",
+  "model": {
+    "catalog_id": "gpt-oss-120b",
+    "provider_config_model": "gpt-oss:120b"
+  },
+  "team": "Witness Validator (preflight sample)",
+  "frozen": true,
+  "attempt_1": {
+    "codegen_ok": true,
+    "codegen_elapsed_ms": 14704,
+    "code_extracted": true,
+    "error": null,
+    "test": {
+      "passed": 6,
+      "total": 7,
+      "failing": [
+        "__main__.WitnessValidatorTest.test_1_ok_record"
+      ]
+    }
+  },
+  "repair": {
+    "codegen_ok": true,
+    "codegen_elapsed_ms": 17263,
+    "code_extracted": true,
+    "error": null,
+    "test": {
+      "passed": 7,
+      "total": 7,
+      "failing": []
+    }
+  },
+  "final": {
+    "code_source": "repair-attempt",
+    "test": {
+      "passed": 7,
+      "total": 7
+    },
+    "all_passed": true
+  },
+  "finding": "fixed",
+  "finding_detail": "attempt 1: 6/7 passed; repair: 7/7 passed; repair fixed: test_1_ok_record",
+  "final_code": "#!/usr/bin/env python3\nimport sys\nimport json\nfrom datetime import date, timedelta\n\ndef parse_date(s: str):\n    \"\"\"Parse an ISO date string to a date object. Return None on failure.\"\"\"\n    try:\n        return date.fromisoformat(s)\n    except Exception:\n        return None\n\ndef main():\n    # Validate arguments\n    if len(sys.argv) < 2:\n        print(\"error:\")\n        return\n\n    json_path = sys.argv[1]\n    as_of_str = sys.argv[2] if len(sys.argv) > 2 else None\n\n    # Load JSON safely\n    try:\n        with open(json_path, \"r\", encoding=\"utf-8\") as f:\n            data = json.load(f)\n    except Exception:\n        print(\"error:\")\n        return\n\n    records = data.get(\"records\", [])\n\n    # Determine as_of date\n    if as_of_str:\n        as_of = parse_date(as_of_str) or date(2026, 5, 26)\n    else:\n        latest = None\n        for rec in records:\n            d = parse_date(rec.get(\"created_at\", \"\"))\n            if d and (latest is None or d > latest):\n                latest = d\n        as_of = latest if latest else date(2026, 5, 26)\n\n    # Header\n    print(f\"WITNESS RECORD VALIDATION (as_of {as_of.isoformat()})\")\n    print()  # blank line after header\n\n    ok_count = 0\n    fail_count = 0\n\n    for rec in records:\n        rec_id = rec.get(\"record_id\", \"\")\n        findings = []\n\n        # 1. missing_consent\n        if rec.get(\"visibility_tier\") == \"public\" and rec.get(\"permission_state\") != \"granted\":\n            findings.append(\"missing_consent\")\n\n        # 2. stale_evidence\n        for ev in rec.get(\"evidence_pointers\", []):\n            ev_date = parse_date(ev.get(\"created_at\", \"\"))\n            if ev_date and (as_of - ev_date).days > 365:\n                findings.append(\"stale_evidence\")\n                break\n\n        # 3. overbroad_public_claim\n        if rec.get(\"record_type\") in {\"claim\", \"attestation\", \"promise\"} \\\n                and rec.get(\"visibility_tier\") == \"public\" \\\n                and len(rec.get(\"statement\", \"\")) > 240:\n            findings.append(\"overbroad_public_claim\")\n\n        # 4. unsupported_authority_language\n        stmt_lower = rec.get(\"statement\", \"\").lower()\n        authority_terms = (\"certified\", \"authorized\", \"legitimate\", \"official\")\n        if any(term in stmt_lower for term in authority_terms) and rec.get(\"review_state\") != \"reviewed\":\n            findings.append(\"unsupported_authority_language\")\n\n        if findings:\n            findings.sort()\n            line = f\"{rec_id}: {', '.join(findings)}\"\n            fail_count += 1\n        else:\n            line = f\"{rec_id}: OK\"\n            ok_count += 1\n\n        print(line)\n\n    # Blank line before summary\n    print()\n\n    total_records = ok_count + fail_count\n    print(f\"SUMMARY: {ok_count} ok, {fail_count} with findings of {total_records} total\")\n\nif __name__ == \"__main__\":\n    main()",
+  "boundary": "This build-attempt record states what happened. It does not establish that the tool is correct, complete, safe, or fit for reuse."
+}

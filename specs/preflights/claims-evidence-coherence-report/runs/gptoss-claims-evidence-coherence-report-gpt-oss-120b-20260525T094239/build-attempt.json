@@ -1,0 +1,51 @@
+{
+  "packet_id": "preflight-claims-evidence-coherence",
+  "packet_path": "/Users/darrenzal/projects/IndigenomicsAI-CreatorJamKit/specs/preflights/claims-evidence-coherence-report/build-packet.json",
+  "run_id": "gptoss-claims-evidence-coherence-report-gpt-oss-120b-20260525T094239",
+  "run_at": "2026-05-25T09:42:39Z",
+  "mode": "TELUS build-attempt lane",
+  "model": {
+    "catalog_id": "gpt-oss-120b",
+    "provider_config_model": "gpt-oss:120b"
+  },
+  "team": "Claims Coherence (preflight sample)",
+  "frozen": true,
+  "attempt_1": {
+    "codegen_ok": true,
+    "codegen_elapsed_ms": 25610,
+    "code_extracted": true,
+    "error": null,
+    "test": {
+      "passed": 7,
+      "total": 8,
+      "failing": [
+        "__main__.ClaimsCoherenceTest.test_4_stale"
+      ]
+    }
+  },
+  "repair": {
+    "codegen_ok": true,
+    "codegen_elapsed_ms": 26281,
+    "code_extracted": true,
+    "error": null,
+    "test": {
+      "passed": 7,
+      "total": 8,
+      "failing": [
+        "__main__.ClaimsCoherenceTest.test_4_stale"
+      ]
+    }
+  },
+  "final": {
+    "code_source": "repair-attempt",
+    "test": {
+      "passed": 7,
+      "total": 8
+    },
+    "all_passed": false
+  },
+  "finding": "no change",
+  "finding_detail": "attempt 1: 7/8 passed; repair: 7/8 passed",
+  "final_code": "#!/usr/bin/env python3\nimport sys\nimport json\nimport datetime\n\n# Freshness windows in days per claim type\nFRESHNESS_WINDOWS = {\n    \"descriptive\": 730,\n    \"commitment_status\": 180,\n    \"outcome\": 365,\n    \"impact\": 365,\n    \"risk\": 180,\n    \"eligibility\": 180,\n}\n\n# Repair path suggestions\nREPAIR_PATHS = {\n    \"do_not_compute\": \"preserve as marker-only; do not compute\",\n    \"visibility_blocked\": \"choose: lower intended_use, or raise visibility (requires consent)\",\n    \"missing_evidence\": \"attach evidence and named reviewer\",\n    \"contested\": \"invite contesting party to review\",\n    \"stale_evidence\": \"refresh evidence within freshness window for {claim_type}\",\n    \"needs_review\": \"assign a named reviewer\",\n}\n\ndef parse_date(s: str) -> datetime.date:\n    try:\n        return datetime.datetime.strptime(s, \"%Y-%m-%d\").date()\n    except Exception:\n        raise ValueError(f\"invalid date format: {s}\")\n\ndef error(msg: str) -> None:\n    print(f\"error: {msg}\")\n    sys.exit(0)\n\ndef validate_claim(claim: dict, idx: int) -> None:\n    required = [\n        \"claim_id\", \"claim_text\", \"claim_type\", \"intended_use\",\n        \"visibility_tier\", \"evidence_pointers\", \"reviewer\", \"contested\"\n    ]\n    for f in required:\n        if f not in claim:\n            error(f\"claim at index {idx} missing required field '{f}'\")\n    if not isinstance(claim[\"claim_id\"], str):\n        error(f\"claim_id must be string at index {idx}\")\n    if claim[\"claim_type\"] not in FRESHNESS_WINDOWS:\n        error(f\"unknown claim_type '{claim['claim_type']}' at index {idx}\")\n    if claim[\"intended_use\"] not in {\"public_share\", \"steward_review\", \"internal\"}:\n        error(f\"invalid intended_use at index {idx}\")\n    if claim[\"visibility_tier\"] not in {\"public\", \"local-only\", \"private\", \"not-for-computation\"}:\n        error(f\"invalid visibility_tier at index {idx}\")\n    if not isinstance(claim[\"evidence_pointers\"], list):\n        error(f\"evidence_pointers must be list at index {idx}\")\n    for ep_idx, ep in enumerate(claim[\"evidence_pointers\"]):\n        if not isinstance(ep, dict):\n            error(f\"evidence pointer at claim {idx} index {ep_idx} not an object\")\n        for subf in (\"id\", \"created_at\", \"reviewer\"):\n            if subf not in ep:\n                error(f\"evidence pointer missing '{subf}' at claim {idx} index {ep_idx}\")\n        if not isinstance(ep[\"id\"], str):\n            error(f\"evidence id must be string at claim {idx} index {ep_idx}\")\n        try:\n            parse_date(ep[\"created_at\"])\n        except ValueError:\n            error(f\"invalid created_at date at claim {idx} index {ep_idx}\")\n        # reviewer may be null or string; no further validation\n    if claim[\"reviewer\"] is not None and not isinstance(claim[\"reviewer\"], str):\n        error(f\"reviewer must be string or null at index {idx}\")\n    if not isinstance(claim[\"contested\"], bool):\n        error(f\"contested must be boolean at index {idx}\")\n\ndef compute_as_of(claims: list, provided: str | None) -> datetime.date:\n    if provided is not None:\n        try:\n            return parse_date(provided)\n        except ValueError:\n            error(f\"provided as_of date '{provided}' is invalid\")\n    latest = None\n    for claim in claims:\n        for ep in claim[\"evidence_pointers\"]:\n            d = parse_date(ep[\"created_at\"])\n            if latest is None or d > latest:\n                latest = d\n    return latest if latest is not None else datetime.date(2026, 5, 26)\n\ndef status_for_claim(claim: dict, as_of: datetime.date) -> str:\n    vt = claim[\"visibility_tier\"]\n    iu = claim[\"intended_use\"]\n    ct = claim[\"claim_type\"]\n    reviewer = claim[\"reviewer\"]\n    contested = claim[\"contested\"]\n    eps = claim[\"evidence_pointers\"]\n\n    # 1. do_not_compute\n    if vt == \"not-for-computation\":\n        return \"do_not_compute\"\n    # 2. visibility_blocked\n    if vt in {\"private\", \"local-only\"} and iu == \"public_share\":\n        return \"visibility_blocked\"\n    # 3. missing_evidence\n    if not eps or (iu == \"public_share\" and reviewer is None and vt == \"public\"):\n        return \"missing_evidence\"\n    # 4. contested\n    if contested:\n        return \"contested\"\n    # 5. stale_evidence\n    window_days = FRESHNESS_WINDOWS[ct]\n    all_stale = True\n    for ep in eps:\n        ep_date = parse_date(ep[\"created_at\"])\n        age = (as_of - ep_date).days\n        # stale when age is greater than or equal to the window\n        if age < window_days:\n            all_stale = False\n            break\n    if all_stale:\n        return \"stale_evidence\"\n    # 6. needs_review\n    if vt == \"public\":\n        for ep in eps:\n            if ep[\"reviewer\"] is None:\n                return \"needs_review\"\n    # 7. ready_for_use\n    return \"ready_for_use\"\n\ndef main() -> None:\n    if len(sys.argv) < 2:\n        error(\"no input file provided\")\n    input_path = sys.argv[1]\n    as_of_provided = None\n    if len(sys.argv) >= 4 and sys.argv[2] == \"as_of\":\n        as_of_provided = sys.argv[3]\n\n    try:\n        with open(input_path, \"r\", encoding=\"utf-8\") as f:\n            data = json.load(f)\n    except Exception as e:\n        error(f\"cannot read JSON: {e}\")\n\n    if not isinstance(data, dict) or \"claims\" not in data:\n        error(\"JSON must contain top-level 'claims' list\")\n    claims = data[\"claims\"]\n    if not isinstance(claims, list):\n        error(\"'claims' must be a list\")\n\n    for idx, claim in enumerate(claims):\n        if not isinstance(claim, dict):\n            error(f\"claim at index {idx} is not an object\")\n        validate_claim(claim, idx)\n\n    as_of_date = compute_as_of(claims, as_of_provided)\n\n    # Build report\n    lines = []\n    lines.append(f\"CLAIMS COHERENCE REPORT (as_of {as_of_date.isoformat()})\")\n    lines.append(\"\")  # blank line after header\n\n    ready_cnt = 0\n    fail_cnt = 0\n\n    for claim in claims:\n        status = status_for_claim(claim, as_of_date)\n        if status == \"ready_for_use\":\n            ready_cnt += 1\n        else:\n            fail_cnt += 1\n        lines.append(f\"{claim['claim_id']} [{claim['claim_type']}]: {status}\")\n        if status != \"ready_for_use\":\n            suggestion = REPAIR_PATHS[status]\n            if status == \"stale_evidence\":\n                suggestion = suggestion.format(claim_type=claim[\"claim_type\"])\n            lines.append(f\"repair_path: {suggestion}\")\n\n    lines.append(\"\")  # blank line before summary\n    total = len(claims)\n    lines.append(f\"SUMMARY: {ready_cnt} ready / {fail_cnt} needing work of {total} total\")\n\n    print(\"\\n\".join(lines))\n\nif __name__ == \"__main__\":\n    main()",
+  "boundary": "This build-attempt record states what happened. It does not establish that the tool is correct, complete, safe, or fit for reuse."
+}
