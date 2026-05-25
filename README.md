@@ -17,12 +17,13 @@ This repo is for public, sample, or explicitly display-approved material only. D
 ## Fast Path
 
 1. Read `docs/participant-handout.md`.
-2. Fill `templates/offering-quick-card.md`, or ask a facilitator to help.
-3. If your offering should be built, wrap it with `templates/spec-fragment.md`.
-4. If several offerings fit together, use `templates/bundle.md`.
-5. For a selected bundle, use `templates/build-attempt-instructions.md`.
-6. After a build attempt, use `templates/reviewer-check.md` and `templates/witness-rollup.md`.
-7. Before a story, receipt wall item, slide, or other display surface is shown, use `templates/display-review-checklist.md`.
+2. If your team is working in Git, follow `docs/team-playbook.md`.
+3. Fill `templates/offering-quick-card.md`, or ask a facilitator to help.
+4. If your offering should be built, wrap it with `templates/spec-fragment.md`.
+5. If several offerings fit together, use `templates/bundle.md`.
+6. For a selected bundle, use `templates/build-attempt-instructions.md`.
+7. After a build attempt, use `templates/reviewer-check.md` and `templates/witness-rollup.md`.
+8. Before a story, receipt wall item, slide, or other display surface is shown, use `templates/display-review-checklist.md`.
 
 ## Seed Examples
 
