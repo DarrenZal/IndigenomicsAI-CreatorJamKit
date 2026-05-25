@@ -1,0 +1,50 @@
+{
+  "packet_id": "preflight-compute-covenant",
+  "packet_path": "/Users/darrenzal/projects/IndigenomicsAI-CreatorJamKit/specs/preflights/compute-covenant/build-packet.json",
+  "run_id": "compute-covenant-gemma-4-31b-20260525T154246",
+  "run_at": "2026-05-25T15:42:46Z",
+  "mode": "TELUS build-attempt lane",
+  "model": {
+    "catalog_id": "gemma-4-31b",
+    "provider_config_model": "google/gemma-4-31b-it"
+  },
+  "team": "Compute Covenant (preflight sample)",
+  "frozen": true,
+  "attempt_1": {
+    "codegen_ok": true,
+    "codegen_elapsed_ms": 25889,
+    "code_extracted": true,
+    "error": null,
+    "test": {
+      "passed": 5,
+      "total": 7,
+      "failing": [
+        "__main__.ComputeCovenantTest.test_3_withheld_not_named_but_counted",
+        "__main__.ComputeCovenantTest.test_4_covenant_and_boundary"
+      ]
+    }
+  },
+  "repair": {
+    "codegen_ok": true,
+    "codegen_elapsed_ms": 29665,
+    "code_extracted": true,
+    "error": null,
+    "test": {
+      "passed": 7,
+      "total": 7,
+      "failing": []
+    }
+  },
+  "final": {
+    "code_source": "repair-attempt",
+    "test": {
+      "passed": 7,
+      "total": 7
+    },
+    "all_passed": true
+  },
+  "finding": "fixed",
+  "finding_detail": "attempt 1: 5/7 passed; repair: 7/7 passed; repair fixed: test_3_withheld_not_named_but_counted, test_4_covenant_and_boundary",
+  "final_code": "import json\nimport sys\n\ndef main():\n    if len(sys.argv) < 2:\n        return\n\n    input_path = sys.argv[1]\n    try:\n        with open(input_path, 'r', encoding='utf-8') as f:\n            data = json.load(f)\n    except Exception:\n        print(\"error:\")\n        sys.exit(0)\n\n    jam = data.get(\"jam\", \"\")\n    date = data.get(\"date\", \"\")\n    site = data.get(\"site\", \"\")\n    teams_raw = data.get(\"teams\", [])\n\n    kept_teams = []\n    rejected_count = 0\n    total_count = len(teams_raw)\n\n    for t in teams_raw:\n        # Validation\n        team_name = t.get(\"team\")\n        disclosure = t.get(\"disclosure\")\n        \n        try:\n            kwh = t.get(\"total_kwh\")\n            in_tok = t.get(\"input_tokens\")\n            out_tok = t.get(\"output_tokens\")\n            \n            # Must be numeric and non-negative\n            # Note: isinstance(True, int) is True, but we need actual numbers.\n            # However, the spec says \"non-numeric\", and bools are technically numeric in Python.\n            # To be safe and strict:\n            if not isinstance(kwh, (int, float)) or isinstance(kwh, bool) or kwh < 0:\n                raise ValueError()\n            if not isinstance(in_tok, int) or isinstance(in_tok, bool) or in_tok < 0:\n                raise ValueError()\n            if not isinstance(out_tok, int) or isinstance(out_tok, bool) or out_tok < 0:\n                raise ValueError()\n            \n            if not team_name or disclosure not in (\"public\", \"withheld\"):\n                raise ValueError()\n                \n            kept_teams.append(t)\n        except (ValueError, TypeError):\n            rejected_count += 1\n\n    # Aggregates\n    k_total = len(kept_teams)\n    k_public = len([t for t in kept_teams if t.get(\"disclosure\") == \"public\"])\n    k_withheld = len([t for t in kept_teams if t.get(\"disclosure\") == \"withheld\"])\n    \n    sum_kwh = sum(t.get(\"total_kwh\", 0.0) for t in kept_teams)\n    sum_input = sum(t.get(\"input_tokens\", 0) for t in kept_teams)\n    sum_output = sum(t.get(\"output_tokens\", 0) for t in kept_teams)\n    \n    all_models = set()\n    for t in kept_teams:\n        models = t.get(\"models\", [])\n        if isinstance(models, list):\n            all_models.update(models)\n    \n    sorted_models = sorted(list(all_models))\n    models_str = \", \".join(sorted_models) if sorted_models else \"none\"\n\n    # Output\n    print(f\"COMPUTE COVENANT \u2014 {jam} ({date})\")\n    print(f\"site: {site}\")\n    print()\n    print(\"ECOSYSTEM ENERGY\")\n    print(f\"  teams: {k_total} kept ({k_public} public, {k_withheld} withheld), {rejected_count} rejected of {total_count} total\")\n    print(f\"  jam_kwh: {sum_kwh:.4f}\")\n    print(f\"  tokens: {sum_input} in / {sum_output} out\")\n    print(f\"  models: {models_str}\")\n    print()\n    print(\"PER-TEAM CONTRIBUTIONS\")\n    print()\n    \n    public_teams = [t for t in kept_teams if t.get(\"disclosure\") == \"public\"]\n    if not public_teams:\n        print(\"  (no public-disclosure teams)\")\n    else:\n        for t in public_teams:\n            t_name = t.get(\"team\")\n            t_kwh = t.get(\"total_kwh\")\n            t_kept = t.get(\"kept_events\", 0)\n            t_rej = t.get(\"rejected_events\", 0)\n            t_in = t.get(\"input_tokens\")\n            t_out = t.get(\"output_tokens\")\n            \n            themes = t.get(\"intention_themes\", [])\n            themes_str = \", \".join(themes) if themes else \"none\"\n            \n            t_models = t.get(\"models\", [])\n            t_models_str = \", \".join(sorted(t_models)) if t_models else \"none\"\n            \n            print(f\"- team: {t_name}\")\n            print(f\"  kWh: {t_kwh}\")\n            print(f\"  events: {t_kept} kept, {t_rej} rejected\")\n            print(f\"  tokens: {t_in} in / {t_out} out\")\n            print(f\"  intention themes: {themes_str}\")\n            print(f\"  models: {t_models_str}\")\n            print()\n\n    # Fix: The previous attempt used \\n inside the string which might have caused \n    # issues with exact string matching in tests if the test expected a single line \n    # or specific spacing. The spec says \"the rest of the sentence omitted in that case\".\n    if k_withheld == 0:\n        print(f\"WITHHELD: {k_withheld} team(s) opted out of public energy disclosure.\")\n    else:\n        print(f\"WITHHELD: {k_withheld} team(s) opted out of public energy disclosure. Their compute is included in ECOSYSTEM ENERGY; their names and per-team numbers are not.\")\n    \n    print()\n    print(\"COVENANT\")\n    # Fix: Ensure the \"Equivalent to roughly\" line is a single line without unexpected breaks\n    print(f\"This jam consumed {sum_kwh:.4f} kWh on {site}. Equivalent to roughly {sum_kwh / 0.4:.2f} Vancouver homes for an hour (0.4 kWh/home/hour reference).\")\n    print(\"Witnessed.\")\n    print()\n    print(\"BOUNDARY: This is a record of compute that happened, on a grid that ran on\")\n    print(\"~99% renewable hydro on the day named. It does not offset, certify carbon\")\n    print(\"neutrality, claim ecological repair, or grant a reuse license.\")\n\nif __name__ == \"__main__\":\n    main()",
+  "boundary": "This build-attempt record states what happened. It does not establish that the tool is correct, complete, safe, or fit for reuse."
+}

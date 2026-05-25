@@ -1,0 +1,63 @@
+{
+  "packet_id": "claude-darren-composed",
+  "packet_path": "/Users/darrenzal/projects/IndigenomicsAI-CreatorJamKit/examples/claude-darren-demo/composed-build-packet.json",
+  "run_id": "claude-darren-composed-qwen-3.6-35b-20260525T154419",
+  "run_at": "2026-05-25T15:44:19Z",
+  "mode": "TELUS build-attempt lane",
+  "model": {
+    "catalog_id": "qwen-3.6-35b",
+    "provider_config_model": "Qwen/Qwen3.6-35B-A3B"
+  },
+  "team": "Kelp Bed Observers + Steward Calendar (joint)",
+  "frozen": true,
+  "attempt_1": {
+    "codegen_ok": true,
+    "codegen_elapsed_ms": 7303,
+    "code_extracted": true,
+    "error": null,
+    "test": {
+      "passed": 0,
+      "total": 8,
+      "failing": [
+        "__main__.StewardshipReportTest.test_1_worked_example",
+        "__main__.StewardshipReportTest.test_2_three_conditions_two_bioregions",
+        "__main__.StewardshipReportTest.test_3_actions_only_bioregion",
+        "__main__.StewardshipReportTest.test_4_both_empty",
+        "__main__.StewardshipReportTest.test_5_unknown_action_type_dropped",
+        "__main__.StewardshipReportTest.test_6_malformed_observations_json",
+        "__main__.StewardshipReportTest.test_7_missing_arg",
+        "__main__.StewardshipReportTest.test_8_canopy_rounding_half_away_from_zero"
+      ]
+    }
+  },
+  "repair": {
+    "codegen_ok": true,
+    "codegen_elapsed_ms": 7325,
+    "code_extracted": true,
+    "error": null,
+    "test": {
+      "passed": 2,
+      "total": 8,
+      "failing": [
+        "__main__.StewardshipReportTest.test_1_worked_example",
+        "__main__.StewardshipReportTest.test_2_three_conditions_two_bioregions",
+        "__main__.StewardshipReportTest.test_3_actions_only_bioregion",
+        "__main__.StewardshipReportTest.test_4_both_empty",
+        "__main__.StewardshipReportTest.test_5_unknown_action_type_dropped",
+        "__main__.StewardshipReportTest.test_8_canopy_rounding_half_away_from_zero"
+      ]
+    }
+  },
+  "final": {
+    "code_source": "repair-attempt",
+    "test": {
+      "passed": 2,
+      "total": 8
+    },
+    "all_passed": false
+  },
+  "finding": "improved",
+  "finding_detail": "attempt 1: 0/8 passed; repair: 2/8 passed; repair fixed: test_6_malformed_observations_json, test_7_missing_arg",
+  "final_code": "import sys\nimport json\nimport math\n\ndef main():\n    if len(sys.argv) < 3:\n        print(\"error: missing arguments\")\n        sys.exit(0)\n\n    obs_path = sys.argv[1]\n    actions_path = sys.argv[2]\n\n    # Read and parse observations\n    try:\n        with open(obs_path, 'r') as f:\n            obs_data = json.load(f)\n    except (IOError, json.JSONDecodeError):\n        print(\"error: invalid JSON in observations\")\n        sys.exit(0)\n\n    # Read and parse actions\n    try:\n        with open(actions_path, 'r') as f:\n            act_data = json.load(f)\n    except (IOError, json.JSONDecodeError):\n        print(\"error: invalid JSON in actions\")\n        sys.exit(0)\n\n    # Validate and filter observations\n    valid_obs = []\n    if \"observations\" in obs_data and isinstance(obs_data[\"observations\"], list):\n        for obs in obs_data[\"observations\"]:\n            if not isinstance(obs, dict):\n                continue\n            if \"canopy_percent\" not in obs or \"site\" not in obs or \"bioregion\" not in obs:\n                continue\n            cp = obs[\"canopy_percent\"]\n            if not isinstance(cp, (int, float)):\n                continue\n            if cp < 0 or cp > 100:\n                continue\n            valid_obs.append(obs)\n\n    # Validate and filter actions\n    valid_action_types = {\"work-party\", \"beach-cleanup\", \"eelgrass-survey\", \"kelp-count\", \"planting\"}\n    valid_actions = []\n    if \"actions\" in act_data and isinstance(act_data[\"actions\"], list):\n        for act in act_data[\"actions\"]:\n            if not isinstance(act, dict):\n                continue\n            if \"action_type\" not in act or \"bioregion\" not in act:\n                continue\n            if act[\"action_type\"] not in valid_action_types:\n                continue\n            valid_actions.append(act)\n\n    # Collect all bioregions\n    bioregions = set()\n    for obs in valid_obs:\n        bioregions.add(obs[\"bioregion\"])\n    for act in valid_actions:\n        bioregions.add(act[\"bioregion\"])\n\n    sorted_bioregions = sorted(bioregions)\n\n    # Process kelp data per bioregion\n    # Structure: bioregion -> site -> list of canopy_percent\n    kelp_data = {}\n    for br in sorted_bioregions:\n        kelp_data[br] = {}\n        for obs in valid_obs:\n            if obs[\"bioregion\"] == br:\n                site = obs[\"site\"]\n                if site not in kelp_data[br]:\n                    kelp_data[br][site] = []\n                kelp_data[br][site].append(obs[\"canopy_percent\"])\n\n    # Process actions per bioregion\n    # Structure: bioregion -> action_type -> count\n    action_data = {}\n    for br in sorted_bioregions:\n        action_data[br] = {}\n        for act in valid_actions:\n            if act[\"bioregion\"] == br:\n                at = act[\"action_type\"]\n                if at not in action_data[br]:\n                    action_data[br][at] = 0\n                action_data[br][at] += 1\n\n    # Helper to round half away from zero\n    def round_half_away(x):\n        if x >= 0:\n            return int(math.floor(x + 0.5))\n        else:\n            return int(math.ceil(x - 0.5))\n\n    # Build output\n    output_lines = []\n\n    # Header\n    output_lines.append(f\"KELP-BED STEWARDSHIP REPORT ({len(sorted_bioregions)} bioregions)\")\n\n    # Per bioregion sections\n    for i, br in enumerate(sorted_bioregions):\n        output_lines.append(f\"== {br} ==\")\n        \n        # KELP block\n        output_lines.append(\"KELP:\")\n        sites = kelp_data[br]\n        if not sites:\n            output_lines.append(\"  none\")\n        else:\n            # Sort sites alphabetically\n            for site in sorted(sites.keys()):\n                values = sites[site]\n                mean = sum(values) / len(values)\n                rounded_mean = round_half_away(mean)\n                if mean >= 60:\n                    condition = \"healthy\"\n                elif mean >= 30:\n                    condition = \"declining\"\n                else:\n                    condition = \"stressed\"\n                output_lines.append(f\"  {site}: {condition} (mean canopy {rounded_mean}%)\")\n        \n        # ACTIONS block\n        output_lines.append(\"ACTIONS:\")\n        actions = action_data[br]\n        if not actions:\n            output_lines.append(\"  none\")\n        else:\n            # Sort by count descending, then action_type alphabetically ascending\n            sorted_actions = sorted(actions.items(), key=lambda x: (-x[1], x[0]))\n            for at, count in sorted_actions:\n                output_lines.append(f\"  {at}: {count}\")\n        \n        # Add blank line after each bioregion section except the last one\n        if i < len(sorted_bioregions) - 1:\n            output_lines.append(\"\")\n\n    # Summary line\n    total_healthy = 0\n    total_declining = 0\n    total_stressed = 0\n    for br in sorted_bioregions:\n        for site, values in kelp_data[br].items():\n            mean = sum(values) / len(values)\n            if mean >= 60:\n                total_healthy += 1\n            elif mean >= 30:\n                total_declining += 1\n            else:\n                total_stressed += 1\n    \n    total_actions = len(valid_actions)\n    \n    output_lines.append(f\"SUMMARY: {total_healthy} healthy / {total_declining} declining / {total_stressed} stressed sites, {total_actions} stewardship actions\")\n\n    # Print all output\n    for line in output_lines:\n        print(line)\n\nif __name__ == \"__main__\":\n    main()",
+  "boundary": "This build-attempt record states what happened. It does not establish that the tool is correct, complete, safe, or fit for reuse."
+}

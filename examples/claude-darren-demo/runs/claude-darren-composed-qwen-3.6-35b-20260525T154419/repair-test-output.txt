@@ -1,0 +1,146 @@
+test_1_worked_example (__main__.StewardshipReportTest.test_1_worked_example) ... FAIL
+test_2_three_conditions_two_bioregions (__main__.StewardshipReportTest.test_2_three_conditions_two_bioregions) ... FAIL
+test_3_actions_only_bioregion (__main__.StewardshipReportTest.test_3_actions_only_bioregion) ... FAIL
+test_4_both_empty (__main__.StewardshipReportTest.test_4_both_empty) ... FAIL
+test_5_unknown_action_type_dropped (__main__.StewardshipReportTest.test_5_unknown_action_type_dropped) ... FAIL
+test_6_malformed_observations_json (__main__.StewardshipReportTest.test_6_malformed_observations_json) ... ok
+test_7_missing_arg (__main__.StewardshipReportTest.test_7_missing_arg) ... ok
+test_8_canopy_rounding_half_away_from_zero (__main__.StewardshipReportTest.test_8_canopy_rounding_half_away_from_zero) ... FAIL
+
+======================================================================
+FAIL: test_1_worked_example (__main__.StewardshipReportTest.test_1_worked_example)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/3c/6p_c61tj3y5ccqzmvfxmdg080000gn/T/m2-lite-test-tp9p8k0_/test_tool.py", line 76, in test_1_worked_example
+    self.assertEqual(self._lines(proc.stdout), [
+AssertionError: Lists differ: ['KEL[172 chars]1', 'SUMMARY: 1 healthy / 0 declining / 0 stre[30 chars]ons'] != ['KEL[172 chars]1', '', 'SUMMARY: 1 healthy / 0 declining / 0 [34 chars]ons']
+
+First differing element 7:
+'SUMMARY: 1 healthy / 0 declining / 0 stressed sites, 3 stewardship actions'
+''
+
+Second list contains 1 additional elements.
+First extra element 8:
+'SUMMARY: 1 healthy / 0 declining / 0 stressed sites, 3 stewardship actions'
+
+  ['KELP-BED STEWARDSHIP REPORT (1 bioregions)',
+   '== Strait of Georgia ==',
+   'KELP:',
+   '  Boundary Bay: healthy (mean canopy 60%)',
+   'ACTIONS:',
+   '  kelp-count: 2',
+   '  beach-cleanup: 1',
++  '',
+   'SUMMARY: 1 healthy / 0 declining / 0 stressed sites, 3 stewardship actions'] : worked example from build-instructions.md
+
+======================================================================
+FAIL: test_2_three_conditions_two_bioregions (__main__.StewardshipReportTest.test_2_three_conditions_two_bioregions)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/3c/6p_c61tj3y5ccqzmvfxmdg080000gn/T/m2-lite-test-tp9p8k0_/test_tool.py", line 107, in test_2_three_conditions_two_bioregions
+    self.assertEqual(self._lines(proc.stdout), [
+AssertionError: Lists differ: ['KEL[140 chars]e', '', '== Strait of Georgia ==', 'KELP:', ' [187 chars]ons'] != ['KEL[140 chars]e', '== Strait of Georgia ==', 'KELP:', '  Bou[187 chars]ons']
+
+First differing element 6:
+''
+'== Strait of Georgia =='
+
+  ['KELP-BED STEWARDSHIP REPORT (2 bioregions)',
+   '== Juan de Fuca ==',
+   'KELP:',
+   '  Botanical Beach: stressed (mean canopy 20%)',
+   'ACTIONS:',
+   '  none',
+-  '',
+   '== Strait of Georgia ==',
+   'KELP:',
+   '  Boundary Bay: healthy (mean canopy 80%)',
+   '  Lighthouse Park: declining (mean canopy 40%)',
+   'ACTIONS:',
+   '  none',
++  '',
+   'SUMMARY: 1 healthy / 1 declining / 1 stressed sites, 0 stewardship actions'] : bioregions alphabetical; sites alphabetical within KELP block
+
+======================================================================
+FAIL: test_3_actions_only_bioregion (__main__.StewardshipReportTest.test_3_actions_only_bioregion)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/3c/6p_c61tj3y5ccqzmvfxmdg080000gn/T/m2-lite-test-tp9p8k0_/test_tool.py", line 137, in test_3_actions_only_bioregion
+    self.assertEqual(self._lines(proc.stdout), [
+AssertionError: Lists differ: ['KEL[131 chars]1', 'SUMMARY: 0 healthy / 0 declining / 0 stre[30 chars]ons'] != ['KEL[131 chars]1', '', 'SUMMARY: 0 healthy / 0 declining / 0 [34 chars]ons']
+
+First differing element 7:
+'SUMMARY: 0 healthy / 0 declining / 0 stressed sites, 3 stewardship actions'
+''
+
+Second list contains 1 additional elements.
+First extra element 8:
+'SUMMARY: 0 healthy / 0 declining / 0 stressed sites, 3 stewardship actions'
+
+  ['KELP-BED STEWARDSHIP REPORT (1 bioregions)',
+   '== Puget Sound ==',
+   'KELP:',
+   '  none',
+   'ACTIONS:',
+   '  planting: 2',
+   '  eelgrass-survey: 1',
++  '',
+   'SUMMARY: 0 healthy / 0 declining / 0 stressed sites, 3 stewardship actions'] : bioregion appears even with no observations; ACTIONS sorted count-desc, alpha-asc
+
+======================================================================
+FAIL: test_4_both_empty (__main__.StewardshipReportTest.test_4_both_empty)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/3c/6p_c61tj3y5ccqzmvfxmdg080000gn/T/m2-lite-test-tp9p8k0_/test_tool.py", line 155, in test_4_both_empty
+    self.assertEqual(self._lines(proc.stdout), [
+AssertionError: Lists differ: ['KEL[38 chars])', 'SUMMARY: 0 healthy / 0 declining / 0 stre[30 chars]ons'] != ['KEL[38 chars])', '', 'SUMMARY: 0 healthy / 0 declining / 0 [34 chars]ons']
+
+First differing element 1:
+'SUMMARY: 0 healthy / 0 declining / 0 stressed sites, 0 stewardship actions'
+''
+
+Second list contains 1 additional elements.
+First extra element 2:
+'SUMMARY: 0 healthy / 0 declining / 0 stressed sites, 0 stewardship actions'
+
+  ['KELP-BED STEWARDSHIP REPORT (0 bioregions)',
++  '',
+   'SUMMARY: 0 healthy / 0 declining / 0 stressed sites, 0 stewardship actions'] : both-empty still prints header + blank line + summary
+
+======================================================================
+FAIL: test_5_unknown_action_type_dropped (__main__.StewardshipReportTest.test_5_unknown_action_type_dropped)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/3c/6p_c61tj3y5ccqzmvfxmdg080000gn/T/m2-lite-test-tp9p8k0_/test_tool.py", line 172, in test_5_unknown_action_type_dropped
+    self.assertEqual(self._lines(proc.stdout), [
+AssertionError: Lists differ: ['KEL[115 chars]1', 'SUMMARY: 0 healthy / 0 declining / 0 stre[30 chars]ons'] != ['KEL[115 chars]1', '', 'SUMMARY: 0 healthy / 0 declining / 0 [34 chars]ons']
+
+First differing element 6:
+'SUMMARY: 0 healthy / 0 declining / 0 stressed sites, 1 stewardship actions'
+''
+
+Second list contains 1 additional elements.
+First extra element 7:
+'SUMMARY: 0 healthy / 0 declining / 0 stressed sites, 1 stewardship actions'
+
+  ['KELP-BED STEWARDSHIP REPORT (1 bioregions)',
+   '== Strait of Georgia ==',
+   'KELP:',
+   '  none',
+   'ACTIONS:',
+   '  kelp-count: 1',
++  '',
+   'SUMMARY: 0 healthy / 0 declining / 0 stressed sites, 1 stewardship actions'] : unknown action_type values are dropped silently
+
+======================================================================
+FAIL: test_8_canopy_rounding_half_away_from_zero (__main__.StewardshipReportTest.test_8_canopy_rounding_half_away_from_zero)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/3c/6p_c61tj3y5ccqzmvfxmdg080000gn/T/m2-lite-test-tp9p8k0_/test_tool.py", line 222, in test_8_canopy_rounding_half_away_from_zero
+    self.assertIn("  Edge Site: healthy (mean canopy 60%)", lines,
+AssertionError: '  Edge Site: healthy (mean canopy 60%)' not found in ['KELP-BED STEWARDSHIP REPORT (1 bioregions)', '== Test Region ==', 'KELP:', '  Edge Site: declining (mean canopy 60%)', 'ACTIONS:', '  none', 'SUMMARY: 0 healthy / 1 declining / 0 stressed sites, 0 stewardship actions'] : 59.5 mean rounds to 60 (half away from zero); displayed mean 60 with healthy condition (>=60). Got: ['KELP-BED STEWARDSHIP REPORT (1 bioregions)', '== Test Region ==', 'KELP:', '  Edge Site: declining (mean canopy 60%)', 'ACTIONS:', '  none', 'SUMMARY: 0 healthy / 1 declining / 0 stressed sites, 0 stewardship actions']
+
+----------------------------------------------------------------------
+Ran 8 tests in 2.837s
+
+FAILED (failures=6)

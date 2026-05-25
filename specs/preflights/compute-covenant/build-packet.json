@@ -1,0 +1,133 @@
+{
+  "packet_version": "v0",
+  "packet_id": "preflight-compute-covenant",
+  "team_spec": {
+    "team_name": "Compute Covenant (preflight sample)",
+    "site": "preflight",
+    "vision": "Roll up multiple team energy receipts into a jam-level compute covenant — ecosystem-scale receipt of what was computed on TELUS-Rimouski hydro, with public-safe handling of teams that opt out of disclosure.",
+    "spec": "Build `python3 tool.py <covenant_json_path>`. Reads { \"jam\": \"...\", \"date\": \"YYYY-MM-DD\", \"site\": \"TELUS-Rimouski hydro\", \"teams\": [ {\"team\":\"...\",\"kept_events\":<int>,\"rejected_events\":<int>,\"total_kwh\":<float>,\"input_tokens\":<int>,\"output_tokens\":<int>,\"models\":[\"...\"],\"intention_themes\":[\"...\"],\"disclosure\":\"public\"|\"withheld\"} ] }. Reject teams with empty team, disclosure not in {public,withheld}, missing/non-numeric/negative total_kwh/input_tokens/output_tokens. Kept teams (public + withheld) all feed ECOSYSTEM ENERGY totals; only public teams are named in PER-TEAM CONTRIBUTIONS. Print to stdout: 'COMPUTE COVENANT — <jam> (<date>)'; 'site: <site>'; blank; 'ECOSYSTEM ENERGY' header with '  teams: <K> kept (<P> public, <W> withheld), <R> rejected of <N> total', '  jam_kwh: <sum 4dp>', '  tokens: <in> in / <out> out', '  models: <sorted distinct kept-team models, or none>'; blank; 'PER-TEAM CONTRIBUTIONS'; blank; per public team in input order: '- team: <team>', '  kWh: <kwh>', '  events: <kept> kept, <rejected> rejected', '  tokens: <in> in / <out> out', '  intention themes: <comma list, or none>', '  models: <sorted distinct team models, or none>', blank; if no public teams: '  (no public-disclosure teams)'; 'WITHHELD: <W> team(s) opted out of public energy disclosure.' + (if W>0) ' Their compute is included in ECOSYSTEM ENERGY; their names and per-team numbers are not.'; blank; 'COVENANT' block: 'This jam consumed <sum 4dp> kWh on <site>. Equivalent to roughly <sum/0.4 2dp> Vancouver homes for an hour (0.4 kWh/home/hour reference). Witnessed.'; blank; 'BOUNDARY: This is a record of compute that happened, on a grid that ran on ~99% renewable hydro on the day named. It does not offset, certify carbon neutrality, claim ecological repair, or grant a reuse license.'. On invalid JSON: 'error:' line, exit 0. Stdlib only.",
+    "build_target": "single-file CLI"
+  },
+  "freeze_record": {
+    "frozen": true,
+    "frozen_at": "2026-05-25",
+    "frozen_by": "preflight",
+    "facilitator_confirmed": {
+      "consent_privacy_complete": true,
+      "boundaries_reviewed": true,
+      "public_private_status_confirmed": true,
+      "ai_input_scope_confirmed": true,
+      "build_path_confirmed": true,
+      "witnessed_working_clear": true
+    }
+  },
+  "allowed_inputs": [
+    {
+      "name": "sample-covenant.json",
+      "kind": "json-data",
+      "note": "synthetic jam-level rollup; no real teams",
+      "content": {
+        "jam": "IndigenomicsAI Creator Jam",
+        "date": "2026-05-25",
+        "site": "TELUS-Rimouski hydro",
+        "teams": [
+          {
+            "team": "Kelp Watchers",
+            "kept_events": 12,
+            "rejected_events": 1,
+            "total_kwh": 0.0420,
+            "input_tokens": 2400,
+            "output_tokens": 5100,
+            "models": ["gemma-4-31b", "qwen-3.6-35b"],
+            "intention_themes": ["kelp", "eelgrass", "witness-voice"],
+            "disclosure": "public"
+          },
+          {
+            "team": "Herring Friends",
+            "kept_events": 8,
+            "rejected_events": 0,
+            "total_kwh": 0.0190,
+            "input_tokens": 1100,
+            "output_tokens": 2400,
+            "models": ["gemma-4-31b"],
+            "intention_themes": ["herring", "keystone-species"],
+            "disclosure": "public"
+          },
+          {
+            "team": "Unnamed Stewards",
+            "kept_events": 6,
+            "rejected_events": 2,
+            "total_kwh": 0.0150,
+            "input_tokens": 900,
+            "output_tokens": 1500,
+            "models": ["gpt-oss-120b"],
+            "intention_themes": ["protocol-work"],
+            "disclosure": "withheld"
+          },
+          {
+            "team": "",
+            "kept_events": 0,
+            "rejected_events": 0,
+            "total_kwh": 0.0,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "models": [],
+            "intention_themes": [],
+            "disclosure": "public"
+          }
+        ]
+      }
+    }
+  ],
+  "excluded_inputs": [
+    {
+      "id": "withheld-team-identifiers",
+      "visibility": "marker-only",
+      "boundary_type": "marker-only",
+      "boundary": "For any team with disclosure=='withheld', the team name and per-team numbers must not appear in the PER-TEAM CONTRIBUTIONS block. The withheld count must appear. Their compute still feeds ECOSYSTEM ENERGY totals.",
+      "private_content_included": false,
+      "disallowed_use": ["embed", "route", "transform"],
+      "note": "the spec encodes this discipline; this marker confirms the design"
+    }
+  ],
+  "build_instructions": {
+    "path": "build-instructions.md"
+  },
+  "acceptance_criteria": {
+    "description": [
+      "header with jam, date, site",
+      "ECOSYSTEM ENERGY rollup includes withheld teams' compute",
+      "PER-TEAM CONTRIBUTIONS only names public teams",
+      "WITHHELD line shows count and explanatory clause when W>0",
+      "COVENANT block has 'Witnessed.' and Vancouver-homes equivalent",
+      "BOUNDARY footer present",
+      "rejects malformed teams",
+      "error: on invalid input"
+    ],
+    "test_file": {
+      "name": "acceptance-test.py",
+      "language": "python-stdlib",
+      "path": "acceptance-test.py"
+    }
+  },
+  "review_checks": [
+    "tool runs cleanly stdlib-only",
+    "passes acceptance tests",
+    "no withheld team names appear in PER-TEAM CONTRIBUTIONS (excluded marker)",
+    "no outputs hardcoded",
+    "no carbon-offset or ecological-repair language in the output"
+  ],
+  "witness_record_seed": {
+    "team": "Compute Covenant preflight",
+    "date": "2026-05-25",
+    "fields": [
+      "what we brought",
+      "what we attempted",
+      "what worked",
+      "what did not work",
+      "what we learned",
+      "boundaries that remain"
+    ],
+    "receipt_statement": "This record states what happened. It does not establish authority, approval, certification, legitimacy, community consent, carbon neutrality, ecological repair, or readiness for reuse."
+  }
+}

@@ -1,0 +1,12 @@
+test_1_header_and_ecosystem_rollup (__main__.ComputeCovenantTest.test_1_header_and_ecosystem_rollup) ... ok
+test_2_per_team_block (__main__.ComputeCovenantTest.test_2_per_team_block) ... ok
+test_3_withheld_not_named_but_counted (__main__.ComputeCovenantTest.test_3_withheld_not_named_but_counted) ... ok
+test_4_covenant_and_boundary (__main__.ComputeCovenantTest.test_4_covenant_and_boundary) ... ok
+test_5_rejects_malformed (__main__.ComputeCovenantTest.test_5_rejects_malformed) ... ok
+test_6_no_public_teams (__main__.ComputeCovenantTest.test_6_no_public_teams) ... ok
+test_7_invalid_json (__main__.ComputeCovenantTest.test_7_invalid_json) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 4.384s
+
+OK

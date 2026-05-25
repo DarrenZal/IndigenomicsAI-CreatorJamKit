@@ -1,0 +1,104 @@
+{
+  "schema_version": "team-submission-v0",
+  "submission_id": "team-spec-steward-calendar-01",
+  "created_at": "2026-05-25T09:10:00-07:00",
+  "updated_at": "2026-05-25T10:55:00-07:00",
+  "surface": "shared-doc",
+  "team": {
+    "id": "team-steward-calendar",
+    "name": "Steward Calendar",
+    "site": "Victoria",
+    "members": [
+      {"display": "S. Salal"},
+      {"display": "R. Riverwalk"}
+    ]
+  },
+  "vision": {
+    "text": "A CLI that takes a season's worth of public stewardship-action entries (work-party events, beach clean-ups, eelgrass surveys, kelp counts) and produces a per-bioregion calendar showing which months hold which kinds of work, so a new volunteer can see where they fit.",
+    "prompt": "What should exist, and what does it make visible, felt, or possible?"
+  },
+  "spec": {
+    "text": "Single-file Python CLI: reads a JSON file of stewardship-action entries (date, bioregion, action_type, site_alias), groups by bioregion and month, and prints a simple calendar table per bioregion showing the count of each action_type per month.",
+    "prompt": "What does the team want made real over the two days?"
+  },
+  "source_offerings": [
+    {
+      "id": "o1",
+      "title": "Salish Sea volunteer stewardship action log (public events)",
+      "contributor_display": "S. Salal",
+      "visibility": "public",
+      "included_in_build": true,
+      "cleared_text": "Public-facing stewardship action log. Each entry: date (ISO), bioregion (string), action_type (one of: work-party, beach-cleanup, eelgrass-survey, kelp-count, planting), site_alias (string). Only events advertised on public calendars are included."
+    },
+    {
+      "id": "o2",
+      "title": "Host-Nation stewardship cycle reference (held by team)",
+      "contributor_display": null,
+      "visibility": "team-only",
+      "included_in_build": false,
+      "cleared_text": "(not cleared — held by team; a host-Nation-internal seasonal cycle reference shared in confidence by a partner organization. Mentioned in framing only; not in the dataset, not in the AI input, not in the displayed output.)"
+    }
+  ],
+  "boundaries": [
+    {
+      "id": "b1",
+      "label": "Host-Nation stewardship cycle reference",
+      "boundary_type": "protected",
+      "marker_text": "A partner-organization reference document held by the team. Shapes our private thinking about the calendar but is not in the dataset, not in any AI input, and not in any output shown Tuesday.",
+      "private_content_included": false,
+      "disallowed_use": ["summarize", "tag", "embed", "transform", "send-to-ai", "quoted-in-output"]
+    },
+    {
+      "id": "b2",
+      "label": "Volunteer real names",
+      "boundary_type": "not-for-AI",
+      "marker_text": "Volunteer rosters live in the team's own roster spreadsheet. Only site_alias appears in the dataset sent to the AI.",
+      "private_content_included": false,
+      "disallowed_use": ["embed", "send-to-ai"]
+    }
+  ],
+  "build_request": {
+    "path": "telus-lane",
+    "target": "single-file-cli",
+    "notes": "stdlib only. Because of the protected boundary, only the cleared public-events portion of the dataset is in scope for the build attempt and the Tuesday display."
+  },
+  "witnessed_working": {
+    "description": "Tuesday: show the CLI reading the cleared public-events fixture and printing a per-bioregion / per-month action-type calendar.",
+    "acceptance_criteria": [
+      "prints header 'STEWARDSHIP CALENDAR (<N> bioregions)'",
+      "groups entries by bioregion, then by month (YYYY-MM)",
+      "prints, for each bioregion, a section listing each month with action-type counts in count-descending then alphabetical order",
+      "handles empty input and malformed JSON without a traceback"
+    ]
+  },
+  "help_wanted": [
+    "a mentor pair on the month-grouping output shape (table vs sectioned text)"
+  ],
+  "authorization": {
+    "visible_to_facilitators": true,
+    "display_scope": "partial",
+    "display_allowed_parts": [
+      "the per-bioregion / per-month calendar output computed from the cleared public-events fixture only"
+    ],
+    "ai_input_scope": "partial",
+    "ai_allowed_parts": [
+      "the cleared public-events stewardship action log"
+    ],
+    "reuse_scope": "ask-first",
+    "authorization_notes": "The host-Nation stewardship cycle reference is named only as a boundary. It is not cleared for AI input, display, or reuse under any framing."
+  },
+  "freeze": {
+    "status": "frozen",
+    "frozen_by": "team + facilitator",
+    "frozen_at": "2026-05-25T10:55:00-07:00",
+    "facilitator_confirmed": {
+      "consent_privacy_complete": true,
+      "boundaries_reviewed": true,
+      "public_private_status_confirmed": true,
+      "ai_input_scope_confirmed": true,
+      "build_path_confirmed": true,
+      "witnessed_working_clear": true
+    },
+    "change_policy": "new ideas require re-freeze"
+  }
+}

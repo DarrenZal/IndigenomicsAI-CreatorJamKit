@@ -1,0 +1,77 @@
+test_1_worked_example (__main__.StewardshipReportTest.test_1_worked_example) ... FAIL
+test_2_three_conditions_two_bioregions (__main__.StewardshipReportTest.test_2_three_conditions_two_bioregions) ... FAIL
+test_3_actions_only_bioregion (__main__.StewardshipReportTest.test_3_actions_only_bioregion) ... FAIL
+test_4_both_empty (__main__.StewardshipReportTest.test_4_both_empty) ... FAIL
+test_5_unknown_action_type_dropped (__main__.StewardshipReportTest.test_5_unknown_action_type_dropped) ... FAIL
+test_6_malformed_observations_json (__main__.StewardshipReportTest.test_6_malformed_observations_json) ... FAIL
+test_7_missing_arg (__main__.StewardshipReportTest.test_7_missing_arg) ... FAIL
+test_8_canopy_rounding_half_away_from_zero (__main__.StewardshipReportTest.test_8_canopy_rounding_half_away_from_zero) ... FAIL
+
+======================================================================
+FAIL: test_1_worked_example (__main__.StewardshipReportTest.test_1_worked_example)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/3c/6p_c61tj3y5ccqzmvfxmdg080000gn/T/m2-lite-test-8dn6odfe/test_tool.py", line 74, in test_1_worked_example
+    self.assertEqual(proc.returncode, 0,
+AssertionError: 1 != 0 : tool must exit 0; stderr='  File "/private/var/folders/3c/6p_c61tj3y5ccqzmvfxmdg080000gn/T/m2-lite-test-8dn6odfe/tool.py", line 105\n    output_lines.append(f"== {br} =="\n                       ^\nSyntaxError: \'(\' was never closed\n'
+
+======================================================================
+FAIL: test_2_three_conditions_two_bioregions (__main__.StewardshipReportTest.test_2_three_conditions_two_bioregions)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/3c/6p_c61tj3y5ccqzmvfxmdg080000gn/T/m2-lite-test-8dn6odfe/test_tool.py", line 105, in test_2_three_conditions_two_bioregions
+    self.assertEqual(proc.returncode, 0,
+AssertionError: 1 != 0 : tool must exit 0; stderr='  File "/private/var/folders/3c/6p_c61tj3y5ccqzmvfxmdg080000gn/T/m2-lite-test-8dn6odfe/tool.py", line 105\n    output_lines.append(f"== {br} =="\n                       ^\nSyntaxError: \'(\' was never closed\n'
+
+======================================================================
+FAIL: test_3_actions_only_bioregion (__main__.StewardshipReportTest.test_3_actions_only_bioregion)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/3c/6p_c61tj3y5ccqzmvfxmdg080000gn/T/m2-lite-test-8dn6odfe/test_tool.py", line 135, in test_3_actions_only_bioregion
+    self.assertEqual(proc.returncode, 0,
+AssertionError: 1 != 0 : tool must exit 0; stderr='  File "/private/var/folders/3c/6p_c61tj3y5ccqzmvfxmdg080000gn/T/m2-lite-test-8dn6odfe/tool.py", line 105\n    output_lines.append(f"== {br} =="\n                       ^\nSyntaxError: \'(\' was never closed\n'
+
+======================================================================
+FAIL: test_4_both_empty (__main__.StewardshipReportTest.test_4_both_empty)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/3c/6p_c61tj3y5ccqzmvfxmdg080000gn/T/m2-lite-test-8dn6odfe/test_tool.py", line 153, in test_4_both_empty
+    self.assertEqual(proc.returncode, 0,
+AssertionError: 1 != 0 : tool must exit 0 on both-empty; stderr='  File "/private/var/folders/3c/6p_c61tj3y5ccqzmvfxmdg080000gn/T/m2-lite-test-8dn6odfe/tool.py", line 105\n    output_lines.append(f"== {br} =="\n                       ^\nSyntaxError: \'(\' was never closed\n'
+
+======================================================================
+FAIL: test_5_unknown_action_type_dropped (__main__.StewardshipReportTest.test_5_unknown_action_type_dropped)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/3c/6p_c61tj3y5ccqzmvfxmdg080000gn/T/m2-lite-test-8dn6odfe/test_tool.py", line 170, in test_5_unknown_action_type_dropped
+    self.assertEqual(proc.returncode, 0,
+AssertionError: 1 != 0 : tool must exit 0; stderr='  File "/private/var/folders/3c/6p_c61tj3y5ccqzmvfxmdg080000gn/T/m2-lite-test-8dn6odfe/tool.py", line 105\n    output_lines.append(f"== {br} =="\n                       ^\nSyntaxError: \'(\' was never closed\n'
+
+======================================================================
+FAIL: test_6_malformed_observations_json (__main__.StewardshipReportTest.test_6_malformed_observations_json)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/3c/6p_c61tj3y5ccqzmvfxmdg080000gn/T/m2-lite-test-8dn6odfe/test_tool.py", line 187, in test_6_malformed_observations_json
+    self.assertEqual(proc.returncode, 0,
+AssertionError: 1 != 0 : malformed JSON must still exit 0; stderr='  File "/private/var/folders/3c/6p_c61tj3y5ccqzmvfxmdg080000gn/T/m2-lite-test-8dn6odfe/tool.py", line 105\n    output_lines.append(f"== {br} =="\n                       ^\nSyntaxError: \'(\' was never closed\n'
+
+======================================================================
+FAIL: test_7_missing_arg (__main__.StewardshipReportTest.test_7_missing_arg)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/3c/6p_c61tj3y5ccqzmvfxmdg080000gn/T/m2-lite-test-8dn6odfe/test_tool.py", line 200, in test_7_missing_arg
+    self.assertEqual(proc.returncode, 0,
+AssertionError: 1 != 0 : missing arg must still exit 0; stderr='  File "/private/var/folders/3c/6p_c61tj3y5ccqzmvfxmdg080000gn/T/m2-lite-test-8dn6odfe/tool.py", line 105\n    output_lines.append(f"== {br} =="\n                       ^\nSyntaxError: \'(\' was never closed\n'
+
+======================================================================
+FAIL: test_8_canopy_rounding_half_away_from_zero (__main__.StewardshipReportTest.test_8_canopy_rounding_half_away_from_zero)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/3c/6p_c61tj3y5ccqzmvfxmdg080000gn/T/m2-lite-test-8dn6odfe/test_tool.py", line 218, in test_8_canopy_rounding_half_away_from_zero
+    self.assertEqual(proc.returncode, 0,
+AssertionError: 1 != 0 : tool must exit 0; stderr='  File "/private/var/folders/3c/6p_c61tj3y5ccqzmvfxmdg080000gn/T/m2-lite-test-8dn6odfe/tool.py", line 105\n    output_lines.append(f"== {br} =="\n                       ^\nSyntaxError: \'(\' was never closed\n'
+
+----------------------------------------------------------------------
+Ran 8 tests in 3.133s
+
+FAILED (failures=8)

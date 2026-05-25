@@ -1,0 +1,146 @@
+{
+  "packet_version": "v0",
+  "packet_id": "claude-darren-composed",
+  "composed_from_bundle": "composed-team-kelp-bed-observers-with-team-steward-calendar",
+  "composed_from_submissions": [
+    "team-spec-kelp-bed-observers-01",
+    "team-spec-steward-calendar-01"
+  ],
+  "team_spec": {
+    "team_name": "Kelp Bed Observers + Steward Calendar (joint)",
+    "site": "Vancouver + Victoria",
+    "vision": "A small CLI that pairs a season's kelp-bed condition assessments with the stewardship actions that happened in each bioregion, so a community group can read which beds are stressed AND what work has been showing up around them.",
+    "spec": "Single-file Python CLI that reads two JSON files (observations + actions), groups by bioregion, and prints a joint report: per-site kelp condition + per-action-type counts, with a summary line. Composed from Kelp Bed Observers' condition-assessment tool and Steward Calendar's bioregion/month grouping; the calendar shape is collapsed to seasonal totals in this v0 composition.",
+    "build_target": "one single-file Python tool, standard library only"
+  },
+  "freeze_record": {
+    "frozen": true,
+    "frozen_at": "2026-05-25T11:30:00-07:00",
+    "frozen_by": "Kelp Bed Observers + Steward Calendar (both teams, joint re-freeze) + facilitator",
+    "facilitator_confirmed": {
+      "boundaries_reviewed": true,
+      "public_private_status_confirmed": true,
+      "consent_and_privacy_complete": true,
+      "both_teams_re_confirmed_in_composed_context": true,
+      "intersected_authorization_accepted_by_both_teams": true
+    },
+    "joint_freeze_note": "Both teams re-read the candidate bundle (intersected authorization = display_scope: partial, ai_input_scope: partial, reuse_scope: ask-first), confirmed the cleared inputs from each team, and re-confirmed that neither team's protected boundary is dissolved by composition. Re-freeze conversation transcript lives in the joint witness record (untracked-allocation section)."
+  },
+  "allowed_inputs": [
+    {
+      "name": "sample-observations.json",
+      "kind": "json-data",
+      "from_team": "team-kelp-bed-observers",
+      "note": "sample of the cleared kelp canopy observations dataset (public-shoreline only, observer aliases only)",
+      "content": {
+        "observations": [
+          {"date": "2025-08-01", "site": "Boundary Bay", "canopy_percent": 72, "observer_alias": "obs-a", "bioregion": "Strait of Georgia"},
+          {"date": "2025-09-01", "site": "Boundary Bay", "canopy_percent": 65, "observer_alias": "obs-b", "bioregion": "Strait of Georgia"},
+          {"date": "2025-08-10", "site": "Lighthouse Park", "canopy_percent": 45, "observer_alias": "obs-c", "bioregion": "Strait of Georgia"},
+          {"date": "2025-09-05", "site": "Lighthouse Park", "canopy_percent": 35, "observer_alias": "obs-d", "bioregion": "Strait of Georgia"},
+          {"date": "2025-08-15", "site": "Botanical Beach", "canopy_percent": 25, "observer_alias": "obs-e", "bioregion": "Juan de Fuca"},
+          {"date": "2025-09-12", "site": "Botanical Beach", "canopy_percent": 20, "observer_alias": "obs-f", "bioregion": "Juan de Fuca"}
+        ]
+      }
+    },
+    {
+      "name": "sample-actions.json",
+      "kind": "json-data",
+      "from_team": "team-steward-calendar",
+      "note": "sample of the cleared public-events stewardship action log (site aliases only)",
+      "content": {
+        "actions": [
+          {"date": "2025-09-15", "bioregion": "Strait of Georgia", "action_type": "kelp-count", "site_alias": "site-bb"},
+          {"date": "2025-10-01", "bioregion": "Strait of Georgia", "action_type": "kelp-count", "site_alias": "site-lh"},
+          {"date": "2025-10-15", "bioregion": "Strait of Georgia", "action_type": "beach-cleanup", "site_alias": "site-bb"},
+          {"date": "2025-09-20", "bioregion": "Juan de Fuca", "action_type": "eelgrass-survey", "site_alias": "site-bot"},
+          {"date": "2025-10-05", "bioregion": "Juan de Fuca", "action_type": "planting", "site_alias": "site-bot"}
+        ]
+      }
+    }
+  ],
+  "excluded_inputs": [
+    {
+      "id": "team-kelp-bed-observers::b1",
+      "visibility": "marker-only",
+      "from_team": "team-kelp-bed-observers",
+      "boundary": "Observer real names and contact details — held in the team's roster spreadsheet; only aliases appear in any input or output.",
+      "disallowed_use": ["embed", "send-to-ai", "summarize"],
+      "note": "Content is deliberately not in this packet; the build attempt never receives it."
+    },
+    {
+      "id": "team-steward-calendar::b1",
+      "visibility": "marker-only",
+      "from_team": "team-steward-calendar",
+      "boundary": "Host-Nation stewardship cycle reference — a partner-organization reference document held by the team. Shapes private team thinking, but is never in any AI input or display.",
+      "disallowed_use": ["summarize", "tag", "embed", "transform", "send-to-ai", "quoted-in-output"],
+      "note": "Content is deliberately not in this packet. Composition does not dissolve this boundary; it is carried forward unchanged."
+    },
+    {
+      "id": "team-steward-calendar::b2",
+      "visibility": "marker-only",
+      "from_team": "team-steward-calendar",
+      "boundary": "Volunteer real names — held in team's roster spreadsheet; only site_alias appears in any input.",
+      "disallowed_use": ["embed", "send-to-ai"],
+      "note": "Content is deliberately not in this packet."
+    }
+  ],
+  "intersected_authorization": {
+    "display_scope": "partial",
+    "ai_input_scope": "partial",
+    "reuse_scope": "ask-first",
+    "display_allowed_parts": [
+      "the joint kelp-condition + stewardship-action report computed from the two cleared sample fixtures only"
+    ],
+    "ai_allowed_parts": [
+      "the cleared kelp canopy observations (public-shoreline, aliases only)",
+      "the cleared public-events stewardship action log (site aliases only)"
+    ],
+    "authorization_notes": "Composed authorization — most-restrictive-wins across both source submissions. Both teams re-confirmed. Reuse forced to ask-first by composition."
+  },
+  "build_instructions": {
+    "path": "build-instructions.md"
+  },
+  "acceptance_criteria": {
+    "description": [
+      "AC1 - prints header 'KELP-BED STEWARDSHIP REPORT (<B> bioregions)' where B is distinct bioregions across both inputs",
+      "AC2 - one section per bioregion (alphabetical asc) with a KELP: block and an ACTIONS: block",
+      "AC3 - KELP block: per-site mean canopy (rounded half-away-from-zero) -> condition (healthy >=60, declining 30-59, stressed <30); sites alphabetical asc; 'none' line when bioregion has no observations",
+      "AC4 - ACTIONS block: per-action-type counts, count desc then alpha asc; 'none' line when bioregion has no actions; unknown action_type values dropped",
+      "AC5 - blank line then SUMMARY line with total healthy/declining/stressed sites and total valid actions",
+      "AC6 - handles empty inputs and malformed JSON (single 'error:' line, exit 0)",
+      "AC7 - missing CLI argument prints 'error:' and exits 0",
+      "AC8 - stdlib only; no network, no credential, no DB; output never references excluded/marker-only content"
+    ],
+    "test_file": {
+      "name": "acceptance-test.py",
+      "language": "python-stdlib",
+      "path": "acceptance-test.py"
+    }
+  },
+  "review_checks": [
+    "the generated tool runs and exits cleanly with no network, credential, or database access",
+    "the tool passes every acceptance-criteria test",
+    "no excluded / marker-only record (host-Nation stewardship cycle reference, real observer/volunteer names) appears in the tool or its output",
+    "no outputs are hardcoded for specific inputs - the tool is correct in general",
+    "the joint witness record states only what happened and does not certify, approve, or grant reuse",
+    "both teams' authorizations are honored: only the cleared public fixtures are in scope for the build attempt"
+  ],
+  "witness_record_seed": {
+    "team": "Kelp Bed Observers + Steward Calendar (joint)",
+    "joint_authors": ["team-kelp-bed-observers", "team-steward-calendar"],
+    "date": "2026-05-26",
+    "fields": [
+      "what we brought (per team)",
+      "what we attempted (joint)",
+      "what worked",
+      "what did not work / what broke",
+      "what we learned (per team's perspective + joint)",
+      "boundaries that remain (per team)",
+      "witnesses",
+      "untracked-allocation"
+    ],
+    "receipt_statement": "This record states what happened. It does not establish authority, approval, certification, legitimacy, community consent, or readiness for reuse. Composition does not dissolve either team's boundaries; both teams' marker-only records remain marker-only after this build attempt and after this witness record."
+  },
+  "boundary": "This packet is a CANDIDATE-then-RE-FROZEN composition of two team submissions. It carries both teams' boundaries forward unchanged; it does not establish authority, approval, certification, or reuse permission for either source team's offerings or for the composed tool."
+}

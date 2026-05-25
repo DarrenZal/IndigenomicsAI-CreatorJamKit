@@ -1,0 +1,19 @@
+test_1_header_and_basic_event (__main__.EnergyReceiptTest.test_1_header_and_basic_event) ... ok
+test_2_totals_and_distinct_models (__main__.EnergyReceiptTest.test_2_totals_and_distinct_models) ... ok
+test_3_reflection_and_boundary (__main__.EnergyReceiptTest.test_3_reflection_and_boundary) ... FAIL
+test_4_rejects_malformed (__main__.EnergyReceiptTest.test_4_rejects_malformed) ... ok
+test_5_no_kept_events (__main__.EnergyReceiptTest.test_5_no_kept_events) ... ok
+test_6_invalid_json (__main__.EnergyReceiptTest.test_6_invalid_json) ... ok
+
+======================================================================
+FAIL: test_3_reflection_and_boundary (__main__.EnergyReceiptTest.test_3_reflection_and_boundary)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/3c/6p_c61tj3y5ccqzmvfxmdg080000gn/T/m2-lite-test-80hg7tfy/test_tool.py", line 90, in test_3_reflection_and_boundary
+    self.assertIn("certify carbon neutrality", proc.stdout)
+AssertionError: 'certify carbon neutrality' not found in 'ENERGY RECEIPT — T\n\n- event_id: e1\n  intention: default intention\n  model: gemma-4-31b\n  kWh: 0.001\n  tokens: 100 in / 200 out\n  duration_s: 1.5\n  outcome: default outcome\n\nTOTALS\n  events: 1 kept, 0 rejected of 1 total\n  kWh: 0.0010\n  tokens: 100 in / 200 out\n  models: gemma-4-31b\n\nREFLECTION\n  Did the work justify its footprint?\n  What would you do differently?\n  What reciprocity is owed?\n\nBOUNDARY: This is a receipt of what was computed. It does not offset, certify\ncarbon neutrality, or grant a reuse license.\n'
+
+----------------------------------------------------------------------
+Ran 6 tests in 1.119s
+
+FAILED (failures=1)

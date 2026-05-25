@@ -1,0 +1,49 @@
+{
+  "packet_id": "claude-darren-composed",
+  "packet_path": "/Users/darrenzal/projects/IndigenomicsAI-CreatorJamKit/examples/claude-darren-demo/composed-build-packet.json",
+  "run_id": "claude-darren-composed-gemma-4-31b-20260525T154419",
+  "run_at": "2026-05-25T15:44:19Z",
+  "mode": "TELUS build-attempt lane",
+  "model": {
+    "catalog_id": "gemma-4-31b",
+    "provider_config_model": "google/gemma-4-31b-it"
+  },
+  "team": "Kelp Bed Observers + Steward Calendar (joint)",
+  "frozen": true,
+  "attempt_1": {
+    "codegen_ok": true,
+    "codegen_elapsed_ms": 24887,
+    "code_extracted": true,
+    "error": null,
+    "test": {
+      "passed": 7,
+      "total": 8,
+      "failing": [
+        "__main__.StewardshipReportTest.test_8_canopy_rounding_half_away_from_zero"
+      ]
+    }
+  },
+  "repair": {
+    "codegen_ok": true,
+    "codegen_elapsed_ms": 29050,
+    "code_extracted": true,
+    "error": null,
+    "test": {
+      "passed": 8,
+      "total": 8,
+      "failing": []
+    }
+  },
+  "final": {
+    "code_source": "repair-attempt",
+    "test": {
+      "passed": 8,
+      "total": 8
+    },
+    "all_passed": true
+  },
+  "finding": "fixed",
+  "finding_detail": "attempt 1: 7/8 passed; repair: 8/8 passed; repair fixed: test_8_canopy_rounding_half_away_from_zero",
+  "final_code": "import json\nimport sys\nfrom decimal import Decimal, ROUND_HALF_UP\n\ndef round_half_up(n):\n    \"\"\"Round to nearest integer, rounding half away from zero.\"\"\"\n    # Decimal.quantize with ROUND_HALF_UP rounds 0.5 to 1 and -0.5 to -1\n    return int(Decimal(str(n)).quantize(Decimal('1'), rounding=ROUND_HALF_UP))\n\ndef main():\n    if len(sys.argv) < 3:\n        print(\"error: missing arguments\")\n        sys.exit(0)\n\n    obs_path = sys.argv[1]\n    act_path = sys.argv[2]\n\n    # Load Observations\n    try:\n        with open(obs_path, 'r') as f:\n            obs_data = json.load(f)\n    except (json.JSONDecodeError, IOError):\n        print(\"error: invalid JSON in observations\")\n        sys.exit(0)\n\n    # Load Actions\n    try:\n        with open(act_path, 'r') as f:\n            act_data = json.load(f)\n    except (json.JSONDecodeError, IOError):\n        print(\"error: invalid JSON in actions\")\n        sys.exit(0)\n\n    # Process Observations\n    # Structure: { bioregion: { site: [canopy_percents] } }\n    bioregion_kelp = {}\n    all_bioregions = set()\n    \n    observations = obs_data.get(\"observations\", [])\n    if not isinstance(observations, list):\n        observations = []\n\n    for obs in observations:\n        try:\n            cp = obs.get(\"canopy_percent\")\n            # Must be a number and 0 <= cp <= 100\n            if not isinstance(cp, (int, float)) or not (0 <= cp <= 100):\n                continue\n            \n            site = obs.get(\"site\")\n            bioregion = obs.get(\"bioregion\")\n            if site is None or bioregion is None:\n                continue\n            \n            all_bioregions.add(bioregion)\n            if bioregion not in bioregion_kelp:\n                bioregion_kelp[bioregion] = {}\n            if site not in bioregion_kelp[bioregion]:\n                bioregion_kelp[bioregion][site] = []\n            bioregion_kelp[bioregion][site].append(cp)\n        except Exception:\n            continue\n\n    # Process Actions\n    # Structure: { bioregion: { action_type: count } }\n    valid_action_types = {\"work-party\", \"beach-cleanup\", \"eelgrass-survey\", \"kelp-count\", \"planting\"}\n    bioregion_actions = {}\n    total_actions_count = 0\n\n    actions = act_data.get(\"actions\", [])\n    if not isinstance(actions, list):\n        actions = []\n\n    for act in actions:\n        try:\n            atype = act.get(\"action_type\")\n            bioregion = act.get(\"bioregion\")\n            if atype not in valid_action_types or bioregion is None:\n                continue\n            \n            all_bioregions.add(bioregion)\n            total_actions_count += 1\n            if bioregion not in bioregion_actions:\n                bioregion_actions[bioregion] = {}\n            bioregion_actions[bioregion][atype] = bioregion_actions[bioregion].get(atype, 0) + 1\n        except Exception:\n            continue\n\n    # Report Generation\n    sorted_bioregions = sorted(list(all_bioregions))\n    print(f\"KELP-BED STEWARDSHIP REPORT ({len(sorted_bioregions)} bioregions)\")\n\n    global_h, global_d, global_s = 0, 0, 0\n\n    for br in sorted_bioregions:\n        print(f\"== {br} ==\")\n        \n        # KELP block\n        print(\"KELP:\")\n        sites_in_br = bioregion_kelp.get(br, {})\n        if not sites_in_br:\n            print(\"  none\")\n        else:\n            sorted_sites = sorted(sites_in_br.keys())\n            for site in sorted_sites:\n                vals = sites_in_br[site]\n                mean_val = sum(vals) / len(vals)\n                rounded_mean = round_half_up(mean_val)\n                \n                # The spec says:\n                # mean >= 60 -> healthy\n                # 30 <= mean < 60 -> declining\n                # mean < 30 -> stressed\n                # Crucially, the test failure shows that if the rounded mean is 60, \n                # it should be 'healthy', implying the condition is based on the ROUNDED mean.\n                # Let's re-read: \"condition is assigned from the per-site mean... <X> is the per-site mean rounded\"\n                # The test failure: \"59.5 mean rounds to 60... displayed mean 60 with healthy condition (>=60)\"\n                # This implies the condition check happens AFTER rounding.\n                \n                if rounded_mean >= 60:\n                    cond = \"healthy\"\n                    global_h += 1\n                elif rounded_mean >= 30:\n                    cond = \"declining\"\n                    global_d += 1\n                else:\n                    cond = \"stressed\"\n                    global_s += 1\n                \n                print(f\"  {site}: {cond} (mean canopy {rounded_mean}%)\")\n\n        # ACTIONS block\n        print(\"ACTIONS:\")\n        actions_in_br = bioregion_actions.get(br, {})\n        if not actions_in_br:\n            print(\"  none\")\n        else:\n            # Sort by count descending, then action_type ascending\n            sorted_acts = sorted(actions_in_br.items(), key=lambda x: (-x[1], x[0]))\n            for atype, count in sorted_acts:\n                print(f\"  {atype}: {count}\")\n\n    print() # Blank line\n    print(f\"SUMMARY: {global_h} healthy / {global_d} declining / {global_s} stressed sites, {total_actions_count} stewardship actions\")\n\nif __name__ == \"__main__\":\n    main()",
+  "boundary": "This build-attempt record states what happened. It does not establish that the tool is correct, complete, safe, or fit for reuse."
+}

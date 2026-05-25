@@ -1,0 +1,28 @@
+test_1_header_and_ecosystem_rollup (__main__.ComputeCovenantTest.test_1_header_and_ecosystem_rollup) ... ok
+test_2_per_team_block (__main__.ComputeCovenantTest.test_2_per_team_block) ... ok
+test_3_withheld_not_named_but_counted (__main__.ComputeCovenantTest.test_3_withheld_not_named_but_counted) ... FAIL
+test_4_covenant_and_boundary (__main__.ComputeCovenantTest.test_4_covenant_and_boundary) ... FAIL
+test_5_rejects_malformed (__main__.ComputeCovenantTest.test_5_rejects_malformed) ... ok
+test_6_no_public_teams (__main__.ComputeCovenantTest.test_6_no_public_teams) ... ok
+test_7_invalid_json (__main__.ComputeCovenantTest.test_7_invalid_json) ... ok
+
+======================================================================
+FAIL: test_3_withheld_not_named_but_counted (__main__.ComputeCovenantTest.test_3_withheld_not_named_but_counted)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/3c/6p_c61tj3y5ccqzmvfxmdg080000gn/T/m2-lite-test-fzjgp8v7/test_tool.py", line 103, in test_3_withheld_not_named_but_counted
+    self.assertIn("Their compute is included in ECOSYSTEM ENERGY", proc.stdout)
+AssertionError: 'Their compute is included in ECOSYSTEM ENERGY' not found in 'COMPUTE COVENANT — IndigenomicsAI Creator Jam (2026-05-25)\nsite: TELUS-Rimouski hydro\n\nECOSYSTEM ENERGY\n  teams: 2 kept (1 public, 1 withheld), 0 rejected of 2 total\n  jam_kwh: 0.0600\n  tokens: 600 in / 1100 out\n  models: gemma-4-31b, gpt-oss-120b\n\nPER-TEAM CONTRIBUTIONS\n\n- team: PublicTeam\n  kWh: 0.01\n  events: 1 kept, 0 rejected\n  tokens: 100 in / 200 out\n  intention themes: kelp\n  models: gemma-4-31b\n\nWITHHELD: 1 team(s) opted out of public energy disclosure. Their compute is\nincluded in ECOSYSTEM ENERGY; their names and per-team numbers are not.\n\nCOVENANT\nThis jam consumed 0.0600 kWh on TELUS-Rimouski hydro. Equivalent to roughly\n0.15 Vancouver homes for an hour (0.4 kWh/home/hour reference).\nWitnessed.\n\nBOUNDARY: This is a record of compute that happened, on a grid that ran on\n~99% renewable hydro on the day named. It does not offset, certify carbon\nneutrality, claim ecological repair, or grant a reuse license.\n'
+
+======================================================================
+FAIL: test_4_covenant_and_boundary (__main__.ComputeCovenantTest.test_4_covenant_and_boundary)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/3c/6p_c61tj3y5ccqzmvfxmdg080000gn/T/m2-lite-test-fzjgp8v7/test_tool.py", line 113, in test_4_covenant_and_boundary
+    self.assertIn("Equivalent to roughly 2.00 Vancouver homes for an hour", proc.stdout)
+AssertionError: 'Equivalent to roughly 2.00 Vancouver homes for an hour' not found in 'COMPUTE COVENANT — IndigenomicsAI Creator Jam (2026-05-25)\nsite: TELUS-Rimouski hydro\n\nECOSYSTEM ENERGY\n  teams: 1 kept (1 public, 0 withheld), 0 rejected of 1 total\n  jam_kwh: 0.8000\n  tokens: 100 in / 200 out\n  models: gemma-4-31b\n\nPER-TEAM CONTRIBUTIONS\n\n- team: T\n  kWh: 0.8\n  events: 1 kept, 0 rejected\n  tokens: 100 in / 200 out\n  intention themes: kelp\n  models: gemma-4-31b\n\nWITHHELD: 0 team(s) opted out of public energy disclosure.\n\nCOVENANT\nThis jam consumed 0.8000 kWh on TELUS-Rimouski hydro. Equivalent to roughly\n2.00 Vancouver homes for an hour (0.4 kWh/home/hour reference).\nWitnessed.\n\nBOUNDARY: This is a record of compute that happened, on a grid that ran on\n~99% renewable hydro on the day named. It does not offset, certify carbon\nneutrality, claim ecological repair, or grant a reuse license.\n'
+
+----------------------------------------------------------------------
+Ran 7 tests in 1.377s
+
+FAILED (failures=2)

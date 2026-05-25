@@ -1,0 +1,21 @@
+test_1_worked_example (__main__.StewardshipReportTest.test_1_worked_example) ... ok
+test_2_three_conditions_two_bioregions (__main__.StewardshipReportTest.test_2_three_conditions_two_bioregions) ... ok
+test_3_actions_only_bioregion (__main__.StewardshipReportTest.test_3_actions_only_bioregion) ... ok
+test_4_both_empty (__main__.StewardshipReportTest.test_4_both_empty) ... ok
+test_5_unknown_action_type_dropped (__main__.StewardshipReportTest.test_5_unknown_action_type_dropped) ... ok
+test_6_malformed_observations_json (__main__.StewardshipReportTest.test_6_malformed_observations_json) ... ok
+test_7_missing_arg (__main__.StewardshipReportTest.test_7_missing_arg) ... ok
+test_8_canopy_rounding_half_away_from_zero (__main__.StewardshipReportTest.test_8_canopy_rounding_half_away_from_zero) ... FAIL
+
+======================================================================
+FAIL: test_8_canopy_rounding_half_away_from_zero (__main__.StewardshipReportTest.test_8_canopy_rounding_half_away_from_zero)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/3c/6p_c61tj3y5ccqzmvfxmdg080000gn/T/m2-lite-test-37ijc2sm/test_tool.py", line 222, in test_8_canopy_rounding_half_away_from_zero
+    self.assertIn("  Edge Site: healthy (mean canopy 60%)", lines,
+AssertionError: '  Edge Site: healthy (mean canopy 60%)' not found in ['KELP-BED STEWARDSHIP REPORT (1 bioregions)', '== Test Region ==', 'KELP:', '  Edge Site: declining (mean canopy 60%)', 'ACTIONS:', '  none', '', 'SUMMARY: 0 healthy / 1 declining / 0 stressed sites, 0 stewardship actions'] : 59.5 mean rounds to 60 (half away from zero); displayed mean 60 with healthy condition (>=60). Got: ['KELP-BED STEWARDSHIP REPORT (1 bioregions)', '== Test Region ==', 'KELP:', '  Edge Site: declining (mean canopy 60%)', 'ACTIONS:', '  none', '', 'SUMMARY: 0 healthy / 1 declining / 0 stressed sites, 0 stewardship actions']
+
+----------------------------------------------------------------------
+Ran 8 tests in 3.601s
+
+FAILED (failures=1)

@@ -1,0 +1,37 @@
+{
+  "packet_id": "preflight-energy-receipt",
+  "packet_path": "/Users/darrenzal/projects/IndigenomicsAI-CreatorJamKit/specs/preflights/energy-receipt/build-packet.json",
+  "run_id": "energy-receipt-gemma-4-31b-20260525T154202",
+  "run_at": "2026-05-25T15:42:02Z",
+  "mode": "TELUS build-attempt lane",
+  "model": {
+    "catalog_id": "gemma-4-31b",
+    "provider_config_model": "google/gemma-4-31b-it"
+  },
+  "team": "Energy Receipt (preflight sample)",
+  "frozen": true,
+  "attempt_1": {
+    "codegen_ok": true,
+    "codegen_elapsed_ms": 17527,
+    "code_extracted": true,
+    "error": null,
+    "test": {
+      "passed": 6,
+      "total": 6,
+      "failing": []
+    }
+  },
+  "repair": null,
+  "final": {
+    "code_source": "attempt-1",
+    "test": {
+      "passed": 6,
+      "total": 6
+    },
+    "all_passed": true
+  },
+  "finding": "built clean",
+  "finding_detail": "attempt 1 passed all acceptance tests; no repair needed",
+  "final_code": "import json\nimport sys\n\ndef main():\n    if len(sys.argv) < 2:\n        return\n\n    input_path = sys.argv[1]\n    try:\n        with open(input_path, 'r', encoding='utf-8') as f:\n            data = json.load(f)\n    except (json.JSONDecodeError, IOError, OSError):\n        print(\"error:\")\n        sys.exit(0)\n\n    team = data.get(\"team\", \"Unknown Team\")\n    events_list = data.get(\"events\", [])\n    \n    kept_events = []\n    rejected_count = 0\n    total_count = 0\n\n    for event in events_list:\n        total_count += 1\n        \n        # Validation checks\n        try:\n            # Required fields presence and non-emptiness\n            if not event.get(\"event_id\") or not event.get(\"intention\") or not event.get(\"model\"):\n                rejected_count += 1\n                continue\n            \n            # Numeric checks\n            metrics = [\"input_tokens\", \"output_tokens\", \"duration_seconds\", \"estimated_kwh\"]\n            valid_metrics = True\n            for m in metrics:\n                val = event.get(m)\n                if val is None or not isinstance(val, (int, float)):\n                    valid_metrics = False\n                    break\n            \n            if not valid_metrics:\n                rejected_count += 1\n                continue\n            \n            # Negative kWh check\n            if event[\"estimated_kwh\"] < 0:\n                rejected_count += 1\n                continue\n                \n            kept_events.append(event)\n        except Exception:\n            rejected_count += 1\n\n    # Header\n    print(f\"ENERGY RECEIPT \u2014 {team}\")\n    print()\n\n    # Event blocks\n    for i, event in enumerate(kept_events):\n        print(f\"- event_id: {event['event_id']}\")\n        print(f\"  intention: {event['intention']}\")\n        print(f\"  model: {event['model']}\")\n        print(f\"  kWh: {event['estimated_kwh']}\")\n        print(f\"  tokens: {event['input_tokens']} in / {event['output_tokens']} out\")\n        print(f\"  duration_s: {event['duration_seconds']}\")\n        print(f\"  outcome: {event['outcome_summary']}\")\n        if i < len(kept_events) - 1:\n            print()\n\n    print()\n\n    # Totals\n    sum_kwh = sum(e['estimated_kwh'] for e in kept_events)\n    sum_in = sum(e['input_tokens'] for e in kept_events)\n    sum_out = sum(e['output_tokens'] for e in kept_events)\n    \n    models = sorted(list(set(e['model'] for e in kept_events)))\n    models_str = \", \".join(models) if models else \"none\"\n\n    print(\"TOTALS\")\n    print(f\"  events: {len(kept_events)} kept, {rejected_count} rejected of {total_count} total\")\n    print(f\"  kWh: {sum_kwh:.4f}\")\n    print(f\"  tokens: {sum_in} in / {sum_out} out\")\n    print(f\"  models: {models_str}\")\n\n    print()\n    print(\"REFLECTION\")\n    print(\"  Did the work justify its footprint?\")\n    print(\"  What would you do differently?\")\n    print(\"  What reciprocity is owed?\")\n    print()\n    print(\"BOUNDARY: This is a receipt of what was computed. It does not offset, certify carbon neutrality, or grant a reuse license.\")\n\nif __name__ == \"__main__\":\n    main()",
+  "boundary": "This build-attempt record states what happened. It does not establish that the tool is correct, complete, safe, or fit for reuse."
+}

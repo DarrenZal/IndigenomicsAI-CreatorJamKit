@@ -223,6 +223,17 @@ Eve has the scheduler. Bill Edmunds is the broader floater mentor.
 
 ---
 
+## 11. Cross-Team Coordination
+
+Four artifacts close the cross-team gaps surfaced in the May 24 UX walk. Open these when teams want to coordinate, compose, or hand offerings to each other:
+
+- **`templates/stigmergic-offering-board.md`** — a shared sticky-card board where teams post what they're making, who might use it, and what they're looking for; the surface other teams scan in a gallery walk.
+- **`workshop/tuesday-composition-sprint-v0.md`** — a 90-minute opt-in Tuesday-morning playbook (gallery walk → mentor matches → merge experiments → comprehension checkpoint → decision) for teams that want to discover cross-team compositions before the 3 PM canoe landings.
+- **`templates/composition-handoff-receipt.md`** — when Team A's output becomes Team B's input, this receipt preserves the source team's original permission state, names the receiving team's new use intent, and records the rollback path if the source team later withdraws.
+- **`workshop/mentor-composition-decision-card.md`** — a 90-second 6-question mentor flowchart (shared interface? compatible permissions? AI boundaries? fresh evidence? no protected material? → "candidate for compose") for triaging promising pairs without making value judgments.
+
+---
+
 ## What to leave out
 
 This guide intentionally does **not** include all 14 specs in detail, all templates, or all workshop docs. Those live in the kit. Open the kit on a laptop when detail is needed.

@@ -1,0 +1,118 @@
+{
+  "packet_version": "v0",
+  "packet_id": "preflight-energy-receipt",
+  "team_spec": {
+    "team_name": "Energy Receipt (preflight sample)",
+    "site": "preflight",
+    "vision": "Turn a team's compute events on TELUS Rimouski hydro into a per-team energy receipt with intention + outcome + reflection — receipt, not offset.",
+    "spec": "Build `python3 tool.py <events_json_path>`. Reads { \"team\": \"...\", \"events\": [ {\"event_id\":\"...\",\"intention\":\"...\",\"model\":\"gemma-4-31b\"|\"qwen-3.6-35b\"|\"gpt-oss-120b\"|\"...\",\"input_tokens\":<int>,\"output_tokens\":<int>,\"duration_seconds\":<float>,\"estimated_kwh\":<float>,\"outcome_summary\":\"...\"} ] }. Reject events with empty event_id/intention/model, or missing/non-numeric/negative numeric fields. Print to stdout: header 'ENERGY RECEIPT — <team>'; blank; per kept event in input order: '- event_id: <id>', '  intention: <intention>', '  model: <model>', '  kWh: <estimated_kwh>', '  tokens: <in> in / <out> out', '  duration_s: <duration_seconds>', '  outcome: <outcome_summary>', blank; then 'TOTALS', '  events: <K> kept, <R> rejected of <N> total', '  kWh: <sum 4dp>', '  tokens: <sumin> in / <sumout> out', '  models: <sorted distinct kept-event model ids comma-separated, or none>'; blank; 'REFLECTION', '  Did the work justify its footprint?', '  What would you do differently?', '  What reciprocity is owed?'; blank; 'BOUNDARY: This is a receipt of what was computed. It does not offset, certify carbon neutrality, or grant a reuse license.'. On invalid JSON: 'error:' line, exit 0. Stdlib only.",
+    "build_target": "single-file CLI"
+  },
+  "freeze_record": {
+    "frozen": true,
+    "frozen_at": "2026-05-25",
+    "frozen_by": "preflight",
+    "facilitator_confirmed": {
+      "consent_privacy_complete": true,
+      "boundaries_reviewed": true,
+      "public_private_status_confirmed": true,
+      "ai_input_scope_confirmed": true,
+      "build_path_confirmed": true,
+      "witnessed_working_clear": true
+    }
+  },
+  "allowed_inputs": [
+    {
+      "name": "sample-events.json",
+      "kind": "json-data",
+      "note": "small synthetic team-events fixture; no real participants",
+      "content": {
+        "team": "Kelp Watchers",
+        "events": [
+          {
+            "event_id": "evt-1",
+            "intention": "draft an opening question about eelgrass beds for the team chat",
+            "model": "gemma-4-31b",
+            "input_tokens": 240,
+            "output_tokens": 410,
+            "duration_seconds": 6.2,
+            "estimated_kwh": 0.0042,
+            "outcome_summary": "kept first draft; reframed to ask the witness, not assert"
+          },
+          {
+            "event_id": "evt-2",
+            "intention": "compare model framings of herring-as-keystone",
+            "model": "qwen-3.6-35b",
+            "input_tokens": 880,
+            "output_tokens": 1200,
+            "duration_seconds": 14.7,
+            "estimated_kwh": 0.0118,
+            "outcome_summary": "qwen surfaced a citation gap; rolled back to gemma for the final paragraph"
+          },
+          {
+            "event_id": "",
+            "intention": "noop",
+            "model": "gemma-4-31b",
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "duration_seconds": 0.0,
+            "estimated_kwh": 0.0,
+            "outcome_summary": "should be rejected — empty event_id"
+          }
+        ]
+      }
+    }
+  ],
+  "excluded_inputs": [
+    {
+      "id": "raw-prompts-and-completions",
+      "visibility": "marker-only",
+      "boundary_type": "marker-only",
+      "boundary": "Raw prompt and completion text are not provided to the build attempt and must not appear in the receipt — the receipt summarizes intention + outcome, not transcript.",
+      "private_content_included": false,
+      "disallowed_use": ["embed", "route", "transform"],
+      "note": "the spec applies this discipline by only consuming the documented event fields"
+    }
+  ],
+  "build_instructions": {
+    "path": "build-instructions.md"
+  },
+  "acceptance_criteria": {
+    "description": [
+      "header with team name",
+      "per-event block with intention, model, kWh, tokens, duration, outcome",
+      "TOTALS line with kept/rejected/total counts",
+      "TOTALS kWh formatted to 4 decimal places",
+      "TOTALS models line shows sorted distinct kept-event models",
+      "REFLECTION block with three Carol-Anne-framed prompts",
+      "BOUNDARY footer present",
+      "rejects malformed events",
+      "error: on invalid input"
+    ],
+    "test_file": {
+      "name": "acceptance-test.py",
+      "language": "python-stdlib",
+      "path": "acceptance-test.py"
+    }
+  },
+  "review_checks": [
+    "tool runs cleanly stdlib-only",
+    "passes acceptance tests",
+    "no raw prompts or completions appear in the output (excluded marker)",
+    "no outputs hardcoded",
+    "no carbon-offset or certification language in the output"
+  ],
+  "witness_record_seed": {
+    "team": "Energy Receipt preflight",
+    "date": "2026-05-25",
+    "fields": [
+      "what we brought",
+      "what we attempted",
+      "what worked",
+      "what did not work",
+      "what we learned",
+      "boundaries that remain"
+    ],
+    "receipt_statement": "This record states what happened. It does not establish authority, approval, certification, legitimacy, community consent, carbon neutrality, or readiness for reuse."
+  }
+}

@@ -46,7 +46,7 @@ The two canonical record shapes used throughout the Jam:
 - [`templates/team-submission-v0.md`](templates/team-submission-v0.md) — what a team writes (rich gateway/fallback record)
 - [`templates/agentic-build-packet-v0.md`](templates/agentic-build-packet-v0.md) — what the build lane consumes after facilitator freeze
 
-Other templates in [`templates/`](templates/): [offering quick card](templates/offering-quick-card.md), [spec fragment](templates/spec-fragment.md), [bundle](templates/bundle.md), [build attempt instructions](templates/build-attempt-instructions.md), [reviewer check](templates/reviewer-check.md), [witness rollup](templates/witness-rollup.md), [display review checklist](templates/display-review-checklist.md), [speech-act transition](templates/speech-act-transition.md), [trade-off surface](templates/trade-off-surface.md).
+Other templates in [`templates/`](templates/): [offering quick card](templates/offering-quick-card.md), [spec fragment](templates/spec-fragment.md), [bundle](templates/bundle.md), [build attempt instructions](templates/build-attempt-instructions.md), [reviewer check](templates/reviewer-check.md), [witness rollup](templates/witness-rollup.md), [display review checklist](templates/display-review-checklist.md), [speech-act transition](templates/speech-act-transition.md), [trade-off surface](templates/trade-off-surface.md), [stigmergic offering board](templates/stigmergic-offering-board.md), [composition handoff receipt](templates/composition-handoff-receipt.md).
 
 ### 📂 Worked examples ([`examples/`](examples/))
 
@@ -60,6 +60,7 @@ Real, walkable end-to-end examples. See [`examples/README.md`](examples/README.m
 | [`sample-submission-minimal/`](examples/sample-submission-minimal/) | Smallest plausible-and-valid (~50 lines JSON) | n/a |
 | [`sample-refusal-only/`](examples/sample-refusal-only/) | A submission that does **not** lead to a build | n/a |
 | [`sample-multi-team-composition/`](examples/sample-multi-team-composition/) | Two team submissions → candidate bundle with conflicts surfaced | n/a |
+| [`claude-darren-demo/`](examples/claude-darren-demo/) — Kelp + Steward Calendar | **Multi-agent composition demo** — full relational arc with joint witness record | ✅ Gemma 8/8 (fixed), ⚠️ Qwen 2/8 |
 | [`sample-withdrawal-flow/`](examples/sample-withdrawal-flow/) | Withdrawal propagation across surfaces + summaries | n/a |
 | [`composition-v0/`](examples/composition-v0/) | Simulated participant offerings becoming candidate bundles | n/a |
 | [`open-kit-collective-demo/`](examples/open-kit-collective-demo/) | End-to-end Open Kit prototype path | n/a |
@@ -77,6 +78,11 @@ A backlog of 14 ready-to-jam specs — see [`specs/README.md`](specs/README.md) 
 - [`specs/preflights/README.md`](specs/preflights/README.md) — per-spec results, spot-checked-good list
 - [`specs/preflights/3-model-comparison.md`](specs/preflights/3-model-comparison.md) — where each model converges
 - [`specs/preflights/stress-tests/README.md`](specs/preflights/stress-tests/README.md) — 5 adversarial harness probes
+
+**Plus two environmental-impact specs** designed for Justin Yang (TELUS) to mentor on:
+
+- [`specs/preflights/energy-receipt/`](specs/preflights/energy-receipt/) — per-team CLI: intention + model + kWh + outcome reflection (Gemma clean, Qwen fixed; see [`justin-mentor-brief.md`](specs/preflights/energy-receipt/justin-mentor-brief.md))
+- [`specs/preflights/compute-covenant/`](specs/preflights/compute-covenant/) — cross-team rollup CLI: ecosystem energy + withheld count + covenant statement (Gemma fixed, Qwen clean)
 
 ### 🤖 For participant LLMs ([`participant-agent-context/`](participant-agent-context/))
 
@@ -109,6 +115,19 @@ Small standard-library Python utilities for jam-day. No installation needed.
 | [`participant-agent.sh`](tools/participant-agent.sh) | Wrap `claude -p` with the participant-agent knowledge bundle |
 
 See [`tools/README.md`](tools/README.md) for usage + when-to-use guidance.
+
+### 🤝 Cross-team coordination (new)
+
+The Jam is a relational build studio — collaboration *across* teams matters as much as within. Four artifacts shipped to support cross-team work:
+
+- [`templates/stigmergic-offering-board.md`](templates/stigmergic-offering-board.md) — shared sticky-card board where teams post live offerings other teams can find
+- [`workshop/tuesday-composition-sprint-v0.md`](workshop/tuesday-composition-sprint-v0.md) — 90-min facilitator playbook for cross-team composition (Tuesday morning)
+- [`templates/composition-handoff-receipt.md`](templates/composition-handoff-receipt.md) — when Team A's output becomes Team B's input, preserve boundaries
+- [`workshop/mentor-composition-decision-card.md`](workshop/mentor-composition-decision-card.md) — 90-second mentor flowchart: "can these two offerings compose?"
+
+Plus the existing [`tools/composition-merger.py`](tools/composition-merger.py) which does the mechanical merge with conflict surfacing.
+
+See `docs/MENTOR_FIELD_GUIDE.md` §11 for the integrated mentor view.
 
 ### 🪵 Workshop notes ([`workshop/`](workshop/))
 

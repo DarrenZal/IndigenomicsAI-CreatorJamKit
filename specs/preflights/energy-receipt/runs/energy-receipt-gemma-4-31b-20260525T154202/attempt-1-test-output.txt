@@ -1,0 +1,11 @@
+test_1_header_and_basic_event (__main__.EnergyReceiptTest.test_1_header_and_basic_event) ... ok
+test_2_totals_and_distinct_models (__main__.EnergyReceiptTest.test_2_totals_and_distinct_models) ... ok
+test_3_reflection_and_boundary (__main__.EnergyReceiptTest.test_3_reflection_and_boundary) ... ok
+test_4_rejects_malformed (__main__.EnergyReceiptTest.test_4_rejects_malformed) ... ok
+test_5_no_kept_events (__main__.EnergyReceiptTest.test_5_no_kept_events) ... ok
+test_6_invalid_json (__main__.EnergyReceiptTest.test_6_invalid_json) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 1.512s
+
+OK
