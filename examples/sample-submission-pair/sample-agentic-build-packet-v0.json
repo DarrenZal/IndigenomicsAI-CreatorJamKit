@@ -1,0 +1,123 @@
+{
+  "packet_version": "v0",
+  "packet_id": "sample-kelp-watch",
+  "export_provenance": {
+    "exported_from": "team-submission-v0",
+    "exported_by": "manual sample export (no live runner)",
+    "exported_at": "2026-05-25T11:50:00-07:00",
+    "submission_id": "team-spec-kelp-watch-01",
+    "surface": "shared-doc",
+    "build_request_path": "telus-lane",
+    "ai_input_scope": "whole",
+    "display_scope": "whole",
+    "reuse_scope": "ask-first",
+    "visible_to_facilitators": true,
+    "offerings_held_out": []
+  },
+  "team_spec": {
+    "team_name": "Kelp Watch",
+    "site": "Vancouver",
+    "vision": "A small tool that turns a season of kelp-bed observation logs into a public-safe site rollup, so stewards can share at a community meeting without re-keying the spreadsheet.",
+    "spec": "Build a single-file Python tool, run as `python3 tool.py <observations_json_path>`, that reads the JSON file at the path given as its first command-line argument. The file is an object shaped { \"observations\": [ { \"id\": \"...\", \"site\": \"...\", \"date\": \"YYYY-MM-DD\", \"indicator\": \"...\", \"value\": <number>, \"notes\": optional string }, ... ] }. Print to stdout, in order: (1) a header line exactly 'KELP BED WATCH (<N> observations across <S> sites)' where N is the observation count and S is the distinct site count; (2) for each site, ordered alphabetically by site name, a block of: a line '== <site> ==' then one '<indicator>: mean <mean>, n=<count>' line per distinct indicator at that site, ordered by indicator alphabetically — means rounded to 2 decimals; (3) one blank line between sites; (4) a final 'SUMMARY: <N> observations, <S> sites, <FROM> .. <TO>' line where FROM and TO are the earliest and latest dates in YYYY-MM-DD form (or 'no dates' if none). Normalize every site name and indicator before grouping: strip ends, collapse internal whitespace to a single space, lowercase. Drop any observation whose 'value' is not a number or whose 'site' or 'indicator' normalizes to empty. If the input cannot be read or is not valid JSON, print a single line beginning with 'error:' and exit 0. Standard library only; no network; no credential or filesystem access beyond reading the path argument.",
+    "build_target": "one single-file command-line tool, standard library only"
+  },
+  "freeze_record": {
+    "frozen": true,
+    "frozen_at": "2026-05-25T11:45:00-07:00",
+    "frozen_by": "team + jam facilitator (sample)",
+    "facilitator_confirmed": {
+      "consent_privacy_complete": true,
+      "boundaries_reviewed": true,
+      "public_private_status_confirmed": true,
+      "ai_input_scope_confirmed": true,
+      "build_path_confirmed": true,
+      "witnessed_working_clear": true
+    }
+  },
+  "allowed_inputs": [
+    {
+      "name": "sample-observations.json",
+      "kind": "json-data",
+      "note": "small hand-rolled fixture giving the model the JSON shape it will read; fictional sites and observations only",
+      "content": {
+        "observations": [
+          {"id": "obs-001", "site": "Boundary Bay", "date": "2026-04-12", "indicator": "canopy_percent", "value": 38.5, "notes": "calm, clear"},
+          {"id": "obs-002", "site": "boundary bay", "date": "2026-04-12", "indicator": "shoot_density", "value": 142, "notes": ""},
+          {"id": "obs-003", "site": "Boundary Bay", "date": "2026-04-26", "indicator": "canopy_percent", "value": 41.0, "notes": ""},
+          {"id": "obs-004", "site": "  Boundary  Bay ", "date": "2026-05-10", "indicator": "Canopy_Percent", "value": 44.2, "notes": "post-bloom"},
+          {"id": "obs-005", "site": "Lighthouse Park", "date": "2026-04-15", "indicator": "blade_length_cm", "value": 22.0, "notes": ""},
+          {"id": "obs-006", "site": "Lighthouse Park", "date": "2026-05-01", "indicator": "blade_length_cm", "value": 28.5, "notes": ""},
+          {"id": "obs-007", "site": "Lighthouse Park", "date": "2026-05-15", "indicator": "blade_length_cm", "value": 31.0, "notes": ""},
+          {"id": "obs-008", "site": "Spanish Banks", "date": "2026-04-20", "indicator": "canopy_percent", "value": 22.3, "notes": ""},
+          {"id": "obs-009", "site": "Spanish Banks", "date": "2026-05-04", "indicator": "canopy_percent", "value": 25.8, "notes": ""},
+          {"id": "obs-010", "site": "Spanish Banks", "date": "2026-05-18", "indicator": "shoot_density", "value": 88, "notes": ""},
+          {"id": "obs-011", "site": "spanish banks", "date": "2026-05-18", "indicator": "shoot_density", "value": 91, "notes": "duplicate transect"},
+          {"id": "obs-012", "site": "  ", "date": "2026-05-18", "indicator": "canopy_percent", "value": 0.0, "notes": "dropped: empty site"},
+          {"id": "obs-013", "site": "Spanish Banks", "date": "2026-05-19", "indicator": "canopy_percent", "value": "not_a_number", "notes": "dropped: bad value"}
+        ]
+      }
+    }
+  ],
+  "excluded_inputs": [
+    {
+      "id": "boundary-restricted-site",
+      "visibility": "marker-only",
+      "boundary_type": "marker-only",
+      "boundary": "One of the team's three monitoring sites is on land reserved by a Nation; its name and exact location are not for the build attempt or any public output.",
+      "private_content_included": false,
+      "disallowed_use": ["summarize", "tag", "embed", "route", "transform", "send-to-ai"],
+      "note": "content withheld by the exporter — this record is named only"
+    },
+    {
+      "id": "boundary-observer-identities",
+      "visibility": "marker-only",
+      "boundary_type": "not-for-AI",
+      "boundary": "Observer email addresses, phone numbers, and full names are held by the team and not cleared for the build or for any public rollup.",
+      "private_content_included": false,
+      "disallowed_use": ["summarize", "tag", "embed", "route", "transform", "send-to-ai"],
+      "note": "content withheld by the exporter — this record is named only"
+    }
+  ],
+  "build_instructions": {
+    "path": "build-instructions.md"
+  },
+  "acceptance_criteria": {
+    "description": [
+      "prints the exact header 'KELP BED WATCH (<N> observations across <S> sites)'",
+      "groups observations by normalized site, then by normalized indicator within each site",
+      "computes per-indicator means rounded to 2 decimals; outputs the count alongside",
+      "orders sites alphabetically, indicators alphabetically within each site",
+      "prints a SUMMARY line with N, S, and earliest..latest date in YYYY-MM-DD form",
+      "drops observations with non-numeric value or empty-normalized site/indicator",
+      "prints a line beginning with 'error:' on unreadable or invalid JSON, exits 0",
+      "uses standard library only, no network, no credential access"
+    ],
+    "test_file": {
+      "name": "acceptance-test.py",
+      "language": "python-stdlib",
+      "path": "acceptance-test.py"
+    }
+  },
+  "review_checks": [
+    "the generated tool runs and exits cleanly with no network, credential, or database access",
+    "the tool passes every acceptance-criteria smoke test",
+    "no excluded / marker-only record appears in the tool or its output",
+    "no outputs are hardcoded for specific inputs — the tool is correct in general",
+    "the witness record states only what happened and does not certify, approve, or grant reuse",
+    "no observer names, emails, or phone numbers appear anywhere in the tool output",
+    "no Nation-reserved site name appears anywhere in the tool output"
+  ],
+  "witness_record_seed": {
+    "team": "Kelp Watch",
+    "date": "2026-05-26",
+    "fields": [
+      "what we brought",
+      "what we attempted",
+      "what worked",
+      "what did not work / what broke",
+      "what we learned",
+      "boundaries that remain"
+    ],
+    "receipt_statement": "This record states what happened. It does not establish authority, approval, certification, legitimacy, community consent, or readiness for reuse."
+  }
+}

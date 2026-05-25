@@ -26,12 +26,18 @@ This repo is for public, sample, or explicitly display-approved material only. D
 
 ## Seed Examples
 
+- `examples/sample-submission-pair/` is a complete end-to-end worked example: `team-submission-v0` → frozen → `agentic-build-packet-v0` → build attempt → witness record. Show this when a team asks "what does a finished submission look like?"
 - `examples/open-kit-collective-demo/` shows the current end-to-end prototype path.
 - `examples/composition-v0/` shows simulated participant offerings becoming candidate bundles.
 - `examples/consent-review-desk/` records refusal, review, withdrawal, and display approval.
 - `examples/receipt-wall-static/` sketches a public/sample-only witnessing surface.
 - `examples/handoff-packet-studio/` shows how to freeze a selected bundle.
 - `examples/ai-attempt-review-pattern/` shows how to review an AI-assisted attempt without treating AI output as authority.
+
+## Schemas
+
+- `templates/team-submission-v0.md` — the rich gateway/fallback submission schema (what a team writes).
+- `templates/agentic-build-packet-v0.md` — the lean runtime packet (what the build lane consumes after facilitator freeze).
 
 ## Spec Backlog
 
