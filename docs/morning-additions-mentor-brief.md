@@ -85,6 +85,57 @@ The kit's discipline is unchanged: boundaries before sharing, consent before dis
 
 ---
 
+## Afternoon additions (Day 1 afternoon)
+
+Three **meta-specs** shipped after the morning push — runnable substrate
+that the jam dogfoods itself with. Each is ~20-min walkable for an
+arriving mentor:
+
+### 4. `specs/agent-coordination-bus-v0/` — file-based bus implementing the 7 wire types
+
+The 7 wire types from `coordination-protocol-v0.md` are now runnable as
+JSON files via `scripts/jam/bus.py`. Per-team append-only logs, per-type
+validators, audit invariant. 13-message worked demo with 3 simulated
+teams.
+
+### 5. `specs/agentic-spec-drafting-loop-v0/` — 5-stage orchestrator
+
+Takes a loose offering, drafts a spec (Prompt 1), boundary-checks
+(Prompt 2), optionally composes (Prompt 4), and freezes to
+`agentic-build-packet-v0.json`. Stub mode is offline + deterministic;
+gateway mode hits the local indigenomics-ai-gateway smoke stack.
+
+### 6. `specs/witness-record-append-v0/` — public witness wall
+
+Tuesday's canoe-landing publication surface. `--confirm-publish` gate,
+overclaim validator wrap, refusal-as-record support. 3 sample records
+demonstrating clean / refusal / partial outcomes.
+
+### Tuesday-sprint walkthrough
+
+[`workshop/tuesday-meta-spec-walkthrough.md`](../workshop/tuesday-meta-spec-walkthrough.md)
+is a 30-min mentor playbook for introducing teams to these three specs
+during Tuesday morning's composition sprint. Each spec has clear
+extension paths.
+
+### Bugs caught + fixed at source today
+
+1. `tools/witness-record-validator.py` was rejecting every well-formed
+   witness record (multi-line receipt-statement wrap broke the
+   disclaimer-context check). Patched. **Without the fix, Tuesday's
+   witness wall would have refused every record.**
+2. `IndigenomicsAI/scripts/mirror-to-public.sh` (newly written) used
+   `--first-parent` which hid second-parent commits. Patched +
+   documented.
+
+### Tests
+
+```bash
+python3 -m unittest discover -s scripts/jam/tests
+```
+
+Expected: 43/43 OK across the 3 meta-specs.
+
 ## Boundary
 
 This brief synthesizes additions to the public kit. It does not certify, approve, or authorize anything. Mentors observe, ask, surface — and the team's judgment remains the deciding voice.
