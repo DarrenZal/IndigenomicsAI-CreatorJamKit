@@ -1,0 +1,52 @@
+{
+  "packet_id": "sample-commitment-pool-route",
+  "packet_path": "/Users/darrenzal/projects/IndigenomicsAI-CreatorJamKit/examples/sample-submission-commitment-pool/sample-agentic-build-packet-v0.json",
+  "run_id": "sample-pool-route-qwen-3.6-35b-20260525T082355",
+  "run_at": "2026-05-25T08:23:55Z",
+  "mode": "TELUS build-attempt lane",
+  "model": {
+    "catalog_id": "qwen-3.6-35b",
+    "provider_config_model": "Qwen/Qwen3.6-35B-A3B"
+  },
+  "team": "Pool Routing",
+  "frozen": true,
+  "attempt_1": {
+    "codegen_ok": true,
+    "codegen_elapsed_ms": 8744,
+    "code_extracted": true,
+    "error": null,
+    "test": {
+      "passed": 5,
+      "total": 7,
+      "failing": [
+        "__main__.PoolRouteTest.test_1_fits_status",
+        "__main__.PoolRouteTest.test_6_idle_and_no_supply"
+      ]
+    }
+  },
+  "repair": {
+    "codegen_ok": true,
+    "codegen_elapsed_ms": 9484,
+    "code_extracted": true,
+    "error": null,
+    "test": {
+      "passed": 6,
+      "total": 7,
+      "failing": [
+        "__main__.PoolRouteTest.test_6_idle_and_no_supply"
+      ]
+    }
+  },
+  "final": {
+    "code_source": "repair-attempt",
+    "test": {
+      "passed": 6,
+      "total": 7
+    },
+    "all_passed": false
+  },
+  "finding": "improved",
+  "finding_detail": "attempt 1: 5/7 passed; repair: 6/7 passed; repair fixed: test_1_fits_status",
+  "final_code": "import sys\nimport json\nimport re\n\ndef main():\n    # Read input\n    if len(sys.argv) < 2:\n        print(\"error: no input file specified\")\n        sys.exit(0)\n    \n    input_path = sys.argv[1]\n    \n    try:\n        with open(input_path, 'r') as f:\n            data = json.load(f)\n    except (IOError, OSError, json.JSONDecodeError):\n        print(\"error: cannot read or parse input file\")\n        sys.exit(0)\n    \n    # Validate structure\n    if not isinstance(data, dict):\n        print(\"error: invalid JSON structure\")\n        sys.exit(0)\n    \n    pool_id = data.get(\"pool_id\", \"\")\n    offers = data.get(\"offers\", [])\n    needs = data.get(\"needs\", [])\n    \n    if not isinstance(offers, list) or not isinstance(needs, list):\n        print(\"error: invalid JSON structure\")\n        sys.exit(0)\n    \n    # Normalize kind function\n    def normalize_kind(kind):\n        if not isinstance(kind, str):\n            return \"\"\n        # Strip whitespace from both ends\n        kind = kind.strip()\n        # Collapse internal runs of whitespace to a single space\n        kind = re.sub(r'\\s+', ' ', kind)\n        # Lowercase\n        kind = kind.lower()\n        return kind\n    \n    # Check if units is a valid number\n    def is_valid_units(units):\n        return isinstance(units, (int, float)) and not isinstance(units, bool)\n    \n    # Process offers\n    # For each kind, track:\n    # - offered units (only from consenting offers)\n    # - consenting contributors (distinct)\n    # - withheld offers (for blockers)\n    \n    kind_offered = {}  # kind -> total units (consenting only)\n    kind_contributors = {}  # kind -> set of contributors (consenting only)\n    kind_withheld = {}  # kind -> list of (contributor, units) tuples\n    \n    for offer in offers:\n        if not isinstance(offer, dict):\n            continue\n        \n        contributor = offer.get(\"contributor\", \"\")\n        kind_raw = offer.get(\"kind\", \"\")\n        units = offer.get(\"units\")\n        consent = offer.get(\"consent_to_route\")\n        \n        # Normalize kind\n        kind = normalize_kind(kind_raw)\n        \n        # Drop if kind is empty\n        if not kind:\n            continue\n        \n        # Drop if units is not a number\n        if not is_valid_units(units):\n            continue\n        \n        # Initialize if needed\n        if kind not in kind_offered:\n            kind_offered[kind] = 0\n            kind_contributors[kind] = set()\n            kind_withheld[kind] = []\n        \n        # Check consent\n        if consent is True:\n            # Consenting offer\n            kind_offered[kind] += units\n            kind_contributors[kind].add(contributor)\n        elif consent is False:\n            # Withheld offer - add to blockers\n            kind_withheld[kind].append((contributor, units))\n        # If consent is neither True nor False, treat as not consenting (drop from O and C, but not dropped entirely)\n        # Actually, the spec says \"consent_to_route is exactly false\" for withheld.\n        # If it's not a boolean or not False, it's not a withheld offer.\n        # But it also doesn't count toward O or C.\n        # So we just ignore it for O and C, and don't add to blockers.\n    \n    # Process needs\n    kind_needed = {}  # kind -> total units\n    kind_requesters = {}  # kind -> set of requesters\n    \n    for need in needs:\n        if not isinstance(need, dict):\n            continue\n        \n        requester = need.get(\"requester\", \"\")\n        kind_raw = need.get(\"kind\", \"\")\n        units = need.get(\"units\")\n        \n        # Normalize kind\n        kind = normalize_kind(kind_raw)\n        \n        # Drop if kind is empty\n        if not kind:\n            continue\n        \n        # Drop if units is not a number\n        if not is_valid_units(units):\n            continue\n        \n        # Initialize if needed\n        if kind not in kind_needed:\n            kind_needed[kind] = 0\n            kind_requesters[kind] = set()\n        \n        kind_needed[kind] += units\n        kind_requesters[kind].add(requester)\n    \n    # Collect all distinct normalized kinds\n    all_kinds = set()\n    all_kinds.update(kind_offered.keys())\n    all_kinds.update(kind_needed.keys())\n    \n    # Sort kinds alphabetically\n    sorted_kinds = sorted(all_kinds)\n    \n    # Print header\n    print(f\"POOL ROUTING DIAGNOSTIC \u2014 {pool_id}\")\n    print()\n    \n    # Print per-kind blocks\n    for kind in sorted_kinds:\n        O = kind_offered.get(kind, 0)\n        C = len(kind_contributors.get(kind, set()))\n        D = kind_needed.get(kind, 0)\n        R = len(kind_requesters.get(kind, set()))\n        \n        # Determine status\n        if D == 0 and O == 0:\n            status = \"idle\"\n        elif D == 0 and O > 0:\n            status = \"no demand\"\n        elif O >= D and D > 0:\n            status = \"fits\"\n        elif O < D and D > 0:\n            status = f\"short by {D - O} units\"\n        else:\n            # O == 0 and D > 0\n            status = \"no supply\"\n        \n        print(f\"kind: {kind}\")\n        print(f\"offered: {O} units ({C} contributors consenting)\")\n        print(f\"needed: {D} units ({R} requesters)\")\n        print(f\"status: {status}\")\n        print()\n    \n    # Print blockers\n    # Collect all withheld offers\n    all_blockers = []\n    for kind in kind_withheld:\n        for contributor, units in kind_withheld[kind]:\n            all_blockers.append((contributor, kind, units))\n    \n    if not all_blockers:\n        print(\"BLOCKERS: none\")\n    else:\n        # Sort by contributor ascending, then by kind ascending\n        all_blockers.sort(key=lambda x: (x[0], x[1]))\n        \n        print(\"BLOCKERS:\")\n        for contributor, kind, units in all_blockers:\n            print(f\"- {contributor} withheld consent on {kind} ({units} units)\")\n\nif __name__ == \"__main__\":\n    main()",
+  "boundary": "This build-attempt record states what happened. It does not establish that the tool is correct, complete, safe, or fit for reuse."
+}

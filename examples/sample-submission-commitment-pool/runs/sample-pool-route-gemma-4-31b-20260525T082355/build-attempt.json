@@ -1,0 +1,50 @@
+{
+  "packet_id": "sample-commitment-pool-route",
+  "packet_path": "/Users/darrenzal/projects/IndigenomicsAI-CreatorJamKit/examples/sample-submission-commitment-pool/sample-agentic-build-packet-v0.json",
+  "run_id": "sample-pool-route-gemma-4-31b-20260525T082355",
+  "run_at": "2026-05-25T08:23:55Z",
+  "mode": "TELUS build-attempt lane",
+  "model": {
+    "catalog_id": "gemma-4-31b",
+    "provider_config_model": "google/gemma-4-31b-it"
+  },
+  "team": "Pool Routing",
+  "frozen": true,
+  "attempt_1": {
+    "codegen_ok": true,
+    "codegen_elapsed_ms": 23729,
+    "code_extracted": true,
+    "error": null,
+    "test": {
+      "passed": 5,
+      "total": 7,
+      "failing": [
+        "__main__.PoolRouteTest.test_1_fits_status",
+        "__main__.PoolRouteTest.test_6_idle_and_no_supply"
+      ]
+    }
+  },
+  "repair": {
+    "codegen_ok": true,
+    "codegen_elapsed_ms": 28630,
+    "code_extracted": true,
+    "error": null,
+    "test": {
+      "passed": 7,
+      "total": 7,
+      "failing": []
+    }
+  },
+  "final": {
+    "code_source": "repair-attempt",
+    "test": {
+      "passed": 7,
+      "total": 7
+    },
+    "all_passed": true
+  },
+  "finding": "fixed",
+  "finding_detail": "attempt 1: 5/7 passed; repair: 7/7 passed; repair fixed: test_1_fits_status, test_6_idle_and_no_supply",
+  "final_code": "import sys\nimport json\nimport re\n\ndef normalize_kind(kind):\n    if not isinstance(kind, str):\n        return \"\"\n    # Strip whitespace from both ends\n    s = kind.strip()\n    # Collapse internal runs of whitespace to a single space\n    s = re.sub(r'\\s+', ' ', s)\n    # Lowercase\n    return s.lower()\n\ndef main():\n    if len(sys.argv) < 2:\n        return\n\n    input_path = sys.argv[1]\n    try:\n        with open(input_path, 'r', encoding='utf-8') as f:\n            data = json.load(f)\n    except Exception:\n        print(\"error: failed to read or parse JSON\")\n        sys.exit(0)\n\n    pool_id = data.get(\"pool_id\", \"Unknown\")\n    offers_raw = data.get(\"offers\", [])\n    needs_raw = data.get(\"needs\", [])\n\n    # Data structures for aggregation\n    # kind -> { 'offered_units': 0, 'consenting_contributors': set(), 'needed_units': 0, 'requesters': set() }\n    stats = {}\n    blockers = []\n\n    # Process Offers\n    for off in offers_raw:\n        if not isinstance(off, dict):\n            continue\n        kind_raw = off.get(\"kind\")\n        units = off.get(\"units\")\n        contributor = off.get(\"contributor\")\n        consent = off.get(\"consent_to_route\")\n\n        # Drop rules: units must be a number, kind must not normalize to empty\n        if not isinstance(units, (int, float)):\n            continue\n        \n        norm_kind = normalize_kind(kind_raw)\n        if not norm_kind:\n            continue\n\n        if norm_kind not in stats:\n            stats[norm_kind] = {'offered_units': 0, 'consenting_contributors': set(), 'needed_units': 0, 'requesters': set()}\n\n        if consent is True:\n            stats[norm_kind]['offered_units'] += units\n            if contributor is not None:\n                stats[norm_kind]['consenting_contributors'].add(contributor)\n        elif consent is False:\n            blockers.append({\n                'contributor': contributor if contributor is not None else \"\",\n                'kind': norm_kind,\n                'units': units\n            })\n\n    # Process Needs\n    for need in needs_raw:\n        if not isinstance(need, dict):\n            continue\n        kind_raw = need.get(\"kind\")\n        units = need.get(\"units\")\n        requester = need.get(\"requester\")\n\n        # Drop rules: units must be a number, kind must not normalize to empty\n        if not isinstance(units, (int, float)):\n            continue\n        \n        norm_kind = normalize_kind(kind_raw)\n        if not norm_kind:\n            continue\n\n        if norm_kind not in stats:\n            stats[norm_kind] = {'offered_units': 0, 'consenting_contributors': set(), 'needed_units': 0, 'requesters': set()}\n\n        stats[norm_kind]['needed_units'] += units\n        if requester is not None:\n            stats[norm_kind]['requesters'].add(requester)\n\n    # (1) Header\n    print(f\"POOL ROUTING DIAGNOSTIC \u2014 {pool_id}\")\n    \n    # (2) Blank line\n    print()\n\n    # (3) Per-kind block\n    sorted_kinds = sorted(stats.keys())\n    for k in sorted_kinds:\n        s = stats[k]\n        o = s['offered_units']\n        c = len(s['consenting_contributors'])\n        d = s['needed_units']\n        r = len(s['requesters'])\n\n        # Status logic\n        # - fits if O >= D and D > 0\n        # - short by <D-O> units if O < D and D > 0\n        # - no demand if D == 0 and O > 0\n        # - no supply if O == 0 and D > 0\n        # - idle if O == 0 and D == 0\n        \n        # Note: The spec says \"no supply if O == 0 and D > 0\". \n        # \"short by\" also triggers if O < D and D > 0. \n        # Since O=0 is a subset of O < D, we must check \"no supply\" first or refine \"short by\".\n        # Re-reading: \"no supply\" is a specific case of \"short by\". \n        # Usually, in these specs, the most specific condition wins.\n        \n        if o == 0 and d > 0:\n            status = \"no supply\"\n        elif o < d and d > 0:\n            status = f\"short by {d - o} units\"\n        elif o >= d and d > 0:\n            status = \"fits\"\n        elif d == 0 and o > 0:\n            status = \"no demand\"\n        else: # o == 0 and d == 0\n            status = \"idle\"\n\n        print(f\"kind: {k}\")\n        print(f\"offered: {o} units ({c} contributors consenting)\")\n        print(f\"needed: {d} units ({r} requesters)\")\n        print(f\"status: {status}\")\n        print() # Blank line after each block\n\n    # (4) Blockers footer\n    if not blockers:\n        print(\"BLOCKERS: none\")\n    else:\n        print(\"BLOCKERS:\")\n        # Sort by contributor ascending, then by kind ascending\n        blockers.sort(key=lambda x: (x['contributor'], x['kind']))\n        for b in blockers:\n            print(f\"- {b['contributor']} withheld consent on {b['kind']} ({b['units']} units)\")\n\nif __name__ == \"__main__\":\n    main()",
+  "boundary": "This build-attempt record states what happened. It does not establish that the tool is correct, complete, safe, or fit for reuse."
+}

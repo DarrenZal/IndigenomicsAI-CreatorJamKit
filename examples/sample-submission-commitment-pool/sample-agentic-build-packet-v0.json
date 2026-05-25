@@ -1,0 +1,116 @@
+{
+  "packet_version": "v0",
+  "packet_id": "sample-commitment-pool-route",
+  "export_provenance": {
+    "exported_from": "team-submission-v0",
+    "exported_by": "manual sample export",
+    "exported_at": "2026-05-25T11:50:00-07:00",
+    "submission_id": "team-spec-commitment-pool-route-01",
+    "surface": "shared-doc",
+    "build_request_path": "telus-lane",
+    "ai_input_scope": "whole",
+    "display_scope": "whole",
+    "reuse_scope": "ask-first",
+    "visible_to_facilitators": true,
+    "offerings_held_out": []
+  },
+  "team_spec": {
+    "team_name": "Pool Routing",
+    "site": "Vancouver",
+    "vision": "A tool that tells a team whether their offers, needs, and commitments can route into a small shared pool, or what's blocking it.",
+    "spec": "Build a single-file Python tool, run as `python3 tool.py <pool_json_path>`, that reads the JSON file at the path given as its first command-line argument. The file is an object shaped { \"pool_id\": \"...\", \"offers\": [ { \"id\": \"...\", \"contributor\": \"...\", \"kind\": \"...\", \"units\": <number>, \"consent_to_route\": <boolean> }, ... ], \"needs\": [ { \"id\": \"...\", \"requester\": \"...\", \"kind\": \"...\", \"units\": <number> }, ... ] }. Print to stdout a routing diagnostic, in this order: (1) a header line exactly 'POOL ROUTING DIAGNOSTIC — <pool_id>'; (2) one blank line; (3) for each distinct kind (alphabetical), a block of: 'kind: <kind>' line; then 'offered: <O> units (<C> contributors consenting)' where O is the sum of units across offers of that kind whose consent_to_route is true and N is the count of contributors with at least one consenting offer; then 'needed: <D> units (<R> requesters)' where D is the sum of need units and R is the count of distinct requesters; then 'status: <status>' where status is 'fits' if O >= D and D > 0, 'short by <D-O> units' if O < D and D > 0, 'no demand' if D == 0 and O > 0, or 'no supply' if O == 0 and D > 0, or 'idle' if O == 0 and D == 0; then one blank line after each block (including the last); (4) a final 'BLOCKERS:' block: if any offers had consent_to_route == false, list each as '- <contributor> withheld consent on <kind> (<units> units)' alphabetical by contributor then kind; if no withholds, print 'BLOCKERS: none'. Normalize kind strings before grouping (strip + collapse internal whitespace + lowercase). Drop offers with non-numeric units or empty-normalized kind. Drop needs with non-numeric units or empty-normalized kind. If the input cannot be read or is not valid JSON, print a single line beginning with 'error:' and exit 0. Standard library only; no network; no credential access.",
+    "build_target": "one single-file command-line tool, standard library only, routing diagnostic output"
+  },
+  "freeze_record": {
+    "frozen": true,
+    "frozen_at": "2026-05-25T11:50:00-07:00",
+    "frozen_by": "team + jam facilitator (sample)",
+    "facilitator_confirmed": {
+      "consent_privacy_complete": true,
+      "boundaries_reviewed": true,
+      "public_private_status_confirmed": true,
+      "ai_input_scope_confirmed": true,
+      "build_path_confirmed": true,
+      "witnessed_working_clear": true
+    }
+  },
+  "allowed_inputs": [
+    {
+      "name": "sample-pool.json",
+      "kind": "json-data",
+      "note": "small fictional pool with 5 offers across 3 kinds and 4 needs",
+      "content": {
+        "pool_id": "kelp-bed-stewardship-2026-Q2",
+        "offers": [
+          {"id": "off-1", "contributor": "A. Tidesmith", "kind": "field hours", "units": 12, "consent_to_route": true},
+          {"id": "off-2", "contributor": "B. Salal", "kind": "field hours", "units": 8, "consent_to_route": true},
+          {"id": "off-3", "contributor": "C. Driftwood", "kind": "field hours", "units": 10, "consent_to_route": false},
+          {"id": "off-4", "contributor": "A. Tidesmith", "kind": "boat use", "units": 4, "consent_to_route": true},
+          {"id": "off-5", "contributor": "B. Salal", "kind": "  Field  Hours ", "units": 2, "consent_to_route": true},
+          {"id": "off-6", "contributor": "D. Eelgrass", "kind": "data review", "units": 6, "consent_to_route": true}
+        ],
+        "needs": [
+          {"id": "need-1", "requester": "Boundary Bay site", "kind": "field hours", "units": 16},
+          {"id": "need-2", "requester": "Lighthouse Park site", "kind": "field hours", "units": 6},
+          {"id": "need-3", "requester": "Boundary Bay site", "kind": "boat use", "units": 4},
+          {"id": "need-4", "requester": "Spanish Banks site", "kind": "data review", "units": 8}
+        ]
+      }
+    }
+  ],
+  "excluded_inputs": [
+    {
+      "id": "boundary-withheld-offers",
+      "visibility": "marker-only",
+      "boundary_type": "marker-only",
+      "boundary": "Offers whose contributors withheld consent_to_route are recorded as blockers — the offer is named (contributor + kind + units) but is not routed and is not counted toward the offered total.",
+      "private_content_included": false,
+      "disallowed_use": ["route", "transform"],
+      "note": "content withheld at the routing layer — surface as a blocker"
+    },
+    {
+      "id": "boundary-contributor-contact",
+      "visibility": "marker-only",
+      "boundary_type": "not-for-AI",
+      "boundary": "Contributor contact details (email, phone, full name beyond display) are held by the team and never enter the build attempt or the diagnostic.",
+      "private_content_included": false,
+      "disallowed_use": ["summarize", "tag", "embed", "route", "transform", "send-to-ai"],
+      "note": "content withheld by the exporter — this record is named only"
+    }
+  ],
+  "build_instructions": {
+    "path": "build-instructions.md"
+  },
+  "acceptance_criteria": {
+    "description": [
+      "prints 'POOL ROUTING DIAGNOSTIC — <pool_id>' as the header",
+      "groups offers and needs by normalized kind (strip + collapse whitespace + lowercase)",
+      "for each kind: offered (only consenting), needed, and status",
+      "status: 'fits', 'short by N units', 'no demand', 'no supply', or 'idle'",
+      "BLOCKERS block lists non-consenting offers (contributor, kind, units) alphabetically",
+      "drops offers/needs with non-numeric units or empty-normalized kind",
+      "error: prefix on unreadable/invalid JSON, exit 0",
+      "stdlib only, no network, no credentials"
+    ],
+    "test_file": {
+      "name": "acceptance-test.py",
+      "language": "python-stdlib",
+      "path": "acceptance-test.py"
+    }
+  },
+  "review_checks": [
+    "the generated tool runs and exits cleanly with no network, credential, or database access",
+    "the tool passes every acceptance-criteria smoke test",
+    "no excluded / marker-only record appears in the tool or its output",
+    "no outputs are hardcoded for specific inputs — the tool is correct in general",
+    "the witness record states only what happened and does not certify, approve, or grant reuse",
+    "the diagnostic does not 'route' anything — it only reports whether routing fits; no side effects beyond stdout",
+    "the diagnostic does not classify a withheld offer as a routing-failure, only as a blocker (consent, not capability)"
+  ],
+  "witness_record_seed": {
+    "team": "Pool Routing",
+    "date": "2026-05-26",
+    "fields": ["what we brought", "what we attempted", "what worked", "what did not work / what broke", "what we learned", "boundaries that remain"],
+    "receipt_statement": "This record states what happened. It does not establish authority, approval, certification, legitimacy, community consent, or readiness for reuse."
+  }
+}
