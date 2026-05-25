@@ -1,6 +1,6 @@
 # Indigenomics AI Creator Jam Kit
 
-Private working repo for Creator Jam participants, facilitators, and invited reviewers.
+Public kit for Creator Jam participants, facilitators, and invited reviewers.
 
 This repo is for public, sample, or explicitly display-approved material only. Do not add protected, cultural, linguistic, ceremonial, Nation-specific, participant-private, credential-bearing, or authority-bound material unless the right authority has explicitly approved that exact use.
 
