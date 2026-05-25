@@ -1,0 +1,74 @@
+test_1_happy_path_two_public_one_withheld (__main__.StoryReceiptsTest.test_1_happy_path_two_public_one_withheld) ... FAIL
+test_2_multi_line_receipt_each_line_quoted (__main__.StoryReceiptsTest.test_2_multi_line_receipt_each_line_quoted) ... FAIL
+test_3_sort_date_then_id (__main__.StoryReceiptsTest.test_3_sort_date_then_id) ... ok
+test_4_empty_text_is_withheld (__main__.StoryReceiptsTest.test_4_empty_text_is_withheld) ... ok
+test_5_missing_scope_treated_as_withheld (__main__.StoryReceiptsTest.test_5_missing_scope_treated_as_withheld) ... ok
+test_6_empty_receipts_list (__main__.StoryReceiptsTest.test_6_empty_receipts_list) ... ok
+test_7_invalid_json (__main__.StoryReceiptsTest.test_7_invalid_json) ... ok
+
+======================================================================
+FAIL: test_1_happy_path_two_public_one_withheld (__main__.StoryReceiptsTest.test_1_happy_path_two_public_one_withheld)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/3c/6p_c61tj3y5ccqzmvfxmdg080000gn/T/m2-lite-test-zjf5wbqb/test_tool.py", line 51, in test_1_happy_path_two_public_one_withheld
+    self.assertEqual(
+AssertionError: Lists differ: ['# S[208 chars]tion.', '', '', '---', '', 'Receipts withheld from display: 1'] != ['# S[208 chars]tion.', '', '---', '', 'Receipts withheld from display: 1']
+
+First differing element 12:
+''
+'---'
+
+First list contains 1 additional elements.
+First extra element 15:
+'Receipts withheld from display: 1'
+
+  ['# Story Receipts Wall (2 shown / 3 total)',
+   '',
+   '## A. Cedar — 2026-05-12',
+   '',
+   '> Read with the room.',
+   '',
+   'tags: learning',
+   '',
+   '## M. Salal — 2026-05-13',
+   '',
+   '> The freeze step caught a missing consent question.',
+   '',
+-  '',
+   '---',
+   '',
+   'Receipts withheld from display: 1'] : header, two public receipts sorted by date, tags line only when tags present, '---' + withheld count footer
+
+======================================================================
+FAIL: test_2_multi_line_receipt_each_line_quoted (__main__.StoryReceiptsTest.test_2_multi_line_receipt_each_line_quoted)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/3c/6p_c61tj3y5ccqzmvfxmdg080000gn/T/m2-lite-test-zjf5wbqb/test_tool.py", line 76, in test_2_multi_line_receipt_each_line_quoted
+    self.assertEqual(
+AssertionError: Lists differ: ['# S[116 chars]hree.', '', '', '---', '', 'Receipts withheld from display: 0'] != ['# S[116 chars]hree.', '', '---', '', 'Receipts withheld from display: 0']
+
+First differing element 8:
+''
+'---'
+
+First list contains 1 additional elements.
+First extra element 11:
+'Receipts withheld from display: 0'
+
+  ['# Story Receipts Wall (1 shown / 1 total)',
+   '',
+   '## A. Cedar — 2026-05-12',
+   '',
+   '> Line one.',
+   '> Line two.',
+   '> Line three.',
+   '',
+-  '',
+   '---',
+   '',
+   'Receipts withheld from display: 0'] : each line of multi-line text is quoted individually with '> '
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.185s
+
+FAILED (failures=2)

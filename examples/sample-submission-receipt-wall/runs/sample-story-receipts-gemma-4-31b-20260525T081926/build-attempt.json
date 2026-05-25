@@ -1,0 +1,50 @@
+{
+  "packet_id": "sample-story-receipts",
+  "packet_path": "/Users/darrenzal/projects/IndigenomicsAI-CreatorJamKit/examples/sample-submission-receipt-wall/sample-agentic-build-packet-v0.json",
+  "run_id": "sample-story-receipts-gemma-4-31b-20260525T081926",
+  "run_at": "2026-05-25T08:19:26Z",
+  "mode": "TELUS build-attempt lane",
+  "model": {
+    "catalog_id": "gemma-4-31b",
+    "provider_config_model": "google/gemma-4-31b-it"
+  },
+  "team": "Story Receipts",
+  "frozen": true,
+  "attempt_1": {
+    "codegen_ok": true,
+    "codegen_elapsed_ms": 16817,
+    "code_extracted": true,
+    "error": null,
+    "test": {
+      "passed": 5,
+      "total": 7,
+      "failing": [
+        "__main__.StoryReceiptsTest.test_1_happy_path_two_public_one_withheld",
+        "__main__.StoryReceiptsTest.test_2_multi_line_receipt_each_line_quoted"
+      ]
+    }
+  },
+  "repair": {
+    "codegen_ok": true,
+    "codegen_elapsed_ms": 25586,
+    "code_extracted": true,
+    "error": null,
+    "test": {
+      "passed": 7,
+      "total": 7,
+      "failing": []
+    }
+  },
+  "final": {
+    "code_source": "repair-attempt",
+    "test": {
+      "passed": 7,
+      "total": 7
+    },
+    "all_passed": true
+  },
+  "finding": "fixed",
+  "finding_detail": "attempt 1: 5/7 passed; repair: 7/7 passed; repair fixed: test_1_happy_path_two_public_one_withheld, test_2_multi_line_receipt_each_line_quoted",
+  "final_code": "import json\nimport sys\n\ndef main():\n    if len(sys.argv) < 2:\n        return\n\n    input_path = sys.argv[1]\n\n    try:\n        with open(input_path, 'r', encoding='utf-8') as f:\n            data = json.load(f)\n    except Exception:\n        print(\"error: could not read or parse input file\")\n        sys.exit(0)\n\n    if not isinstance(data, dict) or \"receipts\" not in data:\n        print(\"error: invalid JSON structure\")\n        sys.exit(0)\n\n    receipts = data[\"receipts\"]\n    if not isinstance(receipts, list):\n        print(\"error: receipts must be a list\")\n        sys.exit(0)\n\n    total_count = len(receipts)\n    \n    public_receipts = []\n    for r in receipts:\n        if not isinstance(r, dict):\n            continue\n            \n        scope = r.get(\"display_scope\")\n        text = r.get(\"text\")\n        \n        # Drop rules:\n        # 1. display_scope must be exactly \"public\"\n        # 2. text must be non-empty after stripping\n        if scope == \"public\" and isinstance(text, str) and text.strip():\n            public_receipts.append(r)\n\n    # Sort by date ascending, then by id ascending\n    public_receipts.sort(key=lambda x: (x.get(\"date\", \"\"), x.get(\"id\", \"\")))\n\n    shown_count = len(public_receipts)\n    withheld_count = total_count - shown_count\n\n    # (1) Header line\n    print(f\"# Story Receipts Wall ({shown_count} shown / {total_count} total)\")\n    \n    # (2) One blank line after header\n    print()\n\n    # (3) Public receipt blocks\n    for r in public_receipts:\n        contributor = r.get(\"contributor\", \"\")\n        date = r.get(\"date\", \"\")\n        text = r.get(\"text\", \"\")\n        tags = r.get(\"tags\")\n\n        # Header: ## <contributor> \u2014 <date> (U+2014 em-dash)\n        print(f\"## {contributor} \u2014 {date}\")\n        print()\n\n        # Quoted text: preserve internal line breaks, quote every line\n        # splitlines() is used to handle various newline characters\n        lines = text.splitlines()\n        for line in lines:\n            print(f\"> {line}\")\n        \n        # The spec says: \"After the tags line (or after the quoted text if no tags), \n        # emit exactly one blank line before the next receipt block (or the footer).\"\n        # The previous attempt added an extra print() before the tags check.\n        \n        if isinstance(tags, list) and tags:\n            # We need a blank line between the quoted text and the tags line? \n            # Looking at the failed test output:\n            # '> Read with the room.', '', 'tags: learning', ''\n            # This implies a blank line between text and tags.\n            print()\n            print(f\"tags: {', '.join(map(str, tags))}\")\n        \n        # Exactly one blank line after the block\n        print()\n\n    # (4) Footer\n    # The failed tests show that the previous attempt had an extra blank line \n    # before the '---' when the last receipt block ended.\n    # Since we print() at the end of every block, we have one blank line.\n    # The spec says: \"The --- is on its own line, then one blank line, then the withheld-count line.\"\n    # If there were no public receipts, we still need the footer.\n    \n    # If we had public receipts, the last one ended with a blank line.\n    # The test failure shows: ['...text', '', '', '---', '', '...'] \n    # vs ['...text', '', '---', '', '...']\n    # This means the blank line at the end of the block IS the blank line before '---'.\n    # But wait, the spec says: \"After the tags line... emit exactly one blank line before the next receipt block (or the footer).\"\n    # Then \"The --- is on its own line\".\n    # This means: [Block] -> [Blank Line] -> [---] -> [Blank Line] -> [Withheld Count]\n    \n    # If there are no public receipts, we don't have that trailing blank line from the loop.\n    if shown_count == 0:\n        # No blocks, just header, blank line, then footer.\n        # Header is already printed, then print().\n        pass \n\n    print(\"---\")\n    print()\n    print(f\"Receipts withheld from display: {withheld_count}\")\n\nif __name__ == \"__main__\":\n    main()",
+  "boundary": "This build-attempt record states what happened. It does not establish that the tool is correct, complete, safe, or fit for reuse."
+}

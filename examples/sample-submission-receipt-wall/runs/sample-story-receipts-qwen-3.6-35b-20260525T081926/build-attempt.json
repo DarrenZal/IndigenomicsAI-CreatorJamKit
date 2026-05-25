@@ -1,0 +1,53 @@
+{
+  "packet_id": "sample-story-receipts",
+  "packet_path": "/Users/darrenzal/projects/IndigenomicsAI-CreatorJamKit/examples/sample-submission-receipt-wall/sample-agentic-build-packet-v0.json",
+  "run_id": "sample-story-receipts-qwen-3.6-35b-20260525T081926",
+  "run_at": "2026-05-25T08:19:26Z",
+  "mode": "TELUS build-attempt lane",
+  "model": {
+    "catalog_id": "qwen-3.6-35b",
+    "provider_config_model": "Qwen/Qwen3.6-35B-A3B"
+  },
+  "team": "Story Receipts",
+  "frozen": true,
+  "attempt_1": {
+    "codegen_ok": true,
+    "codegen_elapsed_ms": 9019,
+    "code_extracted": true,
+    "error": null,
+    "test": {
+      "passed": 5,
+      "total": 7,
+      "failing": [
+        "__main__.StoryReceiptsTest.test_1_happy_path_two_public_one_withheld",
+        "__main__.StoryReceiptsTest.test_2_multi_line_receipt_each_line_quoted"
+      ]
+    }
+  },
+  "repair": {
+    "codegen_ok": true,
+    "codegen_elapsed_ms": 8355,
+    "code_extracted": true,
+    "error": null,
+    "test": {
+      "passed": 5,
+      "total": 7,
+      "failing": [
+        "__main__.StoryReceiptsTest.test_1_happy_path_two_public_one_withheld",
+        "__main__.StoryReceiptsTest.test_2_multi_line_receipt_each_line_quoted"
+      ]
+    }
+  },
+  "final": {
+    "code_source": "repair-attempt",
+    "test": {
+      "passed": 5,
+      "total": 7
+    },
+    "all_passed": false
+  },
+  "finding": "no change",
+  "finding_detail": "attempt 1: 5/7 passed; repair: 5/7 passed",
+  "final_code": "import sys\nimport json\n\ndef main():\n    # Check command line arguments\n    if len(sys.argv) != 2:\n        print(\"error: expected exactly one argument: receipts_json_path\")\n        sys.exit(0)\n    \n    json_path = sys.argv[1]\n    \n    # Read the input file\n    try:\n        with open(json_path, 'r', encoding='utf-8') as f:\n            content = f.read()\n    except Exception:\n        print(\"error: could not read file\")\n        sys.exit(0)\n    \n    # Parse JSON\n    try:\n        data = json.loads(content)\n    except json.JSONDecodeError:\n        print(\"error: invalid JSON\")\n        sys.exit(0)\n    \n    # Validate structure\n    if not isinstance(data, dict) or 'receipts' not in data:\n        print(\"error: invalid JSON structure\")\n        sys.exit(0)\n    \n    receipts = data['receipts']\n    if not isinstance(receipts, list):\n        print(\"error: receipts must be an array\")\n        sys.exit(0)\n    \n    total_count = len(receipts)\n    \n    # Filter public receipts with non-empty text\n    public_receipts = []\n    for r in receipts:\n        if not isinstance(r, dict):\n            continue\n        display_scope = r.get('display_scope', '')\n        if display_scope != 'public':\n            continue\n        text = r.get('text', '')\n        if not isinstance(text, str):\n            continue\n        if text.strip() == '':\n            continue\n        public_receipts.append(r)\n    \n    # Sort by date ascending, then by id ascending for ties\n    public_receipts.sort(key=lambda r: (r.get('date', ''), r.get('id', '')))\n    \n    shown_count = len(public_receipts)\n    withheld_count = total_count - shown_count\n    \n    # Build output\n    output_lines = []\n    \n    # (1) Header line\n    output_lines.append(f\"# Story Receipts Wall ({shown_count} shown / {total_count} total)\")\n    \n    # (2) One blank line after the header\n    output_lines.append(\"\")\n    \n    # (3) Each public receipt block\n    for r in public_receipts:\n        contributor = r.get('contributor', '')\n        date = r.get('date', '')\n        text = r.get('text', '')\n        tags = r.get('tags', [])\n        \n        # ## <contributor> \u2014 <date>\n        output_lines.append(f\"## {contributor} \u2014 {date}\")\n        \n        # Quote each line of text with \"> \"\n        text_lines = text.split('\\n')\n        for line in text_lines:\n            output_lines.append(f\"> {line}\")\n        \n        # Tags line if present and non-empty\n        if tags and isinstance(tags, list) and len(tags) > 0:\n            tags_str = \", \".join(str(t) for t in tags)\n            output_lines.append(f\"tags: {tags_str}\")\n        \n        # One blank line after each receipt block\n        output_lines.append(\"\")\n    \n    # (4) Footer\n    output_lines.append(\"---\")\n    output_lines.append(\"\")\n    output_lines.append(f\"Receipts withheld from display: {withheld_count}\")\n    \n    # Print output\n    print('\\n'.join(output_lines))\n\nif __name__ == '__main__':\n    main()",
+  "boundary": "This build-attempt record states what happened. It does not establish that the tool is correct, complete, safe, or fit for reuse."
+}

@@ -1,0 +1,109 @@
+{
+  "packet_version": "v0",
+  "packet_id": "sample-story-receipts",
+  "export_provenance": {
+    "exported_from": "team-submission-v0",
+    "exported_by": "manual sample export",
+    "exported_at": "2026-05-25T11:35:00-07:00",
+    "submission_id": "team-spec-story-receipts-01",
+    "surface": "shared-doc",
+    "build_request_path": "telus-lane",
+    "ai_input_scope": "whole",
+    "display_scope": "whole",
+    "reuse_scope": "ask-first",
+    "visible_to_facilitators": true,
+    "offerings_held_out": []
+  },
+  "team_spec": {
+    "team_name": "Story Receipts",
+    "site": "Vancouver",
+    "vision": "A tool that turns a small set of public-safe story-receipts into a markdown wall the room can read on Tuesday — each entry only appearing if the contributor cleared it for display.",
+    "spec": "Build a single-file Python tool, run as `python3 tool.py <receipts_json_path>`, that reads the JSON file at the path given as its first command-line argument. The file is an object shaped { \"receipts\": [ { \"id\": \"...\", \"contributor\": \"...\", \"date\": \"YYYY-MM-DD\", \"text\": \"...\", \"display_scope\": \"public\"|\"team-only\"|\"spoken-only\"|\"none\", \"tags\": optional list of strings }, ... ] }. Print to stdout a markdown wall, in this order: (1) a header line exactly '# Story Receipts Wall (<S> shown / <N> total)' where S is the count of receipts with display_scope == 'public' and N is the total receipt count; (2) one blank line; (3) for each public receipt, sorted by date ascending then by id ascending for ties, a block of: '## <contributor> — <date>', one blank line, then the receipt's `text` quoted with `> ` prefix on each line, one blank line, then `tags: <comma-separated tags>` if tags are non-empty (else omit the tags line), then one blank line; (4) at the bottom, a footer line exactly '---' on its own line, one blank line, then 'Receipts withheld from display: <W>' where W = N - S. Skip every receipt whose display_scope is not exactly 'public' (treat 'team-only', 'spoken-only', 'none', and any missing/unknown value as withheld). Receipts with empty `text` after stripping are also withheld. The output is markdown; do not strip or modify the receipt text other than quoting each of its lines. If the input cannot be read or is not valid JSON, print a single line beginning with 'error:' and exit 0. Standard library only; no network; no credential access.",
+    "build_target": "one single-file command-line tool, standard library only, markdown output"
+  },
+  "freeze_record": {
+    "frozen": true,
+    "frozen_at": "2026-05-25T11:30:00-07:00",
+    "frozen_by": "team + jam facilitator (sample)",
+    "facilitator_confirmed": {
+      "consent_privacy_complete": true,
+      "boundaries_reviewed": true,
+      "public_private_status_confirmed": true,
+      "ai_input_scope_confirmed": true,
+      "build_path_confirmed": true,
+      "witnessed_working_clear": true
+    }
+  },
+  "allowed_inputs": [
+    {
+      "name": "sample-receipts.json",
+      "kind": "json-data",
+      "note": "small fictional fixture giving the model the JSON shape it will read",
+      "content": {
+        "receipts": [
+          {"id": "r1", "contributor": "A. Cedar", "date": "2026-05-12", "text": "Read with the room. Heard back: silence felt heavier than agreement. Next time I will name the silence.", "display_scope": "public", "tags": ["learning", "facilitation"]},
+          {"id": "r2", "contributor": "M. Salal", "date": "2026-05-13", "text": "Tried the offering quick card with five different framings.\nThree landed; two didn't. The two that didn't were the ones that named cost upfront.", "display_scope": "public", "tags": ["facilitation"]},
+          {"id": "r3", "contributor": "J. Fir", "date": "2026-05-13", "text": "Drafted a receipt for our work but our group has not reviewed it yet — holding to share later.", "display_scope": "team-only"},
+          {"id": "r4", "contributor": "K. Salal", "date": "2026-05-14", "text": "What worked: the freeze step slowed us down enough to catch a missing consent question.", "display_scope": "public", "tags": ["freeze", "consent"]},
+          {"id": "r5", "contributor": "P. Arbutus", "date": "2026-05-14", "text": "", "display_scope": "public"},
+          {"id": "r6", "contributor": "A. Cedar", "date": "2026-05-15", "text": "Will share aloud Tuesday but not in writing.", "display_scope": "spoken-only"}
+        ]
+      }
+    }
+  ],
+  "excluded_inputs": [
+    {
+      "id": "boundary-non-public-scopes",
+      "visibility": "marker-only",
+      "boundary_type": "marker-only",
+      "boundary": "Receipts whose contributors did not clear them for public display are named only as a count at the bottom of the wall.",
+      "private_content_included": false,
+      "disallowed_use": ["summarize", "tag", "embed", "route", "transform", "send-to-ai"],
+      "note": "content withheld by the exporter — this record is named only"
+    },
+    {
+      "id": "boundary-contributor-contact",
+      "visibility": "marker-only",
+      "boundary_type": "not-for-AI",
+      "boundary": "Contributor contact details are held by the team and never enter the build attempt or the rendered wall.",
+      "private_content_included": false,
+      "disallowed_use": ["summarize", "tag", "embed", "route", "transform", "send-to-ai"],
+      "note": "content withheld by the exporter — this record is named only"
+    }
+  ],
+  "build_instructions": {
+    "path": "build-instructions.md"
+  },
+  "acceptance_criteria": {
+    "description": [
+      "prints the exact header '# Story Receipts Wall (<S> shown / <N> total)'",
+      "shows only receipts with display_scope == 'public'",
+      "renders each public receipt as: '## <contributor> — <date>', blank, quoted text, blank, optional tags line, blank",
+      "sorts public receipts by date ascending, then id ascending",
+      "skips receipts with empty stripped text (counts as withheld)",
+      "emits the '---' footer + 'Receipts withheld from display: <W>' line",
+      "prints a line beginning with 'error:' on unreadable or invalid JSON, exits 0",
+      "uses standard library only, no network, no credential access"
+    ],
+    "test_file": {
+      "name": "acceptance-test.py",
+      "language": "python-stdlib",
+      "path": "acceptance-test.py"
+    }
+  },
+  "review_checks": [
+    "the generated tool runs and exits cleanly with no network, credential, or database access",
+    "the tool passes every acceptance-criteria smoke test",
+    "no excluded / marker-only record appears in the tool or its output",
+    "no outputs are hardcoded for specific inputs — the tool is correct in general",
+    "the witness record states only what happened and does not certify, approve, or grant reuse",
+    "no contributor email, phone, or full surname appears anywhere in the tool output (display-name initials only)",
+    "no team-only or spoken-only receipt text is rendered in the public wall"
+  ],
+  "witness_record_seed": {
+    "team": "Story Receipts",
+    "date": "2026-05-26",
+    "fields": ["what we brought", "what we attempted", "what worked", "what did not work / what broke", "what we learned", "boundaries that remain"],
+    "receipt_statement": "This record states what happened. It does not establish authority, approval, certification, legitimacy, community consent, or readiness for reuse."
+  }
+}
