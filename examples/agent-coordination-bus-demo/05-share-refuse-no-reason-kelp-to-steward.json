@@ -1,0 +1,20 @@
+{
+  "created_at": "2026-05-25T22:11:34.537462+00:00",
+  "from_agent": {
+    "agent_role": "spec-drafting",
+    "team_id": "team-kelp-bed-observers"
+  },
+  "message_id": "d86293f0-d18b-4e31-9be6-db546a957a5f",
+  "message_type": "share_refuse",
+  "payload": {
+    "granted": false,
+    "log_as_learning": true
+  },
+  "references": [
+    "b37eb373-e612-4370-b61b-8e2aa2b7edee"
+  ],
+  "signature": "17b3137551a210c4212a92fa1f1dc715",
+  "to_agent": {
+    "team_id": "team-steward-calendar"
+  }
+}

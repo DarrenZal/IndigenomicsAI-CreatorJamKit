@@ -1,0 +1,31 @@
+{
+  "created_at": "2026-05-25T22:11:34.537499+00:00",
+  "from_agent": {
+    "agent_role": "spec-drafting",
+    "team_id": "team-steward-calendar"
+  },
+  "message_id": "38025b47-8a6b-484c-9ea2-1e4566f1e7ce",
+  "message_type": "share_request",
+  "payload": {
+    "consent_terms": {
+      "ai_input_scope": "whole",
+      "display_scope": "whole",
+      "reuse_scope": "public-ok"
+    },
+    "what": {
+      "content_kind": "offering",
+      "preview": {
+        "body": "Internal cultural framing detail [PROTECTED] should not flow here",
+        "mode": "marker_only"
+      }
+    },
+    "why": {
+      "intent": "Trying to share content through marker_only mode"
+    }
+  },
+  "references": [],
+  "signature": "2626fb50963754267d097c44e9c785a8",
+  "to_agent": {
+    "team_id": "team-kelp-bed-observers"
+  }
+}

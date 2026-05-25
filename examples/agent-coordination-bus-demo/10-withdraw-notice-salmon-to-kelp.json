@@ -1,0 +1,25 @@
+{
+  "created_at": "2026-05-25T22:11:34.537487+00:00",
+  "from_agent": {
+    "agent_role": "spec-drafting",
+    "team_id": "team-salmon-counters"
+  },
+  "message_id": "3b01532f-6da7-4b0e-831c-49c1d11faac4",
+  "message_type": "withdraw_notice",
+  "payload": {
+    "acknowledgment_required_from": [
+      "team-kelp-bed-observers"
+    ],
+    "withdrawn_record_ids": [
+      "off-salmon-counts-may-partial"
+    ]
+  },
+  "references": [
+    "18404a09-29e9-49b9-9527-3cb34228eac0",
+    "d0172dde-6e5c-4bb5-88f7-524bb47dc61f"
+  ],
+  "signature": "50664ef06f594ca0ab0fd53f7ac89fdd",
+  "to_agent": {
+    "team_id": "team-kelp-bed-observers"
+  }
+}

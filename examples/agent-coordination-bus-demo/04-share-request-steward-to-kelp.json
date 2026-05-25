@@ -1,0 +1,32 @@
+{
+  "created_at": "2026-05-25T22:11:34.537457+00:00",
+  "from_agent": {
+    "agent_role": "spec-drafting",
+    "team_id": "team-steward-calendar"
+  },
+  "message_id": "b37eb373-e612-4370-b61b-8e2aa2b7edee",
+  "message_type": "share_request",
+  "payload": {
+    "consent_terms": {
+      "ai_input_scope": "whole",
+      "display_scope": "whole",
+      "reuse_scope": "team-only"
+    },
+    "what": {
+      "content_kind": "offering",
+      "preview": {
+        "body": "Same kelp-cover map data, requested for restoration-day site selection",
+        "mode": "paraphrased"
+      }
+    },
+    "why": {
+      "intent": "Use kelp-cover transects to pick which sites need restoration first",
+      "target_spec": "specs/bioregional-mapping-layer-board.md"
+    }
+  },
+  "references": [],
+  "signature": "6a9aa22bcc1fb4585fae214d3875944e",
+  "to_agent": {
+    "team_id": "team-kelp-bed-observers"
+  }
+}

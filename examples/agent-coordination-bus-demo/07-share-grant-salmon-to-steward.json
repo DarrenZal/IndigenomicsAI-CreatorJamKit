@@ -1,0 +1,24 @@
+{
+  "created_at": "2026-05-25T22:11:34.537471+00:00",
+  "from_agent": {
+    "agent_role": "spec-drafting",
+    "team_id": "team-salmon-counters"
+  },
+  "message_id": "2cd175a6-6b8e-4050-9d43-79567fbee204",
+  "message_type": "share_grant",
+  "payload": {
+    "added_conditions": [
+      {
+        "condition": "Weekly aggregates only \u2014 do not request raw counts"
+      }
+    ],
+    "granted": true
+  },
+  "references": [
+    "807a28f6-bf39-4451-a22c-93f1cf02a2b7"
+  ],
+  "signature": "31c733c7a70d60db9077b431871ee97e",
+  "to_agent": {
+    "team_id": "team-steward-calendar"
+  }
+}

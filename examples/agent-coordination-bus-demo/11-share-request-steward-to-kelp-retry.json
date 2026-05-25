@@ -1,0 +1,31 @@
+{
+  "created_at": "2026-05-25T22:11:34.537491+00:00",
+  "from_agent": {
+    "agent_role": "spec-drafting",
+    "team_id": "team-steward-calendar"
+  },
+  "message_id": "cd788b97-05f7-4702-a2ac-2c5017e4fed1",
+  "message_type": "share_request",
+  "payload": {
+    "consent_terms": {
+      "ai_input_scope": "none",
+      "display_scope": "partial",
+      "reuse_scope": "ask-first"
+    },
+    "what": {
+      "content_kind": "offering",
+      "preview": {
+        "body": "Just the transect locations (lat/lon), not the cover values",
+        "mode": "paraphrased"
+      }
+    },
+    "why": {
+      "intent": "Even just transect locations would let us co-locate restoration sites without needing your cover values"
+    }
+  },
+  "references": [],
+  "signature": "350abde5c61ae637cffa97070672fcd3",
+  "to_agent": {
+    "team_id": "team-kelp-bed-observers"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "created_at": "2026-05-25T22:11:34.537441+00:00",
+  "from_agent": {
+    "agent_role": "spec-drafting",
+    "team_id": "team-salmon-counters"
+  },
+  "message_id": "d0172dde-6e5c-4bb5-88f7-524bb47dc61f",
+  "message_type": "share_grant",
+  "payload": {
+    "added_conditions": [
+      {
+        "condition": "Attribution required as 'Salmon Counters (Vancouver, May 2026)'"
+      },
+      {
+        "condition": "Display partial only \u2014 no full dataset on public surfaces"
+      }
+    ],
+    "granted": true
+  },
+  "references": [
+    "18404a09-29e9-49b9-9527-3cb34228eac0"
+  ],
+  "signature": "b04573268eb37032d8fe5f84be703638",
+  "to_agent": {
+    "team_id": "team-kelp-bed-observers"
+  }
+}

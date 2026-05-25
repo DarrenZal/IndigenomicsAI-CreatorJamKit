@@ -43,6 +43,17 @@ These are sample/public working specs. Do not add protected, Nation-specific, ce
 | Public receipt surfaces | [Receipt Wall Story Gallery](receipt-wall-story-gallery.md) | 🟡 | medium | (sample at `examples/sample-submission-receipt-wall/`) | Publishing sample-safe witness rollups and build stories. |
 | Spec-driven development | [Spec Composer Bundle Board](spec-composer-bundle-board.md) | ⚪ | light | — | Composing participant spec fragments into candidate collective builds. |
 
+### Meta-specs (the jam's own substrate)
+
+These specs are the jam dogfooding itself — they implement the substrate
+participating teams' agents and witness surfaces use. They compose with
+the coordination protocol, the participant gateway, and the witness
+record interop profile.
+
+| Area | Spec | Status | Good for |
+| --- | --- | --- | --- |
+| Agent coordination | [Agent Coordination Bus v0](agent-coordination-bus-v0/) | implemented + tested + demoed | File-based JSONL bus implementing the 7 wire types from `coordination-protocol-v0.md`. Per-team append-only logs, per-type validators, audit. |
+
 **Good-first-builds spot-checked by TELUS lane overnight (Mon 2026-05-25)**:
 - ✅ **Sensor To Receipt Pipeline** — both Gemma + Qwen 6/6 clean
 - ✅ **Untracked Allocation Ledger** — both Gemma + Qwen 6/6 clean

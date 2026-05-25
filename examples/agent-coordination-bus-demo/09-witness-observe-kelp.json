@@ -1,0 +1,29 @@
+{
+  "created_at": "2026-05-25T22:11:34.537483+00:00",
+  "from_agent": {
+    "agent_role": "witness-drafter",
+    "team_id": "team-kelp-bed-observers"
+  },
+  "message_id": "dea23d4c-19a8-441b-b3f4-5c261e52efe5",
+  "message_type": "witness_observe",
+  "payload": {
+    "attribution": {
+      "agent_role": "boundary-checker",
+      "source_messages": [
+        "b37eb373-e612-4370-b61b-8e2aa2b7edee",
+        "d86293f0-d18b-4e31-9be6-db546a957a5f"
+      ]
+    },
+    "not_an_authority_claim": true,
+    "observed": {
+      "body": "Refusal flow exercised cleanly: steward team requested kelp-cover data, kelp team refused with no reason, propagation halted.",
+      "kind": "refusal_tested"
+    },
+    "routing": "witness_drafter"
+  },
+  "references": [],
+  "signature": "a5ac2e7fa8f79d9f2d7c2d70379eaa29",
+  "to_agent": {
+    "team_id": "team-kelp-bed-observers"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "created_at": "2026-05-25T22:11:34.537467+00:00",
+  "from_agent": {
+    "agent_role": "spec-drafting",
+    "team_id": "team-steward-calendar"
+  },
+  "message_id": "807a28f6-bf39-4451-a22c-93f1cf02a2b7",
+  "message_type": "share_request",
+  "payload": {
+    "consent_terms": {
+      "ai_input_scope": "partial",
+      "display_scope": "partial",
+      "reuse_scope": "team-only"
+    },
+    "what": {
+      "content_kind": "offering",
+      "preview": {
+        "body": "Salmon count returns at three creek mouths, weekly aggregates only",
+        "mode": "paraphrased"
+      }
+    },
+    "why": {
+      "intent": "Compare salmon-return density with planned restoration timing"
+    }
+  },
+  "references": [],
+  "signature": "dcfe58bafcd0f2658cf113898d3ed08e",
+  "to_agent": {
+    "team_id": "team-salmon-counters"
+  }
+}
