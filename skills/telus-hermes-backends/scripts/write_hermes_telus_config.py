@@ -49,7 +49,7 @@ def main() -> int:
     parser.add_argument(
         "--max-tokens",
         type=int,
-        default=1024,
+        default=4096,
         help="Hermes max_tokens to write.",
     )
     parser.add_argument(

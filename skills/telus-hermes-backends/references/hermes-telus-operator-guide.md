@@ -8,7 +8,7 @@ Use the Creator Jam Gateway for participant API access and Gateway-mediated Herm
 
 | Backend | Best fit | Watch points |
 |---|---|---|
-| Qwen `Qwen/Qwen3.6-35B-A3B` | Complex reasoning, coding, decomposition, multi-step tool loops | Reasoning can consume output tokens. Start with `max_tokens: 1024`; use `2048` or higher for longer plans. |
+| Qwen `Qwen/Qwen3.6-35B-A3B` | Complex reasoning, coding, decomposition, multi-step tool loops | Reasoning can consume output tokens. Start with `max_tokens: 4096`; raise it for long-form generation. |
 | Gemma `google/gemma-4-31b-it` | Fast concise answers, writing, review, extraction, low-latency operator checks | Keep tool instructions explicit and bounded. |
 | GPT OSS `gpt-oss:120b` | General fallback, broad reasoning, robust chat and tool calls | May spend more tokens on reasoning; keep max-turn and output budgets visible. |
 
@@ -51,7 +51,7 @@ model:
   api_key: "<TELUS_QWEN_KEY>"
   api_mode: chat_completions
   context_length: 262144
-  max_tokens: 1024
+  max_tokens: 4096
 
 terminal:
   backend: local
@@ -94,7 +94,7 @@ model:
   api_key: "<TEAM_GATEWAY_KEY>"
   api_mode: chat_completions
   context_length: 262144
-  max_tokens: 2048
+  max_tokens: 4096
 ```
 
 ### `model.api_key`
@@ -117,7 +117,7 @@ If this is too low, Hermes compresses earlier and may lose useful context. If th
 
 The output cap for a single model response. It is not the total context size.
 
-Low values can break reasoning models because internal reasoning and visible output compete for the same response budget. For Qwen, use at least `1024`; use `2048` or more for long planning or complicated tool use.
+Low values can break reasoning models because internal reasoning and visible output compete for the same response budget. For Qwen/Hermes work, use at least `4096`; raise it further for long planning, long writing, or complicated tool use.
 
 ### `agent.max_turns`
 
@@ -213,14 +213,14 @@ model:
   base_url: https://qwen-0b50s.paas.ai.telus.com/v1
   api_mode: chat_completions
   context_length: 262144
-  max_tokens: 2048
+  max_tokens: 4096
 display:
   streaming: false
   show_reasoning: false
   tool_progress: off
 ```
 
-Use `max_tokens: 1024` for smoke tests and `2048` for serious agent work.
+Use `max_tokens: 4096` for normal Gateway/Hermes work. Use lower values only for deliberate smoke tests, and raise it for long-form generation.
 
 ## Verification Ladder
 
