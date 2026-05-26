@@ -437,6 +437,10 @@ def cmd_run(args):
         "aggregate_every": args.aggregate_every,
         "builder_mode": args.builder_mode,
         "mesh_mode": args.mesh_mode,
+        "planner_mode": getattr(args, "planner_mode", False),
+        "planner_threshold": getattr(args, "planner_threshold", None),
+        "dag_mode": getattr(args, "dag_mode", False),
+        "archive_prior_run": getattr(args, "archive_prior_run", False),
     }
     append_master_log(persistent_root, start_record)
 
