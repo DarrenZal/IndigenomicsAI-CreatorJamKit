@@ -188,24 +188,38 @@ class GatewayModelAdapter:
                 # Stub returns {"draft_spec": {...}}. Match that.
                 result["draft_spec"] = parsed
             elif prompt_name == "boundary-checker":
-                # Models tend to echo the stage-2 envelope back. Detect
-                # that case: if the parsed payload looks like our own
-                # envelope (has raw_content / model_source / stage), it's
-                # an echo — fall back to using stage-2's draft_spec inside
-                # payload as the annotated_spec base.
-                if "model_source" in parsed and "raw_content" in parsed:
-                    # Echo case — use the payload's draft_spec as the base,
-                    # mark boundary_check as default-passed (no real
-                    # annotation happened, but we have a usable spec).
+                # Models tend to echo back what they were given. Two
+                # observed echo shapes:
+                #   A. Wrapper-shape echo (Qwen):
+                #      {"model_source": ..., "raw_content": ..., "stage": ...}
+                #   B. Payload-shape echo (Gemma):
+                #      {"draft_spec": {...}}
+                # In either case we fall back to using stage-2's draft_spec
+                # from payload as the annotated_spec base, mark
+                # boundary_check_passed=True with a default boundary.
+                is_wrapper_echo = "model_source" in parsed and "raw_content" in parsed
+                is_payload_echo = (
+                    "draft_spec" in parsed
+                    and isinstance(parsed["draft_spec"], dict)
+                    and len(parsed) <= 2  # just draft_spec, maybe one other field
+                )
+                # Also: if parsed has vision/spec at TOP level, it's a
+                # real annotated_spec (Qwen-postpatch happy path).
+                has_top_level_content = (
+                    isinstance(parsed.get("vision"), str)
+                    or isinstance(parsed.get("spec"), str)
+                )
+                if is_wrapper_echo or is_payload_echo or not has_top_level_content:
                     base = payload.get("draft_spec", {})
-                    if isinstance(base, dict):
+                    if isinstance(base, dict) and (base.get("vision") or base.get("spec")):
                         result["annotated_spec"] = {
                             **base,
                             "boundaries": [],
                             "boundary_check_passed": True,
                             "boundary_notes": (
-                                "[gateway adapter] Model echoed stage-2 envelope; "
-                                "no real annotation. Default not-for-reuse boundary applied."
+                                "[gateway adapter] Model did not produce a usable "
+                                "annotated_spec dict (echoed payload). Using stage-2 "
+                                "draft_spec as base; default not-for-reuse boundary applied."
                             ),
                         }
                     else:
