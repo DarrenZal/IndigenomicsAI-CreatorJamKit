@@ -630,6 +630,17 @@ def cmd_run(args):
             "events": planner.events,
         }, indent=2))
 
+    # Generate the closing-witness-readout markdown — the kit's
+    # canonical closing-ceremony artifact, populated from this run.
+    try:
+        from jam.closing_readout import render_readout
+        readout_md = render_readout(persistent_root)
+        readout_path = persistent_root / "closing-witness-readout.md"
+        readout_path.write_text(readout_md)
+        print(f"  closing readout: {readout_path}")
+    except Exception as e:
+        print(f"  closing readout: FAIL — {e}")
+
 
 # --------------------------------------------------------------------- #
 # CLI                                                                   #
