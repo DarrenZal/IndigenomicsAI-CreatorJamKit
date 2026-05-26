@@ -56,6 +56,7 @@ record interop profile.
 | Agentic pipeline | [Agentic Spec Drafting Loop v0](agentic-spec-drafting-loop-v0/) | implemented + tested + demoed | 5-stage orchestrator wiring Prompts 1+2+4 + composition engine to take a loose offering and produce a frozen `agentic-build-packet-v0.json`. Stub + gateway model sources. |
 | Publication surface | [Witness Record Append v0](witness-record-append-v0/) | implemented + tested + demoed | CLI for appending validated witness records to a public wall. `--confirm-publish` gate, receipt-statement check, overclaim validator, refusal-as-record support. |
 | Witness drafting | [Draft Witness v0](draft-witness-v0/) | implemented + tested + chain-demoed | Stage 6 of the drafting chain — takes a frozen build packet + build outputs and produces a witness-record DRAFT via Prompt 3 (stub or gateway). Renderer falls back to "team to fill" placeholders so output is never null. Closes the offering → packet → build → witness → wall loop. |
+| Autonomous orchestration | [Orchestrator v0](orchestrator-v0/) | implemented + smoke-tested | Autonomous spec-execution network: given the spec menu, picks N specs, runs each through the full chain, honors refusal at every step (gatekeeper / model / pre-freeze-sanity / validator), publishes built-clean records + refusal-as-record entries to the wall. Composes all 4 prior meta-specs into one CLI. |
 
 **Good-first-builds spot-checked by TELUS lane overnight (Mon 2026-05-25)**:
 - ✅ **Sensor To Receipt Pipeline** — both Gemma + Qwen 6/6 clean
