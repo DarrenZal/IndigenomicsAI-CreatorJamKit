@@ -89,6 +89,7 @@ from typing import Any, Dict, List, Optional, Tuple
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from jam import bus  # noqa: E402
 from jam.spec_drafting_loop import GatewayModelAdapter  # noqa: E402
+from jam.telus_builder import build_from_packet  # noqa: E402
 
 
 # --------------------------------------------------------------------- #
@@ -294,6 +295,7 @@ def attempt_spec(
     counter: Dict[str, int],
     build_queue_dir: Path,
     builder_wait_seconds: int = 0,
+    builder_mode: str = "queue",
 ) -> Dict[str, Any]:
     """Run the full chain for one spec. Returns a structured result.
 
@@ -427,9 +429,39 @@ def attempt_spec(
     )
     log("4-queue", "ok", queue_entry=str(queue_entry))
 
-    # ---------- Stage 5: wait for builder (or skip if 0) ----------
+    # ---------- Stage 5: build (mode = queue | telus | skip) ----------
     build_result = None
-    if builder_wait_seconds > 0:
+    finding = "no-change"
+    if builder_mode == "telus":
+        log("5-builder", "telus-build-starting")
+        try:
+            packet = json.loads(packet_path.read_text())
+            sandbox = run_dir / "build-sandbox"
+            br = build_from_packet(packet, adapter, sandbox_dir=sandbox,
+                                    allow_repair=True)
+            counter["telus_calls"] += len(br.get("attempts", []))
+            finding = br.get("finding", "no-change")
+            # Write a build-attempt summary
+            (run_dir / "build-attempt.json").write_text(
+                json.dumps({
+                    "finding": br["finding"],
+                    "model_label": br.get("model_label"),
+                    "elapsed_seconds": br.get("elapsed_seconds"),
+                    "n_attempts": len(br.get("attempts", [])),
+                    "test_passed_final": br["attempts"][-1]["test_passed"] if br.get("attempts") else False,
+                    "build_file": br.get("build_file"),
+                    "sandbox": br.get("sandbox"),
+                }, indent=2)
+            )
+            log("5-builder", "ok", finding=finding,
+                attempts=len(br.get("attempts", [])),
+                elapsed=br.get("elapsed_seconds"))
+            build_result = br
+        except Exception as e:
+            log("5-builder", "FAIL", error=str(e))
+            finding = "failed"
+            build_result = {"finding": "failed", "error": str(e)}
+    elif builder_wait_seconds > 0:
         log("5-builder-wait", "waiting", seconds=builder_wait_seconds)
         deadline = time.time() + builder_wait_seconds
         while time.time() < deadline:
@@ -437,16 +469,13 @@ def attempt_spec(
             if build_result is not None:
                 break
             time.sleep(min(5, max(1, builder_wait_seconds / 10)))
-    if build_result is None:
-        # Mark as "queued for build, builder hasn't reported yet"
-        # We still draft a witness record with finding=no-change to show
-        # what the orchestrator produced; the operator can re-witness
-        # later with the real finding.
-        log("5-builder", "skipped", reason="no builder result; using finding=no-change")
-        finding = "no-change"
+        if build_result is None:
+            log("5-builder", "skipped", reason="no builder result; using finding=no-change")
+        else:
+            finding = build_result.get("finding", "no-change")
+            log("5-builder", "ok", finding=finding)
     else:
-        finding = build_result.get("finding", "no-change")
-        log("5-builder", "ok", finding=finding)
+        log("5-builder", "skipped", reason="builder_mode=queue, wait=0; finding=no-change")
 
     # ---------- Stage 6: draft witness ----------
     witness_path = run_dir / "witness-record-draft.md"
@@ -574,6 +603,7 @@ def cmd_run(args):
             counter=counter,
             build_queue_dir=build_queue_dir,
             builder_wait_seconds=args.builder_wait_seconds,
+            builder_mode=args.builder_mode,
         )
         results.append(result)
         counter["specs_attempted"] += 1
@@ -649,6 +679,13 @@ def main():
                           help="seconds to wait for a builder to report a "
                                "result (default 0: skip building, use "
                                "finding=no-change for witness draft)")
+    ap_run.add_argument("--builder-mode", choices=["queue", "telus", "skip"],
+                          default="queue",
+                          help="how to build: queue (emit build-queue entry + "
+                               "wait for external builder); telus (call TELUS "
+                               "to generate CLI + run acceptance test + "
+                               "one-shot repair); skip (no build attempt, "
+                               "draft witness with finding=no-change)")
     ap_run.set_defaults(func=cmd_run)
 
     ap_report = sub.add_parser("report", help="report on the latest run")
