@@ -189,11 +189,11 @@ class ReviewEndToEndTests(unittest.TestCase):
 
 
 class ReviewerPromptCarveOutTests(unittest.TestCase):
-    """Verify REVIEWER_SYSTEM has the finding-line carve-out.
-
-    Sharpened after supervised-run round 1 revealed the live model
-    was halting on the literal word 'failed' appearing in the
-    finding metadata line — a real false-positive."""
+    """Verify REVIEWER_SYSTEM has the finding-line + descriptive
+    carve-outs. Both sharpened from supervised-run evidence:
+      - Round 1: 'failed' in finding-line falsely halted
+      - Round ~17: 'The build outcome was built-clean' in prose
+        falsely halted (the model accurately reporting the finding)"""
 
     def test_prompt_includes_finding_line_carveout(self):
         self.assertIn("finding-line", ar.REVIEWER_SYSTEM.lower())
@@ -202,8 +202,27 @@ class ReviewerPromptCarveOutTests(unittest.TestCase):
     def test_prompt_lists_failed_in_standard_outcomes(self):
         self.assertIn("'failed'", ar.REVIEWER_SYSTEM)
 
-    def test_prompt_includes_carveout_example(self):
-        self.assertIn("- finding: **failed**", ar.REVIEWER_SYSTEM)
+    def test_prompt_includes_finding_line_carveout_example(self):
+        # Generic finding-line pattern OR a specific example
+        self.assertIn("`- finding: **<word>**`", ar.REVIEWER_SYSTEM)
+
+    def test_prompt_includes_descriptive_use_carveout(self):
+        """Carve-out 2: outcome words used descriptively in prose
+        are OK (not overclaim)."""
+        self.assertIn("CRITICAL CARVE-OUT 2", ar.REVIEWER_SYSTEM)
+        self.assertIn("DESCRIPTIVELY", ar.REVIEWER_SYSTEM)
+        self.assertIn("The build outcome was built-clean",
+                      ar.REVIEWER_SYSTEM)
+
+    def test_prompt_distinguishes_forbidden_from_descriptive(self):
+        """The forbidden words list (certified/approved/etc.) should
+        still HALT in any context, but outcome words descriptively
+        used should NOT halt."""
+        self.assertIn("'certified'", ar.REVIEWER_SYSTEM)
+        self.assertIn("'validated'", ar.REVIEWER_SYSTEM)
+        # Explicit example of forbidden-word HALT
+        self.assertIn("validates that the approach works",
+                      ar.REVIEWER_SYSTEM)
 
 
 if __name__ == "__main__":
