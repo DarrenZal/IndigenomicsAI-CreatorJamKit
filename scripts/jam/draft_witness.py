@@ -50,6 +50,7 @@ Discipline:
 
 import argparse
 import json
+import os
 import re
 import subprocess
 import sys
@@ -325,7 +326,10 @@ def cmd_draft(args):
         )
         sys.exit(2)
 
-    adapter = make_adapter(args.model_source, args.gateway, args.team_key, args.model)
+    # Prefer env var TELUS_TEAM_KEY over argv (avoids argv leak via
+    # /proc/<pid>/cmdline and stderr capture).
+    team_key = args.team_key or os.environ.get("TELUS_TEAM_KEY")
+    adapter = make_adapter(args.model_source, args.gateway, team_key, args.model)
 
     drafted = call_prompt3(adapter, build_packet, build_attempt, reviewer_findings, finding)
 

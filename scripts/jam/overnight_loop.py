@@ -103,11 +103,12 @@ def run_round(
 
     orchestrator_py = kit_root / "scripts" / "jam" / "orchestrator.py"
 
+    # NOTE: team_key passed ONLY via env (TELUS_TEAM_KEY) to avoid argv
+    # leak (Codex A1). The subprocess reads os.environ for the key.
     cmd = [
         "python3", str(orchestrator_py), "run",
         "--kit-root", str(kit_root),
         "--gateway", gateway,
-        "--team-key", team_key,
         "--models", model,
         "--specs", spec_id,
         "--max-specs", "1",
@@ -117,25 +118,42 @@ def run_round(
         "--bus-root", str(bus_root),
         "--out-dir", str(round_dir),
         "--wall-root", str(wall_root),
+        "--allowed-root", str(persistent_root),
     ]
     if mesh_mode:
         cmd.append("--mesh-mode")
 
+    sub_env = {**os.environ, "TELUS_TEAM_KEY": team_key}
+
     started_at = now_iso()
     t0 = time.time()
+    rc = -1
+    stderr_tail = ""
+    # Use Popen so we can SIGKILL after timeout (Codex E1). subprocess.run
+    # only sends SIGTERM and may leave the orchestrator lingering.
+    proc = subprocess.Popen(
+        cmd, env=sub_env,
+        stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+    )
     try:
-        proc = subprocess.run(
-            cmd, capture_output=True, text=True,
+        stdout_b, stderr_b = proc.communicate(
             timeout=per_round_time_budget_min * 60 + 60,
         )
         rc = proc.returncode
-        stdout_tail = proc.stdout[-2000:] if proc.stdout else ""
-        stderr_tail = proc.stderr[-2000:] if proc.stderr else ""
-    except subprocess.TimeoutExpired as e:
+        stderr_tail = (stderr_b or b"").decode("utf-8", errors="replace")[-2000:]
+    except subprocess.TimeoutExpired:
+        # SIGTERM then SIGKILL — guarantee the subprocess is gone.
+        proc.terminate()
+        try:
+            stdout_b, stderr_b = proc.communicate(timeout=15)
+        except subprocess.TimeoutExpired:
+            proc.kill()
+            try:
+                stdout_b, stderr_b = proc.communicate(timeout=10)
+            except subprocess.TimeoutExpired:
+                stdout_b, stderr_b = b"", b""
         rc = 124
-        stdout_tail = (e.stdout or b"").decode("utf-8", errors="replace")[-2000:] \
-            if e.stdout else ""
-        stderr_tail = "subprocess TIMEOUT"
+        stderr_tail = "subprocess TIMEOUT (sent SIGTERM, then SIGKILL)"
 
     elapsed = round(time.time() - t0, 1)
 
@@ -156,6 +174,13 @@ def run_round(
             if summary.get("results") else "no-results"
         )
         telus_calls = summary.get("counter", {}).get("telus_calls", 0)
+
+    # Codex E1: when subprocess timed out, conservatively charge the
+    # full per-round call budget so the loop's cumulative-call cap is
+    # not undercounted into overshoot territory.
+    if rc == 124 and telus_calls == 0:
+        telus_calls = per_round_call_budget
+        outcome = "subprocess-timeout"
 
     record = {
         "kind": "round",
@@ -267,6 +292,17 @@ def cmd_run(args):
         print(f"error: kit_root does not contain expected orchestrator.py: {kit_root}",
                file=sys.stderr)
         sys.exit(2)
+
+    # Team-key resolution: env var preferred. argv falls back; warn if used.
+    team_key = os.environ.get("TELUS_TEAM_KEY") or args.team_key
+    if not team_key:
+        print("error: team key required via TELUS_TEAM_KEY env (preferred) "
+              "or --team-key", file=sys.stderr)
+        sys.exit(2)
+    if args.team_key and not os.environ.get("TELUS_TEAM_KEY"):
+        print("WARNING: --team-key on argv exposes key via /proc; "
+              "prefer 'export TELUS_TEAM_KEY=...'", file=sys.stderr)
+    args.team_key = team_key
 
     # Pre-flight: gateway health
     ok, reason = check_gateway_health(args.gateway, timeout=10)
@@ -414,6 +450,15 @@ def cmd_run(args):
                 write_halt(persistent_root, "BOUNDARY", {"error": str(e)})
                 break
             except Exception as e:
+                # Codex A2: include round_dir fallback so the credential
+                # scan below doesn't KeyError. The error dir is created
+                # so the scan finds an empty dir (no hits).
+                error_dir = ensure_path_within(
+                    persistent_root / "rounds" /
+                    f"round-{round_idx:04d}-error",
+                    persistent_root,
+                )
+                error_dir.mkdir(parents=True, exist_ok=True)
                 record = {
                     "kind": "round",
                     "round_idx": round_idx,
@@ -425,6 +470,7 @@ def cmd_run(args):
                     "started_at": now_iso(),
                     "finished_at": now_iso(),
                     "elapsed_seconds": 0,
+                    "round_dir": str(error_dir),
                     "stderr_tail": str(e)[:500],
                 }
 
@@ -525,7 +571,11 @@ def main():
     ap_run = sub.add_parser("run", help="run the overnight loop")
     ap_run.add_argument("--kit-root", required=True)
     ap_run.add_argument("--gateway", required=True)
-    ap_run.add_argument("--team-key", required=True)
+    ap_run.add_argument("--team-key", default=None,
+                          help="STRONGLY PREFER env var TELUS_TEAM_KEY. "
+                               "Passing on argv exposes the key via "
+                               "/proc/<pid>/cmdline for the loop's "
+                               "lifetime (6+ hours unattended).")
     ap_run.add_argument("--persistent-root", required=True,
                           help="ALL writes land here; loop never writes "
                                "outside this dir")

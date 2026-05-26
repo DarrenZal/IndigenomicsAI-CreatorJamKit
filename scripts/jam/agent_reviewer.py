@@ -273,9 +273,26 @@ def normalize_findings(parsed: Optional[Dict[str, Any]]) -> Dict[str, Any]:
             ],
         }
 
-    # Model refusal → halt with refusal record
+    # Model refusal → halt with refusal record.
+    # Codex F1: if the model returned BOTH a refusal AND valid checks,
+    # preserve the checks under partial_checks_before_refusal so
+    # the operator can see which checks passed during diagnosis.
     if "refusal" in parsed and isinstance(parsed["refusal"], str):
-        return {
+        partial_checks = []
+        raw_checks = parsed.get("checks")
+        if isinstance(raw_checks, list):
+            for c in raw_checks:
+                if not isinstance(c, dict):
+                    continue
+                status = c.get("status", "ok")
+                if status not in ("ok", "flag", "halt"):
+                    status = "flag"
+                partial_checks.append({
+                    "name": str(c.get("name", "unnamed")),
+                    "status": status,
+                    "note": str(c.get("note", ""))[:500],
+                })
+        result = {
             "review_passed": False,
             "halt_publish": True,
             "checks": [
@@ -286,6 +303,9 @@ def normalize_findings(parsed: Optional[Dict[str, Any]]) -> Dict[str, Any]:
             "recommendations": [],
             "refusal": parsed["refusal"],
         }
+        if partial_checks:
+            result["partial_checks_before_refusal"] = partial_checks
+        return result
 
     checks = parsed.get("checks")
     if not isinstance(checks, list):

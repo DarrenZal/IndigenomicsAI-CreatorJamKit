@@ -366,15 +366,17 @@ def attempt_spec(
         str(offering_path),
         "--model-source", "gateway",
         "--gateway", gateway,
-        "--team-key", team_key,
         "--model", model,
         "--confirm-freeze",
         "--team-name", f"Orchestrator-{spec_id}",
         "--team-site", "other",
         "--out-dir", str(drafting_out),
     ]
+    # Pass team_key via env to avoid argv leak (Codex A1).
+    sub_env = {**os.environ, "TELUS_TEAM_KEY": team_key}
     try:
-        r = subprocess.run(cmd, capture_output=True, text=True, timeout=180)
+        r = subprocess.run(cmd, capture_output=True, text=True, timeout=180,
+                            env=sub_env)
         counter["telus_calls"] += 3  # estimate: spec-drafter + boundary-checker (and sometimes composition)
     except subprocess.TimeoutExpired:
         log("3-drafting", "TIMEOUT")
@@ -492,11 +494,12 @@ def attempt_spec(
         "--out", str(witness_path),
         "--model-source", "gateway",
         "--gateway", gateway,
-        "--team-key", team_key,
         "--model", model,
     ]
+    sub_env = {**os.environ, "TELUS_TEAM_KEY": team_key}
     try:
-        r = subprocess.run(cmd, capture_output=True, text=True, timeout=120)
+        r = subprocess.run(cmd, capture_output=True, text=True, timeout=120,
+                            env=sub_env)
         counter["telus_calls"] += 1
         if r.returncode != 0:
             log("6-witness-draft", "FAIL",
@@ -611,6 +614,37 @@ def cmd_run(args):
     wall_root = Path(args.wall_root).expanduser() if args.wall_root else None
     mesh_mode = bool(getattr(args, "mesh_mode", False))
 
+    # Team key: prefer env var (TELUS_TEAM_KEY) over argv to avoid argv
+    # leaks via /proc/<pid>/cmdline and crash-stderr capture. argv kept
+    # for backward-compat + interactive use.
+    team_key = args.team_key or os.environ.get("TELUS_TEAM_KEY")
+    if not team_key:
+        print("error: team key required via --team-key OR TELUS_TEAM_KEY env",
+               file=sys.stderr)
+        sys.exit(2)
+    # Stash for downstream calls; never log this.
+    args.team_key = team_key
+
+    # Write-boundary: if --allowed-root supplied, every dir we plan to
+    # write under must resolve inside it. Defends against caller-supplied
+    # paths that escape via symlink / ..
+    if args.allowed_root:
+        from jam.loop_safety import ensure_path_within
+        allowed = Path(args.allowed_root).expanduser().resolve()
+        for label, p in [("out_dir", out_dir), ("bus_root", bus_root),
+                          ("build_queue_dir", build_queue_dir)]:
+            try:
+                ensure_path_within(p, allowed)
+            except PermissionError as e:
+                print(f"error: {label} write-boundary: {e}", file=sys.stderr)
+                sys.exit(2)
+        if wall_root is not None:
+            try:
+                ensure_path_within(wall_root, allowed)
+            except PermissionError as e:
+                print(f"error: wall_root write-boundary: {e}", file=sys.stderr)
+                sys.exit(2)
+
     out_dir.mkdir(parents=True, exist_ok=True)
     bus.init_bus(bus_root)
 
@@ -719,7 +753,15 @@ def main():
     ap_run = sub.add_parser("run", help="run the orchestrator")
     ap_run.add_argument("--kit-root", required=True)
     ap_run.add_argument("--gateway", required=True)
-    ap_run.add_argument("--team-key", required=True)
+    ap_run.add_argument("--team-key", default=None,
+                          help="Bearer key for the gateway. PREFER passing "
+                               "via TELUS_TEAM_KEY env var (avoids argv "
+                               "leak to /proc/<pid>/cmdline + stderr_tail).")
+    ap_run.add_argument("--allowed-root",
+                          help="restrict all writes (out-dir, bus-root, "
+                               "build-queue, wall-root) to this dir; used "
+                               "by overnight_loop to enforce write-boundary "
+                               "inside the subprocess")
     ap_run.add_argument("--models",
                           default="telus-qwen,telus-gemma",
                           help="comma-separated model list")

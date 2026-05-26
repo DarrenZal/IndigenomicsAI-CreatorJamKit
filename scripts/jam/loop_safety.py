@@ -62,6 +62,24 @@ CREDENTIAL_PATTERNS: List[Tuple[str, re.Pattern]] = [
     # PEM block headers
     ("pem_private_key",
      re.compile(r"-----BEGIN (?:RSA |EC |OPENSSH |)PRIVATE KEY-----")),
+    # Codex C2 additions:
+    # GitHub PAT / OAuth tokens (ghp_/gho_/ghs_/ghu_/ghr_/github_pat_)
+    ("github_token",
+     re.compile(r"\b(?:ghp|gho|ghs|ghu|ghr)_[A-Za-z0-9]{30,}\b|"
+                 r"\bgithub_pat_[A-Za-z0-9_]{20,}\b")),
+    # Slack tokens (xoxb-, xoxa-, xoxp-, xoxr-)
+    ("slack_token",
+     re.compile(r"\bxox[abprs]-[A-Za-z0-9-]{10,}\b")),
+    # Telegram bot tokens: <numeric-id>:<35-char-base62>
+    ("telegram_bot_token",
+     re.compile(r"\b\d{8,12}:[A-Za-z0-9_-]{35}\b")),
+    # Long hex blob (40+ chars; catches generic 32-byte / 40-byte secrets
+    # like git PATs of old format, webhook secrets, SHA256/SHA1 hex of
+    # secrets, anthropic-style keys). False-positive risk on Salish-sea
+    # content is low — colors, hashes in code snippets COULD trip this,
+    # but the kit's hash references are markdown text not 40+ hex blobs.
+    ("hex_blob_40plus",
+     re.compile(r"\b[a-fA-F0-9]{40,}\b")),
 ]
 
 
@@ -86,12 +104,19 @@ def scan_for_credentials(text: str,
             masked = (matched_value[:6] + "…[redacted-len="
                        + str(len(matched_value)) + "]…"
                        + matched_value[-4:]) if len(matched_value) > 12 else "[…redacted…]"
+            # Codex C1: replace the FULL m.group(0) span in snippet, AND
+            # also redact any sub-group capture if it appears separately
+            # in the snippet. Defense-in-depth against bearer-style patterns
+            # where group(1) is the value-only portion.
+            safe_snippet = snippet[:80].replace(matched_value, "[MATCH]")
+            if m.groups():
+                for sub in m.groups():
+                    if sub and isinstance(sub, str) and len(sub) > 8:
+                        safe_snippet = safe_snippet.replace(sub, "[MATCH-VAL]")
             hits.append({
                 "pattern_name": name,
                 "source": source_label,
-                "snippet_context": snippet[:80].replace(
-                    matched_value, "[MATCH]"
-                ),
+                "snippet_context": safe_snippet,
                 "matched_value_masked": masked,
                 "span": [start, end],
             })

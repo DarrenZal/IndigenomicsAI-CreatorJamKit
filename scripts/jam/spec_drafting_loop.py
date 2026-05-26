@@ -51,6 +51,7 @@ Discipline:
 
 import argparse
 import json
+import os
 import re
 import sys
 import uuid
@@ -832,7 +833,10 @@ def cmd_run(args):
             raise SystemExit(f"offering not found: {p}")
     out_dir = Path(args.out_dir).resolve()
     out_dir.mkdir(parents=True, exist_ok=True)
-    adapter = make_adapter(args.model_source, args.gateway, args.team_key, args.model)
+    # Team key: prefer env var (TELUS_TEAM_KEY) over argv to avoid
+    # argv leak via /proc/<pid>/cmdline. argv kept for back-compat.
+    team_key = args.team_key or os.environ.get("TELUS_TEAM_KEY")
+    adapter = make_adapter(args.model_source, args.gateway, team_key, args.model)
     run_loop(
         offering_files=offering_files,
         out_dir=out_dir,
