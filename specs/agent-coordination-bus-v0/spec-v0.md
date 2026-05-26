@@ -97,9 +97,16 @@ All rules from coordination-protocol-v0.md §Refusal boundaries +
 | No reputation / trust score fields | Validator rejects unknown payload structures via schema-driven checks |
 | Vague intents fail | `share_request.why.intent` must be a non-empty string ≥ 5 chars |
 
-## What is NOT in v0
+## What is NOT in v0 (but IS in v0.1)
 
-- **HTTP transport.** v0 is file-based. v0.1 may wrap with FastAPI.
+- **HTTP transport.** v0.1 **ships as `scripts/jam/bus_server.py`** — a
+  stdlib `http.server` thin shim around `bus.py` storage + validators.
+  Endpoints: `GET /health`, `POST /messages` (bearer auth required),
+  `GET /teams/<id>`, `GET /global`, `GET /audit`, `GET /audit/<id>`.
+  Single shared bearer token via `BUS_SERVER_TOKEN` env var (fine for
+  dev + small jams; not multi-tenant). 12 unittest cases (run +
+  read + audit + 401/422/404 paths + path-traversal rejection +
+  silent-share rejection at HTTP layer).
 - **Cryptographic signatures.** v0's `signature` field is a SHA-256 hash
   of `<team_id>:<message_id>` (not a real key signature). Real signing
   requires gateway-issued team tokens (see participant-gateway spec).
