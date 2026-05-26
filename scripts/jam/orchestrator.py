@@ -149,14 +149,21 @@ def refusal_gatekeeper(spec_path: Path) -> Optional[str]:
 # Specs we will attempt (preflighted-clean per kit menu, excluding those
 # we've already built tonight + culturally-gated).
 ORCHESTRATOR_CANDIDATE_SPECS = [
+    # L0 foundation specs (no depends_on)
     "witness-record-interop-profile",
-    "claims-evidence-coherence-report",
     "commitment-pool-route-diagnostic",
     "dream-to-fulfillment-board",
-    "receipt-wall-story-gallery",
     "flow-funding-frontier-map",
     "bioregional-mapping-layer-board",
+    "sensor-to-receipt-pipeline",
+    "untracked-allocation-ledger",
+    "risk-insurance-coherence-map",
+    # L1 dependent specs (depends_on declared in frontmatter)
+    "claims-evidence-coherence-report",
+    "receipt-wall-story-gallery",
     "spec-composer-bundle-board",
+    "living-atlas-coherence-packet",
+    "bioregional-insights-briefing",
 ]
 
 
