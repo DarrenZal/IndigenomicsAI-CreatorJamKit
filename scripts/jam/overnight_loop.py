@@ -717,6 +717,28 @@ def cmd_run(args):
     except Exception as e:
         print(f"  coherence synthesis: FAIL — {e}")
 
+    # Generate composition proposals — cross-spec composition primitives
+    # that propose new specs composing the published ones. Bounded to
+    # max-proposals to avoid combinatorial explosion.
+    try:
+        from jam.agent_composer import compose as _compose
+        comp_dir = persistent_root / "compositions"
+        comp_summary = _compose(
+            persistent_root=persistent_root,
+            gateway=args.gateway,
+            team_key=team_key,
+            model="telus-gemma",
+            out_dir=comp_dir,
+            max_proposals=8,
+        )
+        print(f"  compositions: {comp_dir} — "
+              f"{comp_summary.get('proposals_attempted', 0)} proposal(s) "
+              f"across {comp_summary.get('components_found', 0)} components")
+    except ImportError:
+        pass
+    except Exception as e:
+        print(f"  compositions: FAIL — {e}")
+
 
 # --------------------------------------------------------------------- #
 # CLI                                                                   #
