@@ -34,7 +34,8 @@ Discipline:
 """
 
 import re
-from collections import defaultdict
+from collections import defaultdict, deque
+from pathlib import Path
 from typing import Any, Dict, List, Optional, Set, Tuple
 
 
@@ -241,6 +242,230 @@ class Planner:
             "demoted_specs": sorted(self.demoted_specs),
             "demoted_models": sorted(self.demoted_models),
         }
+
+
+# --------------------------------------------------------------------- #
+# Spec DAG + topological scheduling                                     #
+# --------------------------------------------------------------------- #
+
+def read_spec_dependencies(specs_root: Path,
+                            candidate_specs: List[str]) -> Dict[str, List[str]]:
+    """Read `depends_on:` from YAML frontmatter of each candidate spec
+    file. Returns {spec_id: [dependency_spec_ids]}.
+
+    Specs without `depends_on:` get an empty dependency list. Missing
+    spec files are skipped silently (the caller's candidate list is
+    authoritative).
+
+    Format expected in spec frontmatter:
+      ---
+      doc_kind: jam-spec
+      depends_on:
+        - other-spec-id
+        - another-spec-id
+      ---
+    """
+    deps: Dict[str, List[str]] = {}
+    for spec_id in candidate_specs:
+        path = specs_root / f"{spec_id}.md"
+        if not path.exists():
+            deps[spec_id] = []
+            continue
+        text = path.read_text()
+        if not text.startswith("---"):
+            deps[spec_id] = []
+            continue
+        # Extract the frontmatter block — between first --- and second ---
+        parts = text.split("---", 2)
+        if len(parts) < 3:
+            deps[spec_id] = []
+            continue
+        frontmatter = parts[1]
+        # Naive YAML parsing for the depends_on: array.
+        # We don't want to add a PyYAML dependency.
+        dep_list: List[str] = []
+        in_depends_block = False
+        for line in frontmatter.splitlines():
+            stripped = line.strip()
+            if stripped.startswith("depends_on:"):
+                # Inline array: depends_on: [a, b]
+                inline = stripped[len("depends_on:"):].strip()
+                if inline.startswith("["):
+                    inner = inline.strip("[]")
+                    for item in inner.split(","):
+                        item = item.strip().strip("'\"")
+                        if item:
+                            dep_list.append(item)
+                else:
+                    in_depends_block = True
+                continue
+            if in_depends_block:
+                if stripped.startswith("- "):
+                    dep_list.append(stripped[2:].strip().strip("'\""))
+                elif stripped and not line.startswith(" "):
+                    # Frontmatter key with no leading space → end of block
+                    in_depends_block = False
+        deps[spec_id] = dep_list
+    return deps
+
+
+def topological_levels(deps: Dict[str, List[str]]) -> List[List[str]]:
+    """Kahn's algorithm. Returns a list of "levels" — specs at level 0
+    have no deps inside the candidate set; level 1 specs depend only on
+    level 0; etc. Cycles are detected and the remaining specs are
+    appended as a final "ungated" level (with a warning recorded by
+    the caller via the returned cycle_specs set in detail mode).
+
+    Round-robin within each level is the caller's responsibility.
+    """
+    in_degree = {s: 0 for s in deps}
+    edges_in: Dict[str, Set[str]] = defaultdict(set)
+    edges_out: Dict[str, Set[str]] = defaultdict(set)
+    for spec, dep_list in deps.items():
+        for dep in dep_list:
+            if dep in in_degree:  # only count deps that are in candidates
+                edges_out[dep].add(spec)
+                edges_in[spec].add(dep)
+                in_degree[spec] += 1
+    levels: List[List[str]] = []
+    remaining = set(deps.keys())
+    current_level = sorted(s for s in remaining if in_degree[s] == 0)
+    while current_level:
+        levels.append(current_level)
+        next_level_set = set()
+        for s in current_level:
+            remaining.discard(s)
+            for downstream in edges_out.get(s, []):
+                in_degree[downstream] -= 1
+                if in_degree[downstream] == 0:
+                    next_level_set.add(downstream)
+        current_level = sorted(next_level_set)
+    if remaining:
+        # Cycle (or dep on something outside candidates). Append the
+        # rest as a final level so they still get attempted.
+        levels.append(sorted(remaining))
+    return levels
+
+
+class DAGScheduler:
+    """Wraps a topological ordering of specs across the (spec × model)
+    schedule. When a spec's deps haven't all been published yet, the
+    scheduler defers attempting it.
+
+    "Published" status tracked via the Planner's update mechanism:
+    when a (spec, _) round produces frozen-and-published, the spec is
+    marked published; downstream specs unlock for the next round.
+    """
+
+    def __init__(self, specs: List[str], models: List[str],
+                  deps: Dict[str, List[str]]):
+        self.specs = list(specs)
+        self.models = list(models)
+        self.deps = {s: list(deps.get(s, [])) for s in specs}
+        self.published: Set[str] = set()
+        # Stable cursor for round-robin within an unlocked subset
+        self._cursor = 0
+
+    def mark_published(self, spec_id: str) -> None:
+        self.published.add(spec_id)
+
+    def is_unlocked(self, spec_id: str) -> bool:
+        for dep in self.deps.get(spec_id, []):
+            if dep in self.specs and dep not in self.published:
+                return False
+        return True
+
+    def unlocked_pairs(self,
+                        demoted_pairs: Set[Tuple[str, str]],
+                        demoted_specs: Set[str],
+                        demoted_models: Set[str]) -> List[Tuple[str, str]]:
+        out = []
+        for spec_id in self.specs:
+            if spec_id in demoted_specs:
+                continue
+            if not self.is_unlocked(spec_id):
+                continue
+            for model in self.models:
+                if model in demoted_models:
+                    continue
+                pair = (spec_id, model)
+                if pair in demoted_pairs:
+                    continue
+                out.append(pair)
+        return out
+
+
+# Add factory + DAG-aware next_pair to Planner via monkey-patch — keeps
+# the existing v0 unchanged + opt-in via constructor flag.
+
+def _planner_init_with_dag(self, specs, models, consecutive_threshold=2,
+                            dag_deps: Optional[Dict[str, List[str]]] = None):
+    self.specs = list(specs)
+    self.models = list(models)
+    self.consecutive_threshold = consecutive_threshold
+    self.demoted_pairs = set()
+    self.demoted_specs = set()
+    self.demoted_models = set()
+    self.consecutive_non_publish = defaultdict(int)
+    self.events = []
+    self._cursor = 0
+    # DAG support (opt-in; None preserves v0 behavior)
+    self.dag = (
+        DAGScheduler(specs, models, dag_deps) if dag_deps is not None
+        else None
+    )
+
+Planner.__init__ = _planner_init_with_dag
+
+
+def _planner_update_with_dag(self, round_record):
+    spec_id = round_record.get("spec_id")
+    model = round_record.get("model")
+    outcome = round_record.get("outcome", "")
+    if not spec_id or not model:
+        return
+    pair = (spec_id, model)
+    kind = classify_outcome(outcome)
+    if kind == "publish":
+        if self.consecutive_non_publish[pair] > 0:
+            self._record("counter_reset", pair=list(pair), outcome=outcome)
+        self.consecutive_non_publish[pair] = 0
+        # NEW: notify the DAG that this spec has produced a publishable
+        # artifact — unlocks any downstream specs whose deps included
+        # this spec.
+        if self.dag is not None:
+            was_already = spec_id in self.dag.published
+            self.dag.mark_published(spec_id)
+            if not was_already:
+                self._record("dag_spec_published", spec_id=spec_id)
+        return
+    self.consecutive_non_publish[pair] += 1
+    n = self.consecutive_non_publish[pair]
+    if n >= self.consecutive_threshold and pair not in self.demoted_pairs:
+        self.demoted_pairs.add(pair)
+        self._record("pair_demoted", pair=list(pair),
+                      consecutive_count=n, last_outcome=outcome)
+
+Planner.update = _planner_update_with_dag
+
+
+def _planner_next_pair_with_dag(self):
+    """Pick next active pair. When DAG is enabled, picks from
+    unlocked-only pool. When DAG is None, picks from full active pool
+    (v0 behavior preserved).
+    """
+    if self.dag is not None:
+        active = self.dag.unlocked_pairs(
+            self.demoted_pairs, self.demoted_specs, self.demoted_models)
+    else:
+        active = self.active_pairs()
+    if not active:
+        return None
+    pair = active[self._cursor % len(active)]
+    self._cursor += 1
+    return pair
+
+Planner.next_pair = _planner_next_pair_with_dag
 
 
 # --------------------------------------------------------------------- #

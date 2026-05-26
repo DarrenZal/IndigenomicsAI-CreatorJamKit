@@ -3,7 +3,9 @@ doc_kind: jam-spec
 status: draft
 visibility: public_sample
 area: claims
-last_updated: 2026-05-17
+last_updated: 2026-05-26
+depends_on:
+  - witness-record-interop-profile
 ---
 
 # Claims Evidence Coherence Report

@@ -60,7 +60,11 @@ from jam.loop_safety import (  # noqa: E402
     write_halt_creds,
 )
 from jam.orchestrator import ORCHESTRATOR_CANDIDATE_SPECS  # noqa: E402
-from jam.agent_planner import Planner  # noqa: E402
+from jam.agent_planner import (  # noqa: E402
+    Planner,
+    read_spec_dependencies,
+    topological_levels,
+)
 
 
 def now_iso() -> str:
@@ -288,6 +292,40 @@ def cmd_run(args):
     persistent_root = Path(args.persistent_root).expanduser().resolve()
     persistent_root.mkdir(parents=True, exist_ok=True)
 
+    # --dag-mode implies --planner-mode (DAG scheduling lives inside Planner)
+    if getattr(args, "dag_mode", False):
+        args.planner_mode = True
+
+    # --archive-prior-run: move prior-run artifacts to _archive-<ts>/
+    # BEFORE the stale-HALT check, so a prior failed run doesn't block
+    # this launch.
+    if getattr(args, "archive_prior_run", False):
+        import shutil
+        from datetime import datetime as _dt
+        ts = _dt.now().strftime("%Y%m%dT%H%M%S")
+        archive_dir = persistent_root / f"_archive-{ts}"
+        moved = []
+        # Move standard prior-run directories + files
+        for name in ("rounds", "wall", "bus", "aggregator",
+                       "planner-events.json", "overnight-master-log.jsonl",
+                       "closing-witness-readout.md", "loop.log",
+                       "STOP", "STOP.txt"):
+            src = persistent_root / name
+            if src.exists():
+                if not moved:
+                    archive_dir.mkdir(parents=True, exist_ok=True)
+                shutil.move(str(src), str(archive_dir / name))
+                moved.append(name)
+        # Also move any HALT-* tombstones
+        for halt in list(persistent_root.glob("HALT-*.txt")):
+            if not moved:
+                archive_dir.mkdir(parents=True, exist_ok=True)
+            shutil.move(str(halt), str(archive_dir / halt.name))
+            moved.append(halt.name)
+        if moved:
+            print(f"  archived prior-run artifacts to {archive_dir}: "
+                  f"{', '.join(moved)}")
+
     # Verify kit_root looks like the kit
     if not (kit_root / "scripts" / "jam" / "orchestrator.py").exists():
         print(f"error: kit_root does not contain expected orchestrator.py: {kit_root}",
@@ -361,10 +399,22 @@ def cmd_run(args):
     cycle = itertools.cycle(pairs)
     planner: Optional[Planner] = None
     if getattr(args, "planner_mode", False):
+        # If --dag-mode, read spec depends_on from frontmatter and
+        # pass the DAG to Planner so the scheduler waits for deps to
+        # publish before attempting downstream specs.
+        dag_deps = None
+        if getattr(args, "dag_mode", False):
+            specs_root = kit_root / "specs"
+            dag_deps = read_spec_dependencies(specs_root, specs)
+            levels = topological_levels(dag_deps)
+            print(f"  DAG topological levels:")
+            for i, lv in enumerate(levels):
+                print(f"    L{i}: {len(lv)} spec(s) — {lv}")
         planner = Planner(
             specs=specs,
             models=models,
             consecutive_threshold=args.planner_threshold,
+            dag_deps=dag_deps,
         )
 
     start_record = {
@@ -641,6 +691,26 @@ def cmd_run(args):
     except Exception as e:
         print(f"  closing readout: FAIL — {e}")
 
+    # Generate the coherence-synthesis markdown — cross-spec synthesis
+    # across the published wall records. This calls TELUS one more time
+    # (post-loop, single call) so it's bounded.
+    try:
+        from jam.coherence_synthesizer import synthesize
+        synth_path = persistent_root / "coherence-synthesis.md"
+        synth_md = synthesize(
+            persistent_root=persistent_root,
+            gateway=args.gateway,
+            team_key=team_key,
+            model="telus-gemma",  # Gemma was the most reliable publisher
+        )
+        synth_path.write_text(synth_md)
+        print(f"  coherence synthesis: {synth_path}")
+    except ImportError:
+        # Module not present yet; soft-skip
+        pass
+    except Exception as e:
+        print(f"  coherence synthesis: FAIL — {e}")
+
 
 # --------------------------------------------------------------------- #
 # CLI                                                                   #
@@ -698,6 +768,19 @@ def main():
                           help="consecutive non-publish count before "
                                "Planner demotes a pair (default 2; bump "
                                "to 3 for noisier model fleets)")
+    ap_run.add_argument("--dag-mode", action="store_true", default=False,
+                          help="enable DAG-aware scheduling: reads "
+                               "depends_on: from spec frontmatter; "
+                               "downstream specs only attempted after "
+                               "their deps have published. Implies "
+                               "--planner-mode.")
+    ap_run.add_argument("--archive-prior-run", action="store_true",
+                          default=False,
+                          help="if persistent_root has prior-run "
+                               "artifacts (rounds/, wall/, etc.), move "
+                               "them to <persistent_root>/_archive-<ts>/ "
+                               "before starting. Eliminates the manual "
+                               "mv step at launch time.")
     ap_run.set_defaults(func=cmd_run)
 
     args = ap.parse_args()

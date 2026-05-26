@@ -3,7 +3,9 @@ doc_kind: jam-spec
 status: draft
 visibility: public_sample
 area: bioregional_insights
-last_updated: 2026-05-17
+last_updated: 2026-05-26
+depends_on:
+  - bioregional-mapping-layer-board
 ---
 
 # Bioregional Insights Briefing
