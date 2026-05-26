@@ -67,6 +67,34 @@ DISCLAIMER_CONTEXT_REGEX = re.compile(
 )
 
 
+# Descriptive-negation context: when the model DESCRIBES what the tool
+# does NOT do (a refusal-as-design statement), forbidden words appearing
+# AFTER one of these negation markers on the same line are honest
+# description, not overclaim.
+#
+# Added 2026-05-26 after overnight Loop 1 round 36 (publish-failed):
+# the witness draft contained "...without performing routing or
+# legitimacy calculations" — the model accurately reporting that the
+# tool refuses to compute legitimacy. The validator caught "legitimacy"
+# without the context.
+DESCRIPTIVE_NEGATION_REGEX = re.compile(
+    r"\b(without|deliberately\s+avoids?|explicitly\s+refuses?|"
+    r"by\s+design\s+does\s+not|never\s+(?:performs|computes|claims|"
+    r"asserts|grants))\b",
+    re.IGNORECASE,
+)
+
+
+def _is_in_descriptive_negation(line: str, col: int) -> bool:
+    """Check whether a descriptive-negation marker appears BEFORE the
+    matched word on the same line. If so, the forbidden word is being
+    used in 'the tool does not X' framing — honest description, not
+    overclaim.
+    """
+    preceding = line[:col]
+    return bool(DESCRIPTIVE_NEGATION_REGEX.search(preceding))
+
+
 def _is_in_disclaimer_context(line: str, col: int, prev_lines: list = None) -> bool:
     """Check whether the matched word is part of a disclaimer (e.g., 'does not certify').
 
@@ -79,8 +107,13 @@ def _is_in_disclaimer_context(line: str, col: int, prev_lines: list = None) -> b
     span 3 lines. The disclaimer-context regex matches on line 1; the
     over-claim words appear on line 2. So we look at a 3-line lookback
     window: the line itself + the two preceding lines.
+
+    Also checks descriptive-negation context ("without performing X")
+    on the same line.
     """
     if DISCLAIMER_CONTEXT_REGEX.search(line):
+        return True
+    if _is_in_descriptive_negation(line, col):
         return True
     if prev_lines:
         for prev in prev_lines[-2:]:  # check up to 2 lines back
