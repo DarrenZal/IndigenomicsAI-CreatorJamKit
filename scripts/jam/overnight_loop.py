@@ -60,6 +60,7 @@ from jam.loop_safety import (  # noqa: E402
     write_halt_creds,
 )
 from jam.orchestrator import ORCHESTRATOR_CANDIDATE_SPECS  # noqa: E402
+from jam.agent_planner import Planner  # noqa: E402
 
 
 def now_iso() -> str:
@@ -351,8 +352,20 @@ def cmd_run(args):
     deadline = start_time + args.time_budget_hours * 3600
     cumulative_telus = 0
 
+    # Planner: optionally use the adaptive scheduler. When --no-planner
+    # (or --planner-mode off), fall back to dumb round-robin via
+    # itertools.cycle. When enabled, Planner demotes pairs after K
+    # consecutive non-publish outcomes + consumes aggregator
+    # recommendations to demote globally.
     pairs = list(itertools.product(specs, models))
     cycle = itertools.cycle(pairs)
+    planner: Optional[Planner] = None
+    if getattr(args, "planner_mode", False):
+        planner = Planner(
+            specs=specs,
+            models=models,
+            consecutive_threshold=args.planner_threshold,
+        )
 
     start_record = {
         "kind": "loop_start",
@@ -423,7 +436,15 @@ def cmd_run(args):
                 round_idx -= 1  # don't count this as a round
                 continue
 
-            spec_id, model = next(cycle)
+            if planner is not None:
+                pair = planner.next_pair()
+                if pair is None:
+                    halt_reason = ("planner has no active (spec, model) "
+                                   "pairs remaining — all demoted")
+                    break
+                spec_id, model = pair
+            else:
+                spec_id, model = next(cycle)
 
             print(f"\n[round {round_idx:04d}] spec={spec_id} model={model} "
                   f"cumulative_calls={cumulative_telus}", flush=True)
@@ -477,6 +498,23 @@ def cmd_run(args):
             append_master_log(persistent_root, record)
             rounds_completed += 1
             cumulative_telus += record.get("telus_calls", 0)
+
+            # Feed the round outcome to the Planner so it can demote
+            # pairs after K consecutive non-publishes.
+            if planner is not None:
+                planner.update(record)
+                # Surface demotion events to the master log
+                if planner.events:
+                    last_event = planner.events[-1]
+                    if last_event.get("event") == "pair_demoted":
+                        append_master_log(persistent_root, {
+                            "kind": "planner_pair_demoted",
+                            "at": now_iso(),
+                            "round_idx": round_idx,
+                            **{k: v for k, v in last_event.items()
+                                if k not in ("demoted_pairs", "demoted_specs",
+                                              "demoted_models")},
+                        })
             print(f"  → outcome={record['outcome']} "
                   f"telus_calls={record['telus_calls']} "
                   f"elapsed={record['elapsed_seconds']}s "
@@ -521,6 +559,27 @@ def cmd_run(args):
                         "round_idx": round_idx,
                         "path": str(agg_path),
                     })
+                    # Planner-P2: consume aggregator output for
+                    # machine-actionable demotions.
+                    if planner is not None:
+                        try:
+                            recs_text = agg_path.read_text()
+                            n_actions = planner.consume_aggregator(recs_text)
+                            if n_actions > 0:
+                                append_master_log(persistent_root, {
+                                    "kind": "planner_aggregator_consumed",
+                                    "at": now_iso(),
+                                    "round_idx": round_idx,
+                                    "actions_applied": n_actions,
+                                    "status": planner.status(),
+                                })
+                                print(f"  [planner] consumed {n_actions} "
+                                      f"aggregator rec(s); status: "
+                                      f"{planner.status()['pairs_active']} "
+                                      f"active pairs", flush=True)
+                        except Exception as e:
+                            print(f"  [planner] aggregator-consume "
+                                  f"failed: {e}", flush=True)
 
             # Brief pause between rounds (prevents pathological tight loops
             # if the orchestrator subprocess returns instantly)
@@ -558,6 +617,18 @@ def cmd_run(args):
     print(f"  cumulative telus calls: {cumulative_telus}")
     if final_agg:
         print(f"  final aggregator: {final_agg}")
+    if planner is not None:
+        ps = planner.status()
+        print(f"  planner: {ps['pairs_active']}/{ps['pairs_total']} pairs "
+              f"active; {ps['pairs_demoted']} pair(s) demoted, "
+              f"{ps['specs_demoted']} spec(s) demoted, "
+              f"{ps['models_demoted']} model(s) demoted")
+        # Persist final planner audit log
+        planner_log = persistent_root / "planner-events.json"
+        planner_log.write_text(json.dumps({
+            "final_status": ps,
+            "events": planner.events,
+        }, indent=2))
 
 
 # --------------------------------------------------------------------- #
@@ -606,6 +677,16 @@ def main():
     ap_run.add_argument("--ignore-stale-halts", action="store_true",
                           help="proceed even if HALT-*.txt files are "
                                "present in persistent_root")
+    ap_run.add_argument("--planner-mode", action="store_true",
+                          default=False,
+                          help="enable adaptive scheduling: demote "
+                               "(spec, model) pairs after K consecutive "
+                               "non-publish outcomes; consume aggregator "
+                               "recommendations to demote globally")
+    ap_run.add_argument("--planner-threshold", type=int, default=2,
+                          help="consecutive non-publish count before "
+                               "Planner demotes a pair (default 2; bump "
+                               "to 3 for noisier model fleets)")
     ap_run.set_defaults(func=cmd_run)
 
     args = ap.parse_args()
