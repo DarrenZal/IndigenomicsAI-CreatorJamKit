@@ -73,13 +73,17 @@ CREDENTIAL_PATTERNS: List[Tuple[str, re.Pattern]] = [
     # Telegram bot tokens: <numeric-id>:<35-char-base62>
     ("telegram_bot_token",
      re.compile(r"\b\d{8,12}:[A-Za-z0-9_-]{35}\b")),
-    # Long hex blob (40+ chars; catches generic 32-byte / 40-byte secrets
-    # like git PATs of old format, webhook secrets, SHA256/SHA1 hex of
-    # secrets, anthropic-style keys). False-positive risk on Salish-sea
-    # content is low — colors, hashes in code snippets COULD trip this,
-    # but the kit's hash references are markdown text not 40+ hex blobs.
-    ("hex_blob_40plus",
-     re.compile(r"\b[a-fA-F0-9]{40,}\b")),
+    # NOTE: a generic 40+ char hex pattern was added per Codex C2 review
+    # but REMOVED 2026-05-26 after the overnight run halted Loop 1 on a
+    # legitimate SHA-256 packet_hash value emitted by the
+    # sensor-to-receipt-pipeline build. Content-addressed hashes are a
+    # foundational kit primitive — they appear in receipts, build
+    # packets, witness records BY DESIGN. The pattern was catching the
+    # substrate's own discipline. Real credential SHAPES (bearer tokens,
+    # api_key assignments, dev key prefixes, JWTs, AWS AKIA, PEM blocks,
+    # GitHub / Slack / Telegram tokens) all have distinguishing prefixes
+    # or assignment context covered by the patterns above. A standalone
+    # 40-char hex string is almost never a credential.
 ]
 
 

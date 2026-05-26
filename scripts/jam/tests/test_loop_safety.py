@@ -52,6 +52,33 @@ class ScanForCredentialsTests(unittest.TestCase):
             self.assertNotIn(token, h["matched_value_masked"])
             self.assertIn("[redacted-len=", h["matched_value_masked"])
 
+    def test_packet_hash_sha256_does_not_trip_credential_scan(self):
+        """REGRESSION: 2026-05-26 overnight Loop 1 halted on a
+        legitimate SHA-256 packet_hash value in a receipt produced by
+        sensor-to-receipt-pipeline. Content-addressed hashes are a
+        foundational kit primitive; the generic hex_blob_40plus pattern
+        was removed. This test enforces that a freestanding SHA-256
+        hex string does NOT trigger any credential pattern.
+
+        If a future change re-introduces a hex-blob pattern, this test
+        catches it and forces the author to scope it carefully (e.g.,
+        only assignment-shape: api_key=<hex>, never freestanding).
+        """
+        sha256 = "86314d95b9ad656a9ca630ca9144f4e2e15fd73fda6b177c475a56db5cca301e"
+        receipt_json = (
+            '{\n  "kind": "receipt",\n'
+            f'  "packet_hash": "{sha256}",\n'
+            '  "witness_at": "2026-05-26T00:00:00Z"\n}'
+        )
+        hits = ls.scan_for_credentials(receipt_json,
+                                         source_label="receipt.json")
+        self.assertEqual(
+            hits, [],
+            "freestanding SHA-256 packet_hash must NOT trip credential "
+            "scan; if it does, content-addressed hashes (a kit "
+            "primitive) will halt autonomous runs.",
+        )
+
 
 class EnsurePathWithinTests(unittest.TestCase):
     def test_ensure_path_within_inside_passes(self):
