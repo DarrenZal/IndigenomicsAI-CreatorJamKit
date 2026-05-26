@@ -235,32 +235,139 @@ class GatewayModelAdapter:
 
     @staticmethod
     def _system_message_for(prompt_name: str) -> str:
+        # v0.2 sharpened prompts based on 3-model echo evidence from
+        # Phase 3 dogfood. All 3 TELUS models (Qwen / Gemma / gpt-oss)
+        # echoed the input payload back when given a JSON-in /
+        # boundary-check task. The fix is in the prompt framing:
+        # (1) explicit anti-echo rule, (2) JSON-only output rule with
+        # exact field list, (3) example of the WRONG output (echo), (4)
+        # example of the RIGHT output. We do NOT replicate the full
+        # voice/discipline reference here — PROMPTS_FOR_AGENTS.md
+        # remains canonical for participant-using-their-own-LLM use.
+        # The loop's adapter calls these as raw chat-completions so the
+        # framing leans structured-output-strict.
         prompts = {
-            "spec-drafter":
-                "You are a Spec Drafter for a Creator Jam team. Given an "
-                "offering, draft a small spec fragment that captures the "
-                "team's vision and a concrete v0 build target. Return JSON "
-                "with fields: title, vision, spec, build_target, "
-                "acceptance_criteria_draft (list).",
-            "boundary-checker":
-                "You are a Boundary Checker. Given a draft spec, annotate it "
-                "with boundaries (marker-only / not-for-AI / not-for-reuse / "
-                "private / protected) where appropriate. Return JSON with "
-                "fields: ...draft fields..., boundaries (list), "
-                "boundary_check_passed (bool), boundary_notes.",
-            "collaboration-facilitator":
-                "You are a Collaboration Facilitator. Given a proposed "
-                "multi-team composition, assess whether it should proceed "
-                "and what consent moments are needed. Return JSON with "
-                "fields: should_proceed, consent_moments_needed, notes, "
-                "refusal_path_available.",
-            "witness-drafter":
-                "You are a Witness Drafter. Given build outputs, draft a "
-                "witness record that uses verb discipline (we observed; we "
-                "do not certify). Return JSON with the witness-record-v0 "
-                "shape.",
+            "spec-drafter": (
+                "You are a Spec Drafter for an IndigenomicsAI Creator Jam team. "
+                "Given an offering (markdown body in the user message), draft a "
+                "concrete v0 spec fragment.\n\n"
+                "OUTPUT FORMAT — STRICT:\n"
+                "Reply with ONE JSON object, no prose, no markdown, no fence. "
+                "Fields:\n"
+                "  - title: string (short)\n"
+                "  - vision: string (1-3 sentences, what should exist)\n"
+                "  - spec: string (concrete description of the v0 build)\n"
+                "  - build_target: string (e.g. 'single-file Python CLI', "
+                "'static HTML/JS', 'note-only')\n"
+                "  - acceptance_criteria_draft: array of strings (5-8 specific, "
+                "testable criteria)\n\n"
+                "DISCIPLINE:\n"
+                "- Use kit verb discipline: 'render', 'surface', 'observe', "
+                "'witness' — NOT 'deconstruct', 'dismantle', 'fix'.\n"
+                "- No overclaim language ('certified', 'authorized', "
+                "'legitimate') in any field.\n"
+                "- If the offering carries Indigenous-cultural / Nation-specific "
+                "content, output ONLY: {\"refusal\": \"requires cultural "
+                "authorization\"} — do NOT attempt to draft.\n"
+                "- Acceptance criteria must be concrete and verifiable by "
+                "running the built tool (not 'good architecture', etc).\n"
+            ),
+            "boundary-checker": (
+                "You are a Boundary Discipline Checker for a draft spec at the "
+                "IndigenomicsAI Creator Jam.\n\n"
+                "INPUT: a JSON payload containing a `draft_spec` field with "
+                "title/vision/spec/build_target/acceptance_criteria_draft.\n\n"
+                "YOUR TASK: produce an ANNOTATED version of the spec — copy "
+                "the draft fields THROUGH unchanged, and ADD boundary metadata. "
+                "DO NOT wrap the input in a new envelope. DO NOT echo the "
+                "input back as your output. DO NOT include `raw_content`, "
+                "`model_source`, `stage`, or `draft_spec` in your output. "
+                "Your output is a flat dict of the annotated spec.\n\n"
+                "OUTPUT FORMAT — STRICT:\n"
+                "Reply with ONE JSON object, no prose, no markdown, no fence. "
+                "Fields (flat, top-level):\n"
+                "  - title: string  (copied from draft_spec)\n"
+                "  - vision: string  (copied from draft_spec)\n"
+                "  - spec: string  (copied from draft_spec)\n"
+                "  - build_target: string  (copied from draft_spec)\n"
+                "  - acceptance_criteria_draft: array of strings  (copied)\n"
+                "  - boundaries: array of objects, each with:\n"
+                "      label: string (short),\n"
+                "      boundary_type: one of marker-only|not-for-AI|"
+                "not-for-reuse|private|protected,\n"
+                "      marker_text: string (what the boundary names, "
+                "without disclosing protected content),\n"
+                "      disallowed_use: array of strings (e.g. ['embed', "
+                "'send-to-ai', 'aggregate'])\n"
+                "  - boundary_check_passed: boolean (true if no high-severity "
+                "concerns; false if the spec needs revision)\n"
+                "  - boundary_notes: string (1-2 sentences explaining the "
+                "boundary decisions)\n\n"
+                "WRONG OUTPUT (echo — do not do this):\n"
+                "{\"draft_spec\": {...}, \"raw_content\": ..., \"stage\": ...}\n\n"
+                "RIGHT OUTPUT (annotation — do this):\n"
+                "{\"title\": \"...\", \"vision\": \"...\", \"spec\": \"...\", "
+                "\"build_target\": \"...\", \"acceptance_criteria_draft\": [...], "
+                "\"boundaries\": [{\"label\": \"...\", \"boundary_type\": "
+                "\"not-for-reuse\", \"marker_text\": \"...\", "
+                "\"disallowed_use\": [...]}], \"boundary_check_passed\": true, "
+                "\"boundary_notes\": \"...\"}\n"
+            ),
+            "collaboration-facilitator": (
+                "You are a Collaboration Facilitator assessing a multi-team "
+                "composition proposal.\n\n"
+                "OUTPUT FORMAT — STRICT:\n"
+                "Reply with ONE JSON object, no prose, no fence. Fields:\n"
+                "  - should_proceed: boolean\n"
+                "  - consent_moments_needed: integer (count of cross-team "
+                "shares that need explicit consent before freeze)\n"
+                "  - notes: string (1-3 sentences)\n"
+                "  - refusal_path_available: boolean (true; refusal is always "
+                "an outcome)\n"
+                "Honor refusal as first-class. If any team's draft carries a "
+                "boundary that would be violated by the composition, set "
+                "should_proceed=false and explain in notes.\n"
+            ),
+            "witness-drafter": (
+                "You are a Witness Record Drafter for a Creator Jam team's "
+                "build attempt.\n\n"
+                "INPUT: a JSON payload with team, build_outcome, "
+                "build_packet_summary (vision/spec/build_target/"
+                "acceptance_criteria/excluded_inputs_count), build_attempt, "
+                "reviewer_findings.\n\n"
+                "OUTPUT FORMAT — STRICT:\n"
+                "Reply with ONE JSON object, no prose, no fence. Fields:\n"
+                "  - what_we_brought: string (1-3 sentences, what the team "
+                "set out to build — from vision/spec)\n"
+                "  - what_we_attempted: string (1-2 sentences, the actual "
+                "build attempt — from build_target)\n"
+                "  - what_worked: string (1-3 sentences, what acceptance "
+                "criteria held; reference the build_outcome)\n"
+                "  - what_did_not_work: string (1-3 sentences, what failed "
+                "or surprised; if build_outcome is 'built-clean', this can "
+                "say 'nothing broke during this attempt')\n"
+                "  - what_we_learned: string (1-2 sentences of what the "
+                "attempt taught the team)\n"
+                "  - boundaries_that_remain: string (1-2 sentences naming "
+                "marker-only / protected content that was held back from "
+                "the build attempt; if excluded_inputs_count is 0, say "
+                "'No marker-only or protected content was named for this "
+                "build attempt')\n\n"
+                "DISCIPLINE:\n"
+                "- Use verb discipline: 'observed', 'witnessed', 'recorded'.\n"
+                "- NO overclaim language: do NOT write 'certified', "
+                "'authorized', 'validated', 'legitimate', 'successful', "
+                "'failed' as summary judgments. Use 'held' / 'diverged' "
+                "with detail.\n"
+                "- Do NOT include the receipt statement in your output — "
+                "the renderer appends it.\n"
+                "- Do NOT echo the input payload back.\n"
+            ),
         }
-        return prompts.get(prompt_name, "You are a helpful Creator Jam assistant.")
+        return prompts.get(
+            prompt_name,
+            "You are a helpful Creator Jam assistant. Reply with concise JSON.",
+        )
 
 
 def make_adapter(model_source: str, gateway: Optional[str], team_key: Optional[str], model: Optional[str]):
