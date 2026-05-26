@@ -188,5 +188,23 @@ class ReviewEndToEndTests(unittest.TestCase):
             self.assertEqual(record["schema"], "reviewer-findings-v0")
 
 
+class ReviewerPromptCarveOutTests(unittest.TestCase):
+    """Verify REVIEWER_SYSTEM has the finding-line carve-out.
+
+    Sharpened after supervised-run round 1 revealed the live model
+    was halting on the literal word 'failed' appearing in the
+    finding metadata line — a real false-positive."""
+
+    def test_prompt_includes_finding_line_carveout(self):
+        self.assertIn("finding-line", ar.REVIEWER_SYSTEM.lower())
+        self.assertIn("metadata", ar.REVIEWER_SYSTEM.lower())
+
+    def test_prompt_lists_failed_in_standard_outcomes(self):
+        self.assertIn("'failed'", ar.REVIEWER_SYSTEM)
+
+    def test_prompt_includes_carveout_example(self):
+        self.assertIn("- finding: **failed**", ar.REVIEWER_SYSTEM)
+
+
 if __name__ == "__main__":
     unittest.main()
