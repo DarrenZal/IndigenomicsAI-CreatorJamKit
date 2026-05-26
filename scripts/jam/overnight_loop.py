@@ -306,9 +306,15 @@ def cmd_run(args):
         archive_dir = persistent_root / f"_archive-{ts}"
         moved = []
         # Move standard prior-run directories + files
+        # Note: loop.log is intentionally NOT in this list — when the
+        # operator launches via `nohup ... > loop.log 2>&1 &`, shell
+        # creates loop.log BEFORE the python process starts; moving it
+        # here would leave the file descriptor pointing at the archive
+        # location (silent monitoring breakage).
         for name in ("rounds", "wall", "bus", "aggregator",
                        "planner-events.json", "overnight-master-log.jsonl",
-                       "closing-witness-readout.md", "loop.log",
+                       "closing-witness-readout.md",
+                       "coherence-synthesis.md",
                        "STOP", "STOP.txt"):
             src = persistent_root / name
             if src.exists():
