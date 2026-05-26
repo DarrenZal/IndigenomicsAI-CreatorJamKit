@@ -90,6 +90,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from jam import bus  # noqa: E402
 from jam.spec_drafting_loop import GatewayModelAdapter  # noqa: E402
 from jam.telus_builder import build_from_packet  # noqa: E402
+from jam.agent_reviewer import review as reviewer_review  # noqa: E402
 
 
 # --------------------------------------------------------------------- #
@@ -296,6 +297,8 @@ def attempt_spec(
     build_queue_dir: Path,
     builder_wait_seconds: int = 0,
     builder_mode: str = "queue",
+    mesh_mode: bool = False,
+    wall_root: Optional[Path] = None,
 ) -> Dict[str, Any]:
     """Run the full chain for one spec. Returns a structured result.
 
@@ -510,14 +513,63 @@ def attempt_spec(
         (run_dir / "result.json").write_text(json.dumps(result, indent=2))
         return result
 
+    # ---------- Stage 6.5: reviewer (mesh-mode only) ----------
+    if mesh_mode:
+        try:
+            build_attempt_path = run_dir / "build-attempt.json"
+            reviewer_record = reviewer_review(
+                build_packet_path=packet_path,
+                witness_draft_path=witness_path,
+                build_attempt_path=(
+                    build_attempt_path if build_attempt_path.exists() else None
+                ),
+                model_source="gateway",
+                gateway=gateway,
+                team_key=team_key,
+                model=model,
+            )
+            counter["telus_calls"] += 1
+            findings_path = run_dir / "reviewer-findings.json"
+            findings_path.write_text(json.dumps(reviewer_record, indent=2))
+            findings = reviewer_record.get("findings", {})
+            halt_publish = bool(findings.get("halt_publish", False))
+            log("6.5-reviewer",
+                "HALT" if halt_publish else "ok",
+                halt_publish=halt_publish,
+                halt_checks=[
+                    c["name"] for c in findings.get("checks", [])
+                    if c.get("status") == "halt"
+                ],
+                flag_checks=[
+                    c["name"] for c in findings.get("checks", [])
+                    if c.get("status") == "flag"
+                ])
+            post_witness_observe(
+                bus_root, f"orchestrator-{spec_id}", "review_completed",
+                f"reviewer halt_publish={halt_publish} for {spec_id}",
+            )
+            if halt_publish:
+                result["outcome"] = "review-halted"
+                result["finished_at"] = datetime.now(timezone.utc).isoformat()
+                (run_dir / "result.json").write_text(json.dumps(result, indent=2))
+                return result
+        except Exception as e:
+            log("6.5-reviewer", "FAIL", error=str(e))
+            # Reviewer failure is non-fatal — record it and proceed to publish.
+            # The validator (stage 7) is still a hard gate.
+            post_witness_observe(
+                bus_root, f"orchestrator-{spec_id}", "review_failed",
+                f"reviewer error: {str(e)[:200]}",
+            )
+
     # ---------- Stage 7: validate + publish to wall ----------
-    wall_root = out_dir / "wall"
+    effective_wall_root = wall_root if wall_root is not None else (out_dir / "wall")
     cmd = [
         "python3",
         str(kit_root / "scripts" / "jam" / "witness_append.py"),
         "append", str(witness_path),
         "--confirm-publish",
-        "--wall-root", str(wall_root),
+        "--wall-root", str(effective_wall_root),
     ]
     try:
         r = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
@@ -556,6 +608,8 @@ def cmd_run(args):
     out_dir = Path(args.out_dir).expanduser()
     bus_root = Path(args.bus_root).expanduser()
     build_queue_dir = Path(args.build_queue).expanduser() if args.build_queue else (out_dir / "build-queue")
+    wall_root = Path(args.wall_root).expanduser() if args.wall_root else None
+    mesh_mode = bool(getattr(args, "mesh_mode", False))
 
     out_dir.mkdir(parents=True, exist_ok=True)
     bus.init_bus(bus_root)
@@ -604,6 +658,8 @@ def cmd_run(args):
             build_queue_dir=build_queue_dir,
             builder_wait_seconds=args.builder_wait_seconds,
             builder_mode=args.builder_mode,
+            mesh_mode=mesh_mode,
+            wall_root=wall_root,
         )
         results.append(result)
         counter["specs_attempted"] += 1
@@ -686,6 +742,14 @@ def main():
                                "to generate CLI + run acceptance test + "
                                "one-shot repair); skip (no build attempt, "
                                "draft witness with finding=no-change)")
+    ap_run.add_argument("--mesh-mode", action="store_true",
+                          help="enable multi-agent-mesh-v0: invoke Reviewer "
+                               "between witness-draft and publish; reviewer "
+                               "may halt publish")
+    ap_run.add_argument("--wall-root",
+                          help="explicit wall dir for publish (default: "
+                               "<out-dir>/wall); use to share one cumulative "
+                               "wall across multiple round subdirs")
     ap_run.set_defaults(func=cmd_run)
 
     ap_report = sub.add_parser("report", help="report on the latest run")
