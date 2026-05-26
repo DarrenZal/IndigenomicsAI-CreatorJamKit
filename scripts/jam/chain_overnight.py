@@ -282,7 +282,7 @@ def cmd_run(args):
 
     log(chain_root, "chain_start",
         kit_root=str(kit_root), gateway=args.gateway,
-        chain_root=str(chain_root),
+        chain_root_path=str(chain_root),
         watch_pid=args.watch_pid, immediate=args.immediate,
         max_loops=args.max_loops)
 
