@@ -324,7 +324,9 @@ def render_markdown(
     n_published = overall.get("frozen-and-published", 0)
     wall_count = 0
     if wall_root.exists():
-        wall_count = sum(1 for _ in wall_root.glob("*.md"))
+        # Witness records live at <wall_root>/witness-records/*.md
+        # (created by witness_append.py). Look one level deep.
+        wall_count = sum(1 for _ in wall_root.rglob("*.md"))
 
     lines = [
         f"# Aggregator Recommendations — Overnight Run",
