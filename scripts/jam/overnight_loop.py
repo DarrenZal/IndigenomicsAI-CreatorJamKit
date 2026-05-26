@@ -739,6 +739,18 @@ def cmd_run(args):
     except Exception as e:
         print(f"  compositions: FAIL — {e}")
 
+    # Weave the layered artifacts into one ceremony document.
+    # No new LLM calls — pure markdown composition.
+    try:
+        from jam.ceremony_artifact import weave_artifact
+        artifact_path = persistent_root / "ceremony-artifact.md"
+        artifact_path.write_text(weave_artifact(persistent_root))
+        print(f"  ceremony artifact: {artifact_path}")
+    except ImportError:
+        pass
+    except Exception as e:
+        print(f"  ceremony artifact: FAIL — {e}")
+
 
 # --------------------------------------------------------------------- #
 # CLI                                                                   #
