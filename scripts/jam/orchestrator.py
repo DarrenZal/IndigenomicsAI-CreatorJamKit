@@ -94,12 +94,30 @@ from jam.agent_reviewer import review as reviewer_review  # noqa: E402
 
 
 # --------------------------------------------------------------------- #
-# Refusal gatekeeper                                                    #
+# Refusal gatekeeper (v0.4 — distinguish adoption from extraction)      #
 # --------------------------------------------------------------------- #
 
-# Words that, if present in a spec body, trigger auto-refuse-by-design.
-# These are spec-body terms that signal cultural/Nation-specific content
-# requiring explicit authorization the orchestrator does not have.
+# Words that, if present in a spec body AND not in a scope-declaration /
+# negation context, trigger auto-refuse-by-design. These are spec-body
+# terms that signal cultural/Nation-specific content requiring explicit
+# authorization the orchestrator does not have.
+#
+# v0.4 change rationale (2026-05-26):
+# - REMOVED framework names (OCAP, FPIC, "indigenous data sovereignty"):
+#   these are data-governance FRAMEWORKS that systems should be able to
+#   ADOPT. A spec saying "this tool follows OCAP principles" is exactly
+#   the kind of work we want built; refusing it for naming the framework
+#   conflated adoption with extraction. (Tonight's substrate-on-team-
+#   specs run revealed this false-positive class — same descriptive-
+#   negation issue we patched in the validator at commit 541f146.)
+# - KEPT Nation names, ceremonial/sacred practice names, and
+#   authority-domain markers. These ARE inherently domain markers; a
+#   spec that mentions them in its actual processing domain DOES need
+#   explicit authorization.
+# - ADDED descriptive-negation carve-out (see _is_in_scope_exclusion
+#   below): terms appearing in "does not / without / explicitly
+#   excludes / marker-only / do_not_compute" context are scope-
+#   declarations, not domain violations.
 CULTURAL_GATEKEEPER_TERMS = [
     "cultural authorization",
     "carol anne",
@@ -108,37 +126,162 @@ CULTURAL_GATEKEEPER_TERMS = [
     "hesquiaht",
     "tla-o-qui-aht",
     "nuu-chah-nulth",
-    "indigenous data sovereignty",
     "nation-specific",
     "nation authority",
-    "elder",
-    "ceremonial",
-    "traditional knowledge",
-    "ocap",
-    "fpic",
-    "potlatch",
-    "longhouse",
+    # NOTE 2026-05-26 (refusal-v0.4): these terms REMOVED from the
+    # regex gatekeeper because they appear in legitimate framework-
+    # adoption contexts that the gatekeeper cannot distinguish from
+    # extractive contexts:
+    #   - "elder" — appears in governance-circle role definitions
+    #     ("rotating group of Indigenous elders, student reps, and
+    #     immigrant leaders set the rules")
+    #   - "ceremonial" — appears when systems DESCRIBE what frameworks
+    #     they follow protect ("UNDRIP Articles 11-13, 25, 31:
+    #     Indigenous rights to ... protect ceremonial objects ...")
+    #   - "traditional knowledge" — appears in framework descriptions
+    #     and in scope-exclusion declarations
+    # All three are now caught at the model layer when the system would
+    # actually process them extractively. The regex layer is reserved
+    # for Nation-specific markers + operator-named gates.
+    #
+    # Also removed for the same reason: "potlatch", "longhouse" —
+    # cultural-practice/place names that appear in framework-influence-
+    # citation contexts ("our consent model draws from Potlatch ceremonies
+    # alongside the Helsinki Declaration"). The model layer catches
+    # actually-extractive uses of these terms.
 ]
+
+
+# Structural scope-exclusion keys from the kit's discipline vocabulary.
+# When a line contains one of these tokens, the WHOLE LINE is treated
+# as a scope-exclusion context regardless of where the sensitive term
+# appears on the line. This catches structured-data declarations like:
+#   "not_established": ["...", "ceremonial or Knowledge Keeper witnessing"]
+#   "excluded_inputs": [..., {"boundary": "ceremonial"}]
+#   excluded_fields: [traditional knowledge, ...]
+# where the kit-discipline key is far from the sensitive term on the
+# same line.
+_STRUCTURAL_EXCLUSION_KEYS_REGEX = re.compile(
+    r"\b("
+    r"not_established|"
+    r"excluded_fields|excluded_inputs|excluded_for|excluded_use|"
+    r"do_not_compute|marker_only|marker-only|"
+    r"not_for_reuse|not_for_ai|not_for_aggregation|"
+    r"refusal_boundaries|"
+    r"boundary_type|"
+    r"disallowed_use|"
+    r"display_block|do_not_display|"
+    r"protected_field|protected_record|"
+    r"withheld|content_mode"
+    r")\b",
+    re.IGNORECASE,
+)
+
+
+# Negation / scope-declaration markers. When a CULTURAL_GATEKEEPER_TERM
+# appears within ~80 chars of one of these on the same line, treat as
+# scope declaration (the spec is excluding the term's domain) rather
+# than scope inclusion. Mirrors the validator's DESCRIPTIVE_NEGATION_REGEX
+# pattern (witness-record-validator.py, commit 541f146) extended for
+# kit-discipline scoping vocabulary.
+_SCOPE_EXCLUSION_REGEX = re.compile(
+    r"\b("
+    r"not|no|without|never|"
+    r"does\s+not|do\s+not|will\s+not|cannot|isn'?t|are\s+not|is\s+not|"
+    r"explicitly\s+(?:excludes?|refuses?)|"
+    r"deliberately\s+avoids?|"
+    r"by\s+design\s+does\s+not|"
+    r"marker[-_]only|"
+    r"do[-_]not[-_]compute|"
+    r"do_not_compute|"
+    r"excluded[-_]?(?:fields?|inputs?)|"
+    r"not[-_]?for[-_]?(?:reuse|ai|aggregation|extraction)|"
+    r"boundary[-_]type:\s*(?:protected|marker-only|not-for-reuse|private)|"
+    r"out[-_]of[-_]scope"
+    r")\b",
+    re.IGNORECASE,
+)
+
+
+def _is_in_scope_exclusion(line: str, term_start: int,
+                            window: int = 80,
+                            prior_lines: Optional[list] = None,
+                            lookback: int = 3) -> bool:
+    """Check whether a CULTURAL_GATEKEEPER_TERM match at term_start in
+    `line` appears in a scope-exclusion context.
+
+    Three layers of detection:
+      (a) Structural-key on current line: if the line contains a
+          kit-discipline scope-exclusion key (not_established,
+          excluded_fields, do_not_compute, marker_only, etc.) ANYWHERE
+          on the line, the whole line is a scope declaration.
+      (b) Structural-key on a prior line (multi-line YAML lists):
+          e.g.,
+              excluded_fields:
+                - traditional knowledge
+                - ceremonial content
+          The structural key sits on line N, the sensitive term on
+          line N+1 or N+2. Lookback covers this. Default lookback=3
+          (covers reasonable YAML/JSON multi-line patterns).
+      (c) Descriptive-negation within window on current line: if a
+          negation/exclusion marker (not, without, does not, explicitly
+          excludes, etc.) appears within `window` chars of the term.
+
+    Any layer triggering passes the term through.
+    """
+    # Layer (a) — structural key anywhere on the current line
+    if _STRUCTURAL_EXCLUSION_KEYS_REGEX.search(line):
+        return True
+    # Layer (b) — structural key on a recent prior line + current line
+    # is indented (i.e., a list item or continuation under that key)
+    if prior_lines is not None:
+        current_is_indented = line.startswith(" ") or line.startswith("\t") \
+            or line.lstrip().startswith("-") \
+            or line.lstrip().startswith("*")
+        if current_is_indented:
+            for prev in prior_lines[-lookback:]:
+                if _STRUCTURAL_EXCLUSION_KEYS_REGEX.search(prev):
+                    return True
+    # Layer (c) — descriptive negation within window
+    start = max(0, term_start - window)
+    end = min(len(line), term_start + window)
+    window_text = line[start:end]
+    return bool(_SCOPE_EXCLUSION_REGEX.search(window_text))
 
 
 def refusal_gatekeeper(spec_path: Path) -> Optional[str]:
     """Return None if the spec is safe to attempt autonomously, OR a
     refusal reason string if not.
 
-    Conservative-by-design: ANY match against the cultural gatekeeper
-    list refuses. False-positives (e.g., a spec that quotes the kit's
-    discipline on these terms in its Refusal Boundaries section)
-    err toward refusal — the operator can manually override.
+    v0.4: scope-aware. A term match in scope-exclusion context (the
+    spec explicitly declares it scopes the term OUT) does NOT trigger
+    refusal. A term match in scope-inclusion context (the spec would
+    process the term's domain) does.
+
+    If multiple lines match, the FIRST line that lacks a scope-
+    exclusion marker triggers refusal. If every match has a nearby
+    exclusion marker, the spec passes the gate.
     """
     if not spec_path.exists():
         return f"spec file not found: {spec_path}"
-    body = spec_path.read_text().lower()
+    body = spec_path.read_text()
+    body_lower = body.lower()
+    lines = body.split("\n")
+    lines_lower = body_lower.split("\n")
     for term in CULTURAL_GATEKEEPER_TERMS:
-        if term in body:
-            # Be specific: name the term so the operator can decide
-            return f"cultural-content-gatekeeper hit on term: {term!r}"
-    # Also check the Refusal Boundaries section for "do not use this for X"
-    # patterns that would conflict with autonomous execution
+        for i, line_lower in enumerate(lines_lower):
+            idx = line_lower.find(term)
+            if idx == -1:
+                continue
+            # Check this match against scope-exclusion context.
+            # Pass prior lines for multi-line YAML/JSON list lookback.
+            if _is_in_scope_exclusion(lines[i], idx, prior_lines=lines[:i]):
+                continue  # this match is a scope declaration, not violation
+            # No exclusion marker nearby — refusal stands
+            return (
+                f"cultural-content-gatekeeper hit on term: {term!r} "
+                f"in line {i + 1} without scope-exclusion context"
+            )
     return None
 
 
